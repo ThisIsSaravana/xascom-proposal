@@ -1,655 +1,1151 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Timeline & Scope — XASCOM Redesign Proposal</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
-  <style>
-    .ico { display: inline-block; width: 16px; height: 16px; vertical-align: -2px; }
-    .card-icon .ico, .feature-icon .ico, .page-icon .ico, .nav-card .icon .ico { width: 24px; height: 24px; vertical-align: middle; }
-    .audit-score-card .ico { width: 28px; height: 28px; display: block; margin: 0 auto 4px; }
-    .legal-card .ico { width: 32px; height: 32px; display: block; margin: 0 auto 4px; }
-    .step-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--blue); color: white; font-size: .8rem; font-weight: 800; }
-  </style>
-  <style>
-    .phase-card {
-      background: var(--white); border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px;
-    }
-    .phase-header {
-      padding: 24px 32px; display: flex; align-items: center; gap: 16px;
-      cursor: pointer; transition: var(--transition);
-    }
-    .phase-header:hover { background: var(--gray-50); }
-    .phase-num {
-      width: 44px; height: 44px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: .85rem; font-weight: 800; color: var(--white); flex-shrink: 0;
-    }
-    .phase-info { flex: 1; }
-    .phase-info h3 { font-size: 1.05rem; font-weight: 700; color: var(--gray-900); }
-    .phase-info span { font-size: .8rem; color: var(--gray-500); }
-    .phase-hours {
-      font-size: .875rem; font-weight: 700; color: var(--blue);
-      background: var(--sky); padding: 8px 18px; border-radius: 100px;
-      white-space: nowrap;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline & Scope — XASCOM Redesign Proposal</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        .ico {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            vertical-align: -2px;
+        }
 
-    .phase-body { padding: 0 32px 28px; }
-    .phase-task {
-      display: flex; align-items: flex-start; gap: 12px;
-      padding: 10px 0; font-size: .875rem; color: var(--gray-600);
-      border-bottom: 1px solid var(--gray-50);
-    }
-    .phase-task:last-child { border-bottom: none; }
-    .phase-check {
-      width: 20px; height: 20px; border-radius: 6px;
-      border: 2px solid var(--gray-300); flex-shrink: 0; margin-top: 1px;
-    }
+        .card-icon .ico,
+        .feature-icon .ico,
+        .page-icon .ico,
+        .nav-card .icon .ico {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+        }
 
-    .milestone-timeline {
-      display: flex; flex-direction: column; gap: 0;
-      position: relative;
-    }
-    .milestone-item {
-      display: flex; gap: 24px; padding: 28px 0;
-      border-bottom: 1px solid var(--gray-100);
-    }
-    .milestone-item:last-child { border-bottom: none; }
-    .milestone-marker {
-      width: 48px; height: 48px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; font-weight: 800; color: var(--white);
-      flex-shrink: 0;
-    }
-    .milestone-content { flex: 1; }
-    .milestone-content h4 { font-size: 1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 4px; }
-    .milestone-content p { font-size: .875rem; color: var(--gray-500); }
-    .milestone-pct {
-      font-size: 1.5rem; font-weight: 800; color: var(--blue);
-      align-self: center; text-align: right; min-width: 60px;
-    }
+        .audit-score-card .ico {
+            width: 28px;
+            height: 28px;
+            display: block;
+            margin: 0 auto 4px;
+        }
 
-    .provide-item {
-      display: flex; align-items: flex-start; gap: 14px;
-      padding: 16px 20px; background: var(--gray-50); border-radius: 10px;
-      margin-bottom: 8px; font-size: .9rem; color: var(--gray-700);
-    }
-    .provide-icon { font-size: 1.1rem; flex-shrink: 0; }
+        .legal-card .ico {
+            width: 32px;
+            height: 32px;
+            display: block;
+            margin: 0 auto 4px;
+        }
 
-    .summary-banner {
-      background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 100%);
-      border-radius: var(--radius-lg); padding: 48px; color: var(--white); text-align: center;
-    }
-    .summary-banner h2 { font-family: var(--font-head); font-size: 2rem; margin-bottom: 8px; }
-    .summary-banner p { color: rgba(255,255,255,.7); margin-bottom: 40px; }
-    .summary-stats {
-      display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;
-    }
-    .summary-stat { text-align: center; }
-    .summary-stat .num { font-size: 2.4rem; font-weight: 800; line-height: 1.2; }
-    .summary-stat .lbl { font-size: .75rem; color: rgba(255,255,255,.6); margin-top: 4px; text-transform: uppercase; letter-spacing: .5px; }
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--blue);
+            color: white;
+            font-size: .8rem;
+            font-weight: 800;
+        }
+    </style>
+    <style>
+        .phase-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
 
-    .gantt {
-      background: var(--white); border: 1px solid var(--gray-200);
-      border-radius: var(--radius); padding: 32px; overflow-x: auto;
-    }
-    .gantt-row {
-      display: flex; align-items: center; gap: 16px;
-      padding: 10px 0; border-bottom: 1px solid var(--gray-50);
-    }
-    .gantt-row:last-child { border-bottom: none; }
-    .gantt-label { min-width: 180px; font-size: .85rem; font-weight: 600; color: var(--gray-700); flex-shrink: 0; }
-    .gantt-bar-wrap { flex: 1; height: 28px; position: relative; }
-    .gantt-bar {
-      height: 100%; border-radius: 6px; position: absolute; top: 0;
-      display: flex; align-items: center; padding-left: 10px;
-      font-size: .7rem; font-weight: 700; color: var(--white);
-    }
-    .gantt-weeks {
-      display: flex; position: relative; min-width: 400px;
-    }
-    .gantt-week-mark {
-      flex: 1; border-left: 1px dashed var(--gray-200);
-      font-size: .65rem; color: var(--gray-400); padding-left: 4px;
-      font-weight: 600;
-    }
+        .phase-header {
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
 
-    .deliverable-section {
-      background: var(--white); border: 1px solid var(--gray-200);
-      border-radius: var(--radius); padding: 28px; margin-bottom: 16px;
-    }
-    .deliverable-section h4 {
-      font-size: .95rem; font-weight: 700; color: var(--gray-800);
-      margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
-    }
-    .del-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 0; font-size: .875rem; color: var(--gray-600);
-      border-bottom: 1px solid var(--gray-50);
-    }
-    .del-item:last-child { border-bottom: none; }
-    .del-check { color: var(--blue); font-size: .75rem; font-weight: 600; }
-  </style>
+        .phase-header:hover {
+            background: var(--gray-50);
+        }
+
+        .phase-num {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .85rem;
+            font-weight: 800;
+            color: var(--white);
+            flex-shrink: 0;
+        }
+
+        .phase-info {
+            flex: 1;
+        }
+
+        .phase-info h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .phase-info span {
+            font-size: .8rem;
+            color: var(--gray-500);
+        }
+
+        .phase-hours {
+            font-size: .875rem;
+            font-weight: 700;
+            color: var(--blue);
+            background: var(--sky);
+            padding: 8px 18px;
+            border-radius: 100px;
+            white-space: nowrap;
+        }
+
+        .phase-body {
+            padding: 0 32px 28px;
+        }
+
+        .phase-task {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            font-size: .875rem;
+            color: var(--gray-600);
+            border-bottom: 1px solid var(--gray-50);
+        }
+
+        .phase-task:last-child {
+            border-bottom: none;
+        }
+
+        .phase-check {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            border: 2px solid var(--gray-300);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .milestone-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+        }
+
+        .milestone-item {
+            display: flex;
+            gap: 24px;
+            padding: 28px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .milestone-item:last-child {
+            border-bottom: none;
+        }
+
+        .milestone-marker {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--white);
+            flex-shrink: 0;
+        }
+
+        .milestone-content {
+            flex: 1;
+        }
+
+        .milestone-content h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .milestone-content p {
+            font-size: .875rem;
+            color: var(--gray-500);
+        }
+
+        .milestone-pct {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--blue);
+            align-self: center;
+            text-align: right;
+            min-width: 60px;
+        }
+
+        .provide-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 16px 20px;
+            background: var(--gray-50);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: .9rem;
+            color: var(--gray-700);
+        }
+
+        .provide-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .summary-banner {
+            background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 100%);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            color: var(--white);
+            text-align: center;
+        }
+
+        .summary-banner h2 {
+            font-family: var(--font-head);
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .summary-banner p {
+            color: rgba(255, 255, 255, .7);
+            margin-bottom: 40px;
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        .summary-stat {
+            text-align: center;
+        }
+
+        .summary-stat .num {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .summary-stat .lbl {
+            font-size: .75rem;
+            color: rgba(255, 255, 255, .6);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .gantt {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            padding: 32px;
+            overflow-x: auto;
+        }
+
+        .gantt-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--gray-50);
+        }
+
+        .gantt-row:last-child {
+            border-bottom: none;
+        }
+
+        .gantt-label {
+            min-width: 180px;
+            font-size: .85rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            flex-shrink: 0;
+        }
+
+        .gantt-bar-wrap {
+            flex: 1;
+            height: 28px;
+            position: relative;
+        }
+
+        .gantt-bar {
+            height: 100%;
+            border-radius: 6px;
+            position: absolute;
+            top: 0;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            font-size: .7rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .gantt-weeks {
+            display: flex;
+            position: relative;
+            min-width: 400px;
+        }
+
+        .gantt-week-mark {
+            flex: 1;
+            border-left: 1px dashed var(--gray-200);
+            font-size: .65rem;
+            color: var(--gray-400);
+            padding-left: 4px;
+            font-weight: 600;
+        }
+
+        .deliverable-section {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 16px;
+        }
+
+        .deliverable-section h4 {
+            font-size: .95rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .del-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: .875rem;
+            color: var(--gray-600);
+            border-bottom: 1px solid var(--gray-50);
+        }
+
+        .del-item:last-child {
+            border-bottom: none;
+        }
+
+        .del-check {
+            color: var(--blue);
+            font-size: .75rem;
+            font-weight: 600;
+        }
+    </style>
 </head>
+
 <body>
 
-  <!-- NAV -->
-  <nav class="topnav">
-    <div class="topnav-inner">
-      <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit;"><span class="dot"></span> XASCOM Redesign Proposal</a>
-      <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
-      <ul class="topnav-links">
-        <li><a href="index.html">Overview</a></li>
-        <li><a href="audit.html">Site Audit</a></li>
-        <li><a href="proposal.html">Redesign Plan</a></li>
-        <li><a href="features.html">Features</a></li>
-        <li><a href="timeline.html" class="active">Timeline</a></li>
-      </ul>
-    </div>
-  </nav>
+    <!-- NAV -->
+    <nav class="topnav">
+        <div class="topnav-inner">
+            <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit;"><span
+                    class="dot"></span> XASCOM Redesign Proposal</a>
+            <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <path d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+            <ul class="topnav-links">
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="audit.html">Site Audit</a></li>
+                <li><a href="proposal.html">Redesign Plan</a></li>
+                <li><a href="features.html">Features</a></li>
+                <li><a href="timeline.html" class="active">Timeline</a></li>
+            </ul>
+        </div>
+    </nav>
 
-  <!-- HERO -->
-  <section class="hero page-hero">
-    <div class="hero-badge"><i data-lucide="calendar" class="ico"></i> Page 5 of 5</div>
-    <h1>Timeline, Scope & Deliverables</h1>
-    <p>The complete project breakdown — 6 work modules, 50+ tasks, simple payment structure, and everything we need from you to get started.</p>
-  </section>
+    <!-- HERO -->
+    <section class="hero page-hero">
+        <div class="hero-badge"><i data-lucide="calendar" class="ico"></i> Page 5 of 5</div>
+        <h1>Timeline, Scope & Deliverables</h1>
+        <p>The complete project breakdown — 6 work modules, 50+ tasks, simple payment structure, and everything we need
+            from you to get started.</p>
+    </section>
 
-  <!-- SUMMARY BANNER -->
-  <section class="section">
+    <!-- SUMMARY BANNER -->
+    <section class="section">
+        <div class="container">
+            <div class="summary-banner">
+                <h2>Project at a Glance</h2>
+                <p>Complete website design & development from scratch — here's the scope summary</p>
+                <div class="summary-stats">
+                    <div class="summary-stat">
+                        <div class="num">28+</div>
+                        <div class="lbl">Pages</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="num">6</div>
+                        <div class="lbl">Work Modules</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="num">50+</div>
+                        <div class="lbl">Individual Tasks</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="num">5-6</div>
+                        <div class="lbl">Weeks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VISUAL TIMELINE -->
+    <section class="section section--gray">
+        <div class="container">
+            <div class="section-label"><i data-lucide="calendar" class="ico"></i> Project Timeline</div>
+            <h2 class="section-title">Week-by-Week Schedule</h2>
+            <p class="section-subtitle">A visual overview of how the project flows from start to launch.</p>
+
+            <div class="gantt">
+                <!-- Week headers -->
+                <div
+                    style="display:flex;align-items:center;gap:16px;padding:6px 0 16px;border-bottom:1px solid var(--gray-200);margin-bottom:8px;">
+                    <div
+                        style="min-width:180px;font-size:.7rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;">
+                        Phase</div>
+                    <div style="flex:1;display:flex;">
+                        <div
+                            style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">
+                            W1</div>
+                        <div
+                            style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">
+                            W2</div>
+                        <div
+                            style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">
+                            W3</div>
+                        <div
+                            style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">
+                            W4</div>
+                        <div
+                            style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">
+                            W5</div>
+                        <div
+                            style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">
+                            W6</div>
+                    </div>
+                </div>
+                <!-- Rows -->
+                <div class="gantt-row">
+                    <div class="gantt-label">Setup & Global Components</div>
+                    <div style="flex:1;display:flex;height:28px;">
+                        <div style="flex:1;padding:2px;">
+                            <div
+                                style="height:100%;background:#2563eb;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">
+                                Week 1</div>
+                        </div>
+                        <div style="flex:5;"></div>
+                    </div>
+                </div>
+                <div class="gantt-row">
+                    <div class="gantt-label">Core Pages</div>
+                    <div style="flex:1;display:flex;height:28px;">
+                        <div style="flex:1;"></div>
+                        <div style="flex:2;padding:2px;">
+                            <div
+                                style="height:100%;background:#10b981;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">
+                                Week 2-3</div>
+                        </div>
+                        <div style="flex:3;"></div>
+                    </div>
+                </div>
+                <div class="gantt-row">
+                    <div class="gantt-label">Secondary Pages</div>
+                    <div style="flex:1;display:flex;height:28px;">
+                        <div style="flex:2;"></div>
+                        <div style="flex:2;padding:2px;">
+                            <div
+                                style="height:100%;background:#f97316;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">
+                                Week 3-4</div>
+                        </div>
+                        <div style="flex:2;"></div>
+                    </div>
+                </div>
+                <div class="gantt-row">
+                    <div class="gantt-label">Integrations, Content & SEO</div>
+                    <div style="flex:1;display:flex;height:28px;">
+                        <div style="flex:3;"></div>
+                        <div style="flex:2;padding:2px;">
+                            <div
+                                style="height:100%;background:#8b5cf6;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">
+                                Week 4-5</div>
+                        </div>
+                        <div style="flex:1;"></div>
+                    </div>
+                </div>
+                <div class="gantt-row">
+                    <div class="gantt-label">Testing & QA</div>
+                    <div style="flex:1;display:flex;height:28px;">
+                        <div style="flex:4;"></div>
+                        <div style="flex:1;padding:2px;">
+                            <div
+                                style="height:100%;background:#06b6d4;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">
+                                W5</div>
+                        </div>
+                        <div style="flex:1;"></div>
+                    </div>
+                </div>
+                <div class="gantt-row">
+                    <div class="gantt-label">Deployment & Launch</div>
+                    <div style="flex:1;display:flex;height:28px;">
+                        <div style="flex:4;"></div>
+                        <div style="flex:2;padding:2px;">
+                            <div
+                                style="height:100%;background:#dc2626;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">
+                                Week 5-6</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gantt-row" style="background:var(--green-bg);">
+                    <div class="gantt-label" style="color:var(--green);">Free Post-Launch Support</div>
+                    <div style="flex:1;display:flex;height:28px;align-items:center;">
+                        <div style="flex:6;padding:2px;text-align:center;">
+                            <span style="font-size:.75rem;font-weight:600;color:var(--green);">30 days free support
+                                after launch (bug fixes, adjustments, training)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6 MODULES -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-48">
+                <div class="section-label"><i data-lucide="package" class="ico"></i> Work Modules</div>
+                <h2 class="section-title">6 Modules — 50+ Tasks — 5-6 Weeks</h2>
+                <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">Here's the complete task
+                    breakdown organized into 6 work modules. We design and develop each page together — no separate
+                    design phase.</p>
+            </div>
+
+            <!-- Module 1 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-num" style="background:#2563eb;">1</div>
+                    <div class="phase-info">
+                        <h3>Project Setup & Global Components</h3><span>Week 1 — Framework setup, branding, header,
+                            footer, reusable components</span>
+                    </div>
+                </div>
+                <div class="phase-body">
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Client kickoff meeting & requirement finalization
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Content & asset collection from client
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Project setup (framework, Git, CI/CD)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Brand identity — color palette, typography, spacing system
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Global header with sticky navigation + mobile menu
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Global footer (multi-column, links, social, newsletter)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Reusable UI components (buttons, cards, CTAs, forms)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Page layout templates (hero, breadcrumbs, sections)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 2 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-num" style="background:#10b981;">2</div>
+                    <div class="phase-info">
+                        <h3>Core Pages — Design & Development</h3><span>Week 2-3 — Homepage, About, Service pages,
+                            Partners</span>
+                    </div>
+                </div>
+                <div class="phase-body">
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Homepage — Hero, Stats, Services, Why Us, About, Partners, How
+                        It Works, Testimonials, CTA
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> About Us page (story, timeline, mission, team, values)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Services overview page
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Health Insurance page (9 sections + 6 sub-plan cards)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Life Insurance page (9 sections + 7 sub-plan cards)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> General Insurance page (9 sections + 6 sub-plan cards)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Our Partners page
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 3 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-num" style="background:#f97316;">3</div>
+                    <div class="phase-info">
+                        <h3>Secondary Pages — Design & Development</h3><span>Week 3-4 — Claim support, FAQ, Legal,
+                            Careers, Contact</span>
+                    </div>
+                </div>
+                <div class="phase-body">
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Claim Support page (5-step process, documents, FAQs)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> FAQ page (categorized accordion)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Contact Us page (form, Google Maps, info cards)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Get a Quote — Multi-step lead generation form
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Gallery page (masonry grid, lightbox, filters)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Testimonials page (grid, ratings, categories)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Careers page (listings, application form)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Privacy Policy, Terms, Refund Policy, Disclaimer
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 4 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-num" style="background:#8b5cf6;">4</div>
+                    <div class="phase-info">
+                        <h3>Integrations, Content & SEO</h3><span>Week 4-5 — Forms, email, WhatsApp, Analytics,
+                            SEO</span>
+                    </div>
+                </div>
+                <div class="phase-body">
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Contact form with validation & email notifications
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Quote form with multi-step logic & email
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Career application form with resume upload
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Newsletter subscription (Mailchimp/Sendinblue)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> WhatsApp floating chat widget
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Google Maps embed + Click-to-call
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Google Analytics 4 + Meta Pixel setup
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Cookie consent banner
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> SEO meta titles & descriptions (all pages)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Schema markup (LocalBusiness, FAQ, Breadcrumb)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> XML sitemap, robots.txt, Open Graph tags
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Image optimization & alt tags
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Content writing — 4 legal pages
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 5 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-num" style="background:#06b6d4;">5</div>
+                    <div class="phase-info">
+                        <h3>Testing & QA</h3><span>Week 5 — Cross-browser, mobile, performance, security</span>
+                    </div>
+                </div>
+                <div class="phase-body">
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Cross-browser testing (Chrome, Safari, Firefox, Edge)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Mobile responsiveness testing (iOS + Android)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Form submission testing (all forms)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Broken link audit
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Performance optimization & PageSpeed &gt; 90
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Security audit & accessibility check
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Content proofreading
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 6 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-num" style="background:#dc2626;">6</div>
+                    <div class="phase-info">
+                        <h3>Deployment & Launch</h3><span>Week 5-6 — Go live!</span>
+                    </div>
+                </div>
+                <div class="phase-body">
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Hosting setup & configuration
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> DNS migration & domain pointing
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> SSL certificate configuration
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Production deployment
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Post-launch monitoring (48 hours)
+                    </div>
+                    <div class="phase-task">
+                        <div class="phase-check"></div> Google Search Console + sitemap submission
+                    </div>
+                </div>
+            </div>
+
+            <!-- Free Support callout -->
+            <div
+                style="background:linear-gradient(135deg,var(--green-bg),#d1fae5);border:2px solid #a7f3d0;border-radius:var(--radius-lg);padding:32px 40px;display:flex;align-items:center;gap:24px;margin-top:8px;">
+                <div
+                    style="width:56px;height:56px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i data-lucide="heart-handshake" class="ico" style="width:28px;height:28px;color:white;"></i>
+                </div>
+                <div>
+                    <h3 style="font-size:1.1rem;font-weight:700;color:#065f46;margin-bottom:4px;">Free 1-Month
+                        Post-Launch Support</h3>
+                    <p style="font-size:.9rem;color:#047857;">After launch, we provide 30 days of free support — bug
+                        fixes, minor adjustments, training, and complete handover with documentation. No extra charges.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- PAYMENT -->
+    <section class="section section--gray">
+        <div class="container-sm">
+            <div class="text-center mb-48">
+                <div class="section-label"><i data-lucide="banknote" class="ico"></i> Payment Structure</div>
+                <h2 class="section-title">Project Investment</h2>
+                <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">Complete website design &
+                    development — 28+ pages, all features included. Simple two-payment plan.</p>
+            </div>
+
+            <!-- Total Amount -->
+            <div
+                style="background:linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);border-radius:var(--radius-lg);padding:48px 40px;text-align:center;color:white;margin-bottom:40px;">
+                <p
+                    style="font-size:.85rem;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">
+                    Total Project Cost</p>
+                <div style="font-size:3.5rem;font-weight:800;line-height:1.1;margin-bottom:8px;"><span
+                        style="font-size:1.8rem;vertical-align:top;margin-right:4px;">&#8377;</span>28,000</div>
+                <p style="font-size:.9rem;color:rgba(255,255,255,.5);">Inclusive of design, development, content,
+                    integrations & 1 month free support</p>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:700px;margin:0 auto;">
+                <!-- Payment 1 -->
+                <div
+                    style="background:var(--white);border:2px solid var(--blue);border-radius:var(--radius-lg);padding:40px 32px;text-align:center;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--blue);"></div>
+                    <div class="milestone-marker"
+                        style="background:#2563eb;margin:0 auto 16px;width:56px;height:56px;font-size:1.1rem;">1</div>
+                    <h4 style="font-size:1.1rem;font-weight:700;color:var(--gray-900);margin-bottom:8px;">Advance
+                        Payment</h4>
+                    <div style="font-size:2.2rem;font-weight:800;color:var(--blue);line-height:1.2;margin-bottom:4px;">
+                        <span style="font-size:1.2rem;vertical-align:top;">&#8377;</span>14,000</div>
+                    <p style="font-size:.8rem;color:var(--gray-400);margin-bottom:12px;">50% of total</p>
+                    <p style="font-size:.875rem;color:var(--gray-500);line-height:1.6;">Paid upfront to kick off the
+                        project. Development begins immediately after receiving payment and assets.</p>
+                    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--gray-100);">
+                        <span
+                            style="font-size:.75rem;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;">Before
+                            project starts</span>
+                    </div>
+                </div>
+                <!-- Payment 2 -->
+                <div
+                    style="background:var(--white);border:2px solid var(--green);border-radius:var(--radius-lg);padding:40px 32px;text-align:center;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--green);"></div>
+                    <div class="milestone-marker"
+                        style="background:#10b981;margin:0 auto 16px;width:56px;height:56px;font-size:1.1rem;">2</div>
+                    <h4 style="font-size:1.1rem;font-weight:700;color:var(--gray-900);margin-bottom:8px;">Pre-Launch
+                        Payment</h4>
+                    <div style="font-size:2.2rem;font-weight:800;color:var(--green);line-height:1.2;margin-bottom:4px;">
+                        <span style="font-size:1.2rem;vertical-align:top;">&#8377;</span>14,000</div>
+                    <p style="font-size:.8rem;color:var(--gray-400);margin-bottom:12px;">50% of total</p>
+                    <p style="font-size:.875rem;color:var(--gray-500);line-height:1.6;">Paid after full development is
+                        complete and reviewed by you. Once you confirm satisfaction, we deploy and go live.</p>
+                    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--gray-100);">
+                        <span
+                            style="font-size:.75rem;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.5px;">Before
+                            website goes live</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Free support note -->
+            <div
+                style="text-align:center;margin-top:32px;padding:24px 32px;background:var(--green-bg);border-radius:var(--radius);border:1px solid #a7f3d0;">
+                <p style="font-size:.95rem;font-weight:600;color:#065f46;margin-bottom:4px;"><i data-lucide="gift"
+                        class="ico" style="vertical-align:-2px;"></i> &nbsp;1 Month Free Post-Launch Support Included
+                </p>
+                <p style="font-size:.825rem;color:#047857;">Bug fixes, minor adjustments, training, documentation &
+                    complete handover — at no additional cost.</p>
+            </div>
+
+            <!-- Satisfaction guarantee -->
+            <div
+                style="text-align:center;margin-top:16px;padding:20px 32px;background:var(--sky-pale);border-radius:var(--radius);border:1px solid rgba(37,99,235,.15);">
+                <p style="font-size:.9rem;font-weight:600;color:var(--blue);margin-bottom:4px;"><i
+                        data-lucide="shield-check" class="ico" style="vertical-align:-2px;"></i> &nbsp;100% Satisfaction
+                    Guarantee</p>
+                <p style="font-size:.825rem;color:var(--gray-500);">The final 50% is only due after you have fully
+                    reviewed and confirmed that the work meets your expectations.</p>
+                <p style="font-size:.8rem;color:var(--gray-400);margin-top:10px;line-height:1.6;font-style:italic;">We
+                    truly value your trust and want you to be completely happy with every detail. The website will only
+                    go live once you have personally reviewed everything and given your written confirmation that you
+                    are fully satisfied with the work. Your approval is what matters most to us.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- DELIVERABLES -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-48">
+                <div class="section-label"><i data-lucide="package" class="ico"></i> Deliverables</div>
+                <h2 class="section-title">What You'll Receive</h2>
+                <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">A complete breakdown of
+                    everything that's included in this project.</p>
+            </div>
+
+            <div class="grid-2" style="gap:20px;">
+                <div class="deliverable-section">
+                    <h4><i data-lucide="monitor" class="ico"></i> Design & Development Deliverables</h4>
+                    <div class="del-item"><span class="del-check">▸</span> 28+ fully designed & developed pages</div>
+                    <div class="del-item"><span class="del-check">▸</span> Mobile-responsive design across all devices
+                    </div>
+                    <div class="del-item"><span class="del-check">▸</span> Brand style guide (colors, fonts, icons)
+                    </div>
+                    <div class="del-item"><span class="del-check">▸</span> All forms with email notifications</div>
+                    <div class="del-item"><span class="del-check">▸</span> SEO-optimized codebase (PageSpeed &gt; 90)
+                    </div>
+                </div>
+                <div class="deliverable-section">
+                    <h4><i data-lucide="pen-line" class="ico"></i> Content Deliverables</h4>
+                    <div class="del-item"><span class="del-check">▸</span> SEO-optimized copy for all pages</div>
+                    <div class="del-item"><span class="del-check">▸</span> 4 legal pages (Privacy, Terms, Refund,
+                        Disclaimer)</div>
+                    <div class="del-item"><span class="del-check">▸</span> Meta titles & descriptions for all pages
+                    </div>
+                </div>
+                <div class="deliverable-section">
+                    <h4><i data-lucide="link" class="ico"></i> Integration Deliverables</h4>
+                    <div class="del-item"><span class="del-check">▸</span> Google Analytics 4 + Meta Pixel</div>
+                    <div class="del-item"><span class="del-check">▸</span> WhatsApp chat + Click-to-call</div>
+                    <div class="del-item"><span class="del-check">▸</span> Google Maps + Social media links</div>
+                    <div class="del-item"><span class="del-check">▸</span> Cookie consent + Newsletter signup</div>
+                </div>
+                <div class="deliverable-section">
+                    <h4><i data-lucide="book-open" class="ico"></i> Documentation & Support</h4>
+                    <div class="del-item"><span class="del-check">▸</span> Technical documentation</div>
+                    <div class="del-item"><span class="del-check">▸</span> SEO best practices guide</div>
+                    <div class="del-item"><span class="del-check">▸</span> Login credentials document</div>
+                    <div class="del-item"><span class="del-check">▸</span> 1 month free post-launch support</div>
+                </div>
+            </div>
+
+            <!-- Optional blog offer -->
+            <div
+                style="text-align:center;margin-top:32px;padding:24px 32px;background:var(--sky-pale);border-radius:var(--radius);border:1px solid rgba(37,99,235,.15);">
+                <p style="font-size:.9rem;font-weight:600;color:var(--blue);margin-bottom:4px;"><i
+                        data-lucide="newspaper" class="ico" style="vertical-align:-2px;"></i> &nbsp;Want a Blog /
+                    Articles Section?</p>
+                <p style="font-size:.825rem;color:var(--gray-500);">If you'd like, we can also build a blog or articles
+                    section for your website — great for SEO and customer education. This can be discussed and added
+                    separately.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- AMC -->
+    <section class="section">
+        <div class="container-sm">
+            <div class="text-center mb-48">
+                <div class="section-label"><i data-lucide="wrench" class="ico"></i> Post-Launch</div>
+                <h2 class="section-title">Annual Maintenance — &#8377;3,000/year</h2>
+                <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">Optional yearly maintenance to
+                    keep your website running smoothly. Covers routine updates and minor fixes.</p>
+            </div>
+
+            <!-- AMC Price card -->
+            <div
+                style="background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius-lg);padding:40px;max-width:600px;margin:0 auto;">
+                <div
+                    style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--gray-100);">
+                    <div>
+                        <h3 style="font-size:1.15rem;font-weight:700;color:var(--gray-900);">Annual Maintenance Contract
+                        </h3>
+                        <p style="font-size:.85rem;color:var(--gray-500);margin-top:4px;">Billed yearly — optional but
+                            recommended</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:2rem;font-weight:800;color:var(--blue);line-height:1;"><span
+                                style="font-size:1rem;vertical-align:top;">&#8377;</span>3,000</div>
+                        <span style="font-size:.75rem;color:var(--gray-400);">/year</span>
+                    </div>
+                </div>
+
+                <h4
+                    style="font-size:.8rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px;">
+                    What's Included</h4>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div
+                        style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
+                        <i data-lucide="pen-line" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Minor text &
+                        image updates
+                    </div>
+                    <div
+                        style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
+                        <i data-lucide="bug" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Bug fixes &
+                        patches
+                    </div>
+                    <div
+                        style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
+                        <i data-lucide="lock" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Security & SSL
+                        updates
+                    </div>
+                    <div
+                        style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
+                        <i data-lucide="hard-drive" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Backup
+                        management
+                    </div>
+                    <div
+                        style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
+                        <i data-lucide="monitor" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Uptime
+                        monitoring
+                    </div>
+                    <div
+                        style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
+                        <i data-lucide="mail" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Priority email
+                        support
+                    </div>
+                </div>
+            </div>
+
+            <!-- Major changes note -->
+        </div>
+    </section>
+
+    <!-- MAJOR CHANGES -->
+    <section class="section section--gray">
+        <div class="container">
+            <div class="text-center mb-48">
+                <div class="section-label"><i data-lucide="info" class="ico"></i> Good to Know</div>
+                <h2 class="section-title">Need Changes After Launch?</h2>
+                <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">The AMC covers routine
+                    maintenance. But if you need something bigger, here's how it works.</p>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:900px;margin:0 auto;">
+                <!-- Covered -->
+                <div
+                    style="background:var(--white);border:2px solid var(--green);border-radius:var(--radius-lg);padding:36px;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--green);"></div>
+                    <h3
+                        style="font-size:1.05rem;font-weight:700;color:var(--green);margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+                        <i data-lucide="check-circle" class="ico" style="width:20px;height:20px;"></i> Covered Under AMC
+                    </h3>
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
+                            <span style="color:var(--green);font-weight:700;">&#10003;</span> Update text, images, or
+                            contact info
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
+                            <span style="color:var(--green);font-weight:700;">&#10003;</span> Fix bugs or broken
+                            functionality
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
+                            <span style="color:var(--green);font-weight:700;">&#10003;</span> Security patches & SSL
+                            renewal
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
+                            <span style="color:var(--green);font-weight:700;">&#10003;</span> Update gallery photos
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
+                            <span style="color:var(--green);font-weight:700;">&#10003;</span> Update partner logos or
+                            testimonials
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
+                            <span style="color:var(--green);font-weight:700;">&#10003;</span> Backup & uptime monitoring
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Not covered -->
+                <div
+                    style="background:var(--white);border:2px solid var(--orange);border-radius:var(--radius-lg);padding:36px;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--orange);"></div>
+                    <h3
+                        style="font-size:1.05rem;font-weight:700;color:var(--orange);margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+                        <i data-lucide="alert-circle" class="ico" style="width:20px;height:20px;"></i> Requires Separate
+                        Quotation</h3>
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
+                            <span style="color:var(--orange);font-weight:700;">&#8594;</span> Adding entirely new pages
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
+                            <span style="color:var(--orange);font-weight:700;">&#8594;</span> Redesigning existing
+                            sections or layouts
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
+                            <span style="color:var(--orange);font-weight:700;">&#8594;</span> Building new features or
+                            tools
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
+                            <span style="color:var(--orange);font-weight:700;">&#8594;</span> Third-party integrations
+                            (payment gateways, etc.)
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
+                            <span style="color:var(--orange);font-weight:700;">&#8594;</span> Major content
+                            restructuring
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
+                            <span style="color:var(--orange);font-weight:700;">&#8594;</span> Platform migration or
+                            technology changes
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How it works -->
+            <div
+                style="max-width:900px;margin:32px auto 0;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:32px 40px;">
+                <h4 style="font-size:1rem;font-weight:700;color:var(--gray-800);margin-bottom:20px;text-align:center;">
+                    How It Works for Major Changes</h4>
+                <div style="display:flex;gap:16px;align-items:flex-start;">
+                    <div style="flex:1;text-align:center;">
+                        <div
+                            style="width:40px;height:40px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin:0 auto 10px;">
+                            1</div>
+                        <strong style="font-size:.85rem;display:block;margin-bottom:4px;">Email Us</strong>
+                        <span style="font-size:.8rem;color:var(--gray-500);">Send the details of what you need changed
+                            or added</span>
+                    </div>
+                    <div style="padding-top:18px;color:var(--gray-300);font-size:1.2rem;">&#8594;</div>
+                    <div style="flex:1;text-align:center;">
+                        <div
+                            style="width:40px;height:40px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin:0 auto 10px;">
+                            2</div>
+                        <strong style="font-size:.85rem;display:block;margin-bottom:4px;">We Review</strong>
+                        <span style="font-size:.8rem;color:var(--gray-500);">We assess the scope and provide a clear
+                            quotation</span>
+                    </div>
+                    <div style="padding-top:18px;color:var(--gray-300);font-size:1.2rem;">&#8594;</div>
+                    <div style="flex:1;text-align:center;">
+                        <div
+                            style="width:40px;height:40px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin:0 auto 10px;">
+                            3</div>
+                        <strong style="font-size:.85rem;display:block;margin-bottom:4px;">You Approve</strong>
+                        <span style="font-size:.8rem;color:var(--gray-500);">Confirm the quote and timeline that works
+                            for you</span>
+                    </div>
+                    <div style="padding-top:18px;color:var(--gray-300);font-size:1.2rem;">&#8594;</div>
+                    <div style="flex:1;text-align:center;">
+                        <div
+                            style="width:40px;height:40px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin:0 auto 10px;">
+                            4</div>
+                        <strong style="font-size:.85rem;display:block;margin-bottom:4px;">We Deliver</strong>
+                        <span style="font-size:.8rem;color:var(--gray-500);">Work begins and is delivered to your
+                            satisfaction</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div style="height:48px;"></div>
+
     <div class="container">
-      <div class="summary-banner">
-        <h2>Project at a Glance</h2>
-        <p>Complete website design & development from scratch — here's the scope summary</p>
-        <div class="summary-stats">
-          <div class="summary-stat"><div class="num">28+</div><div class="lbl">Pages</div></div>
-          <div class="summary-stat"><div class="num">6</div><div class="lbl">Work Modules</div></div>
-          <div class="summary-stat"><div class="num">50+</div><div class="lbl">Individual Tasks</div></div>
-          <div class="summary-stat"><div class="num">5-6</div><div class="lbl">Weeks</div></div>
+        <div class="page-nav">
+            <a href="features.html">← Features & Tech</a>
+            <a href="index.html">Back to Overview →</a>
         </div>
-      </div>
     </div>
-  </section>
 
-  <!-- VISUAL TIMELINE -->
-  <section class="section section--gray">
-    <div class="container">
-      <div class="section-label"><i data-lucide="calendar" class="ico"></i> Project Timeline</div>
-      <h2 class="section-title">Week-by-Week Schedule</h2>
-      <p class="section-subtitle">A visual overview of how the project flows from start to launch.</p>
+    <footer class="site-footer">
+        <strong>XASCOM Website Redesign Proposal</strong> · Prepared on April 9, 2026 · Confidential Document
+    </footer>
 
-      <div class="gantt">
-        <!-- Week headers -->
-        <div style="display:flex;align-items:center;gap:16px;padding:6px 0 16px;border-bottom:1px solid var(--gray-200);margin-bottom:8px;">
-          <div style="min-width:180px;font-size:.7rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;">Phase</div>
-          <div style="flex:1;display:flex;">
-            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W1</div>
-            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W2</div>
-            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W3</div>
-            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W4</div>
-            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W5</div>
-            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W6</div>
-          </div>
-        </div>
-        <!-- Rows -->
-        <div class="gantt-row">
-          <div class="gantt-label">Setup & Global Components</div>
-          <div style="flex:1;display:flex;height:28px;">
-            <div style="flex:1;padding:2px;"><div style="height:100%;background:#2563eb;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">Week 1</div></div>
-            <div style="flex:5;"></div>
-          </div>
-        </div>
-        <div class="gantt-row">
-          <div class="gantt-label">Core Pages</div>
-          <div style="flex:1;display:flex;height:28px;">
-            <div style="flex:1;"></div>
-            <div style="flex:2;padding:2px;"><div style="height:100%;background:#10b981;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">Week 2-3</div></div>
-            <div style="flex:3;"></div>
-          </div>
-        </div>
-        <div class="gantt-row">
-          <div class="gantt-label">Secondary Pages</div>
-          <div style="flex:1;display:flex;height:28px;">
-            <div style="flex:2;"></div>
-            <div style="flex:2;padding:2px;"><div style="height:100%;background:#f97316;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">Week 3-4</div></div>
-            <div style="flex:2;"></div>
-          </div>
-        </div>
-        <div class="gantt-row">
-          <div class="gantt-label">Integrations, Content & SEO</div>
-          <div style="flex:1;display:flex;height:28px;">
-            <div style="flex:3;"></div>
-            <div style="flex:2;padding:2px;"><div style="height:100%;background:#8b5cf6;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">Week 4-5</div></div>
-            <div style="flex:1;"></div>
-          </div>
-        </div>
-        <div class="gantt-row">
-          <div class="gantt-label">Testing & QA</div>
-          <div style="flex:1;display:flex;height:28px;">
-            <div style="flex:4;"></div>
-            <div style="flex:1;padding:2px;"><div style="height:100%;background:#06b6d4;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">W5</div></div>
-            <div style="flex:1;"></div>
-          </div>
-        </div>
-        <div class="gantt-row">
-          <div class="gantt-label">Deployment & Launch</div>
-          <div style="flex:1;display:flex;height:28px;">
-            <div style="flex:4;"></div>
-            <div style="flex:2;padding:2px;"><div style="height:100%;background:#dc2626;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">Week 5-6</div></div>
-          </div>
-        </div>
-        <div class="gantt-row" style="background:var(--green-bg);">
-          <div class="gantt-label" style="color:var(--green);">Free Post-Launch Support</div>
-          <div style="flex:1;display:flex;height:28px;align-items:center;">
-            <div style="flex:6;padding:2px;text-align:center;">
-              <span style="font-size:.75rem;font-weight:600;color:var(--green);">30 days free support after launch (bug fixes, adjustments, training)</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6 MODULES -->
-  <section class="section">
-    <div class="container">
-      <div class="text-center mb-48">
-        <div class="section-label"><i data-lucide="package" class="ico"></i> Work Modules</div>
-        <h2 class="section-title">6 Modules — 50+ Tasks — 5-6 Weeks</h2>
-        <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">Here's the complete task breakdown organized into 6 work modules. We design and develop each page together — no separate design phase.</p>
-      </div>
-
-      <!-- Module 1 -->
-      <div class="phase-card">
-        <div class="phase-header">
-          <div class="phase-num" style="background:#2563eb;">1</div>
-          <div class="phase-info"><h3>Project Setup & Global Components</h3><span>Week 1 — Framework setup, branding, header, footer, reusable components</span></div>
-        </div>
-        <div class="phase-body">
-          <div class="phase-task"><div class="phase-check"></div> Client kickoff meeting & requirement finalization</div>
-          <div class="phase-task"><div class="phase-check"></div> Content & asset collection from client</div>
-          <div class="phase-task"><div class="phase-check"></div> Project setup (framework, Git, CI/CD)</div>
-          <div class="phase-task"><div class="phase-check"></div> Brand identity — color palette, typography, spacing system</div>
-          <div class="phase-task"><div class="phase-check"></div> Global header with sticky navigation + mobile menu</div>
-          <div class="phase-task"><div class="phase-check"></div> Global footer (multi-column, links, social, newsletter)</div>
-          <div class="phase-task"><div class="phase-check"></div> Reusable UI components (buttons, cards, CTAs, forms)</div>
-          <div class="phase-task"><div class="phase-check"></div> Page layout templates (hero, breadcrumbs, sections)</div>
-        </div>
-      </div>
-
-      <!-- Module 2 -->
-      <div class="phase-card">
-        <div class="phase-header">
-          <div class="phase-num" style="background:#10b981;">2</div>
-          <div class="phase-info"><h3>Core Pages — Design & Development</h3><span>Week 2-3 — Homepage, About, Service pages, Partners</span></div>
-        </div>
-        <div class="phase-body">
-          <div class="phase-task"><div class="phase-check"></div> Homepage — Hero, Stats, Services, Why Us, About, Partners, How It Works, Testimonials, CTA</div>
-          <div class="phase-task"><div class="phase-check"></div> About Us page (story, timeline, mission, team, values)</div>
-          <div class="phase-task"><div class="phase-check"></div> Services overview page</div>
-          <div class="phase-task"><div class="phase-check"></div> Health Insurance page (9 sections + 6 sub-plan cards)</div>
-          <div class="phase-task"><div class="phase-check"></div> Life Insurance page (9 sections + 7 sub-plan cards)</div>
-          <div class="phase-task"><div class="phase-check"></div> General Insurance page (9 sections + 6 sub-plan cards)</div>
-          <div class="phase-task"><div class="phase-check"></div> Our Partners page</div>
-        </div>
-      </div>
-
-      <!-- Module 3 -->
-      <div class="phase-card">
-        <div class="phase-header">
-          <div class="phase-num" style="background:#f97316;">3</div>
-          <div class="phase-info"><h3>Secondary Pages — Design & Development</h3><span>Week 3-4 — Claim support, FAQ, Legal, Careers, Contact</span></div>
-        </div>
-        <div class="phase-body">
-          <div class="phase-task"><div class="phase-check"></div> Claim Support page (5-step process, documents, FAQs)</div>
-          <div class="phase-task"><div class="phase-check"></div> FAQ page (categorized accordion)</div>
-          <div class="phase-task"><div class="phase-check"></div> Contact Us page (form, Google Maps, info cards)</div>
-          <div class="phase-task"><div class="phase-check"></div> Get a Quote — Multi-step lead generation form</div>
-          <div class="phase-task"><div class="phase-check"></div> Gallery page (masonry grid, lightbox, filters)</div>
-          <div class="phase-task"><div class="phase-check"></div> Testimonials page (grid, ratings, categories)</div>
-          <div class="phase-task"><div class="phase-check"></div> Careers page (listings, application form)</div>
-          <div class="phase-task"><div class="phase-check"></div> Privacy Policy, Terms, Refund Policy, Disclaimer</div>
-        </div>
-      </div>
-
-      <!-- Module 4 -->
-      <div class="phase-card">
-        <div class="phase-header">
-          <div class="phase-num" style="background:#8b5cf6;">4</div>
-          <div class="phase-info"><h3>Integrations, Content & SEO</h3><span>Week 4-5 — Forms, email, WhatsApp, Analytics, SEO</span></div>
-        </div>
-        <div class="phase-body">
-          <div class="phase-task"><div class="phase-check"></div> Contact form with validation & email notifications</div>
-          <div class="phase-task"><div class="phase-check"></div> Quote form with multi-step logic & email</div>
-          <div class="phase-task"><div class="phase-check"></div> Career application form with resume upload</div>
-          <div class="phase-task"><div class="phase-check"></div> Newsletter subscription (Mailchimp/Sendinblue)</div>
-          <div class="phase-task"><div class="phase-check"></div> WhatsApp floating chat widget</div>
-          <div class="phase-task"><div class="phase-check"></div> Google Maps embed + Click-to-call</div>
-          <div class="phase-task"><div class="phase-check"></div> Google Analytics 4 + Meta Pixel setup</div>
-          <div class="phase-task"><div class="phase-check"></div> Cookie consent banner</div>
-          <div class="phase-task"><div class="phase-check"></div> SEO meta titles & descriptions (all pages)</div>
-          <div class="phase-task"><div class="phase-check"></div> Schema markup (LocalBusiness, FAQ, Breadcrumb)</div>
-          <div class="phase-task"><div class="phase-check"></div> XML sitemap, robots.txt, Open Graph tags</div>
-          <div class="phase-task"><div class="phase-check"></div> Image optimization & alt tags</div>
-          <div class="phase-task"><div class="phase-check"></div> Content writing — 4 legal pages</div>
-        </div>
-      </div>
-
-      <!-- Module 5 -->
-      <div class="phase-card">
-        <div class="phase-header">
-          <div class="phase-num" style="background:#06b6d4;">5</div>
-          <div class="phase-info"><h3>Testing & QA</h3><span>Week 5 — Cross-browser, mobile, performance, security</span></div>
-        </div>
-        <div class="phase-body">
-          <div class="phase-task"><div class="phase-check"></div> Cross-browser testing (Chrome, Safari, Firefox, Edge)</div>
-          <div class="phase-task"><div class="phase-check"></div> Mobile responsiveness testing (iOS + Android)</div>
-          <div class="phase-task"><div class="phase-check"></div> Form submission testing (all forms)</div>
-          <div class="phase-task"><div class="phase-check"></div> Broken link audit</div>
-          <div class="phase-task"><div class="phase-check"></div> Performance optimization & PageSpeed &gt; 90</div>
-          <div class="phase-task"><div class="phase-check"></div> Security audit & accessibility check</div>
-          <div class="phase-task"><div class="phase-check"></div> Content proofreading</div>
-        </div>
-      </div>
-
-      <!-- Module 6 -->
-      <div class="phase-card">
-        <div class="phase-header">
-          <div class="phase-num" style="background:#dc2626;">6</div>
-          <div class="phase-info"><h3>Deployment & Launch</h3><span>Week 5-6 — Go live!</span></div>
-        </div>
-        <div class="phase-body">
-          <div class="phase-task"><div class="phase-check"></div> Hosting setup & configuration</div>
-          <div class="phase-task"><div class="phase-check"></div> DNS migration & domain pointing</div>
-          <div class="phase-task"><div class="phase-check"></div> SSL certificate configuration</div>
-          <div class="phase-task"><div class="phase-check"></div> Production deployment</div>
-          <div class="phase-task"><div class="phase-check"></div> Post-launch monitoring (48 hours)</div>
-          <div class="phase-task"><div class="phase-check"></div> Google Search Console + sitemap submission</div>
-        </div>
-      </div>
-
-      <!-- Free Support callout -->
-      <div style="background:linear-gradient(135deg,var(--green-bg),#d1fae5);border:2px solid #a7f3d0;border-radius:var(--radius-lg);padding:32px 40px;display:flex;align-items:center;gap:24px;margin-top:8px;">
-        <div style="width:56px;height:56px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <i data-lucide="heart-handshake" class="ico" style="width:28px;height:28px;color:white;"></i>
-        </div>
-        <div>
-          <h3 style="font-size:1.1rem;font-weight:700;color:#065f46;margin-bottom:4px;">Free 1-Month Post-Launch Support</h3>
-          <p style="font-size:.9rem;color:#047857;">After launch, we provide 30 days of free support — bug fixes, minor adjustments, training, and complete handover with documentation. No extra charges.</p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- PAYMENT -->
-  <section class="section section--gray">
-    <div class="container-sm">
-      <div class="text-center mb-48">
-        <div class="section-label"><i data-lucide="banknote" class="ico"></i> Payment Structure</div>
-        <h2 class="section-title">Project Investment</h2>
-        <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">Complete website design & development — 28+ pages, all features included. Simple two-payment plan.</p>
-      </div>
-
-      <!-- Total Amount -->
-      <div style="background:linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);border-radius:var(--radius-lg);padding:48px 40px;text-align:center;color:white;margin-bottom:40px;">
-        <p style="font-size:.85rem;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Total Project Cost</p>
-        <div style="font-size:3.5rem;font-weight:800;line-height:1.1;margin-bottom:8px;"><span style="font-size:1.8rem;vertical-align:top;margin-right:4px;">&#8377;</span>28,000</div>
-        <p style="font-size:.9rem;color:rgba(255,255,255,.5);">Inclusive of design, development, content, integrations & 1 month free support</p>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:700px;margin:0 auto;">
-        <!-- Payment 1 -->
-        <div style="background:var(--white);border:2px solid var(--blue);border-radius:var(--radius-lg);padding:40px 32px;text-align:center;position:relative;overflow:hidden;">
-          <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--blue);"></div>
-          <div class="milestone-marker" style="background:#2563eb;margin:0 auto 16px;width:56px;height:56px;font-size:1.1rem;">1</div>
-          <h4 style="font-size:1.1rem;font-weight:700;color:var(--gray-900);margin-bottom:8px;">Advance Payment</h4>
-          <div style="font-size:2.2rem;font-weight:800;color:var(--blue);line-height:1.2;margin-bottom:4px;"><span style="font-size:1.2rem;vertical-align:top;">&#8377;</span>14,000</div>
-          <p style="font-size:.8rem;color:var(--gray-400);margin-bottom:12px;">50% of total</p>
-          <p style="font-size:.875rem;color:var(--gray-500);line-height:1.6;">Paid upfront to kick off the project. Development begins immediately after receiving payment and assets.</p>
-          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--gray-100);">
-            <span style="font-size:.75rem;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;">Before project starts</span>
-          </div>
-        </div>
-        <!-- Payment 2 -->
-        <div style="background:var(--white);border:2px solid var(--green);border-radius:var(--radius-lg);padding:40px 32px;text-align:center;position:relative;overflow:hidden;">
-          <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--green);"></div>
-          <div class="milestone-marker" style="background:#10b981;margin:0 auto 16px;width:56px;height:56px;font-size:1.1rem;">2</div>
-          <h4 style="font-size:1.1rem;font-weight:700;color:var(--gray-900);margin-bottom:8px;">Pre-Launch Payment</h4>
-          <div style="font-size:2.2rem;font-weight:800;color:var(--green);line-height:1.2;margin-bottom:4px;"><span style="font-size:1.2rem;vertical-align:top;">&#8377;</span>14,000</div>
-          <p style="font-size:.8rem;color:var(--gray-400);margin-bottom:12px;">50% of total</p>
-          <p style="font-size:.875rem;color:var(--gray-500);line-height:1.6;">Paid after full development is complete and reviewed by you. Once you confirm satisfaction, we deploy and go live.</p>
-          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--gray-100);">
-            <span style="font-size:.75rem;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.5px;">Before website goes live</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Free support note -->
-      <div style="text-align:center;margin-top:32px;padding:24px 32px;background:var(--green-bg);border-radius:var(--radius);border:1px solid #a7f3d0;">
-        <p style="font-size:.95rem;font-weight:600;color:#065f46;margin-bottom:4px;"><i data-lucide="gift" class="ico" style="vertical-align:-2px;"></i> &nbsp;1 Month Free Post-Launch Support Included</p>
-        <p style="font-size:.825rem;color:#047857;">Bug fixes, minor adjustments, training, documentation & complete handover — at no additional cost.</p>
-      </div>
-
-      <!-- Satisfaction guarantee -->
-      <div style="text-align:center;margin-top:16px;padding:20px 32px;background:var(--sky-pale);border-radius:var(--radius);border:1px solid rgba(37,99,235,.15);">
-        <p style="font-size:.9rem;font-weight:600;color:var(--blue);margin-bottom:4px;"><i data-lucide="shield-check" class="ico" style="vertical-align:-2px;"></i> &nbsp;100% Satisfaction Guarantee</p>
-        <p style="font-size:.825rem;color:var(--gray-500);">The final 50% is only due after you have fully reviewed and confirmed that the work meets your expectations.</p>
-        <p style="font-size:.8rem;color:var(--gray-400);margin-top:10px;line-height:1.6;font-style:italic;">We truly value your trust and want you to be completely happy with every detail. The website will only go live once you have personally reviewed everything and given your written confirmation that you are fully satisfied with the work. Your approval is what matters most to us.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- DELIVERABLES -->
-  <section class="section">
-    <div class="container">
-      <div class="text-center mb-48">
-        <div class="section-label"><i data-lucide="package" class="ico"></i> Deliverables</div>
-        <h2 class="section-title">What You'll Receive</h2>
-        <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">A complete breakdown of everything that's included in this project.</p>
-      </div>
-
-      <div class="grid-2" style="gap:20px;">
-        <div class="deliverable-section">
-          <h4><i data-lucide="monitor" class="ico"></i> Design & Development Deliverables</h4>
-          <div class="del-item"><span class="del-check">▸</span> 28+ fully designed & developed pages</div>
-          <div class="del-item"><span class="del-check">▸</span> Mobile-responsive design across all devices</div>
-          <div class="del-item"><span class="del-check">▸</span> Brand style guide (colors, fonts, icons)</div>
-          <div class="del-item"><span class="del-check">▸</span> All forms with email notifications</div>
-          <div class="del-item"><span class="del-check">▸</span> SEO-optimized codebase (PageSpeed &gt; 90)</div>
-        </div>
-        <div class="deliverable-section">
-          <h4><i data-lucide="pen-line" class="ico"></i> Content Deliverables</h4>
-          <div class="del-item"><span class="del-check">▸</span> SEO-optimized copy for all pages</div>
-          <div class="del-item"><span class="del-check">▸</span> 4 legal pages (Privacy, Terms, Refund, Disclaimer)</div>
-          <div class="del-item"><span class="del-check">▸</span> Meta titles & descriptions for all pages</div>
-        </div>
-        <div class="deliverable-section">
-          <h4><i data-lucide="link" class="ico"></i> Integration Deliverables</h4>
-          <div class="del-item"><span class="del-check">▸</span> Google Analytics 4 + Meta Pixel</div>
-          <div class="del-item"><span class="del-check">▸</span> WhatsApp chat + Click-to-call</div>
-          <div class="del-item"><span class="del-check">▸</span> Google Maps + Social media links</div>
-          <div class="del-item"><span class="del-check">▸</span> Cookie consent + Newsletter signup</div>
-        </div>
-        <div class="deliverable-section">
-          <h4><i data-lucide="book-open" class="ico"></i> Documentation & Support</h4>
-          <div class="del-item"><span class="del-check">▸</span> Technical documentation</div>
-          <div class="del-item"><span class="del-check">▸</span> SEO best practices guide</div>
-          <div class="del-item"><span class="del-check">▸</span> Login credentials document</div>
-          <div class="del-item"><span class="del-check">▸</span> 1 month free post-launch support</div>
-        </div>
-      </div>
-
-      <!-- Optional blog offer -->
-      <div style="text-align:center;margin-top:32px;padding:24px 32px;background:var(--sky-pale);border-radius:var(--radius);border:1px solid rgba(37,99,235,.15);">
-        <p style="font-size:.9rem;font-weight:600;color:var(--blue);margin-bottom:4px;"><i data-lucide="newspaper" class="ico" style="vertical-align:-2px;"></i> &nbsp;Want a Blog / Articles Section?</p>
-        <p style="font-size:.825rem;color:var(--gray-500);">If you'd like, we can also build a blog or articles section for your website — great for SEO and customer education. This can be discussed and added separately.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- AMC -->
-  <section class="section">
-    <div class="container-sm">
-      <div class="text-center mb-48">
-        <div class="section-label"><i data-lucide="wrench" class="ico"></i> Post-Launch</div>
-        <h2 class="section-title">Annual Maintenance — &#8377;3,000/year</h2>
-        <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">Optional yearly maintenance to keep your website running smoothly. Covers routine updates and minor fixes.</p>
-      </div>
-
-      <!-- AMC Price card -->
-      <div style="background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius-lg);padding:40px;max-width:600px;margin:0 auto;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--gray-100);">
-          <div>
-            <h3 style="font-size:1.15rem;font-weight:700;color:var(--gray-900);">Annual Maintenance Contract</h3>
-            <p style="font-size:.85rem;color:var(--gray-500);margin-top:4px;">Billed yearly — optional but recommended</p>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:2rem;font-weight:800;color:var(--blue);line-height:1;"><span style="font-size:1rem;vertical-align:top;">&#8377;</span>3,000</div>
-            <span style="font-size:.75rem;color:var(--gray-400);">/year</span>
-          </div>
-        </div>
-
-        <h4 style="font-size:.8rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px;">What's Included</h4>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
-            <i data-lucide="pen-line" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Minor text & image updates
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
-            <i data-lucide="bug" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Bug fixes & patches
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
-            <i data-lucide="lock" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Security & SSL updates
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
-            <i data-lucide="hard-drive" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Backup management
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
-            <i data-lucide="monitor" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Uptime monitoring
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
-            <i data-lucide="mail" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Priority email support
-          </div>
-        </div>
-      </div>
-
-      <!-- Major changes note -->
-    </div>
-  </section>
-
-  <!-- MAJOR CHANGES -->
-  <section class="section section--gray">
-    <div class="container">
-      <div class="text-center mb-48">
-        <div class="section-label"><i data-lucide="info" class="ico"></i> Good to Know</div>
-        <h2 class="section-title">Need Changes After Launch?</h2>
-        <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">The AMC covers routine maintenance. But if you need something bigger, here's how it works.</p>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:900px;margin:0 auto;">
-        <!-- Covered -->
-        <div style="background:var(--white);border:2px solid var(--green);border-radius:var(--radius-lg);padding:36px;position:relative;overflow:hidden;">
-          <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--green);"></div>
-          <h3 style="font-size:1.05rem;font-weight:700;color:var(--green);margin-bottom:20px;display:flex;align-items:center;gap:10px;"><i data-lucide="check-circle" class="ico" style="width:20px;height:20px;"></i> Covered Under AMC</h3>
-          <div style="display:flex;flex-direction:column;gap:12px;">
-            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
-              <span style="color:var(--green);font-weight:700;">&#10003;</span> Update text, images, or contact info
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
-              <span style="color:var(--green);font-weight:700;">&#10003;</span> Fix bugs or broken functionality
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
-              <span style="color:var(--green);font-weight:700;">&#10003;</span> Security patches & SSL renewal
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
-              <span style="color:var(--green);font-weight:700;">&#10003;</span> Update gallery photos
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
-              <span style="color:var(--green);font-weight:700;">&#10003;</span> Update partner logos or testimonials
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
-              <span style="color:var(--green);font-weight:700;">&#10003;</span> Backup & uptime monitoring
-            </div>
-          </div>
-        </div>
-
-        <!-- Not covered -->
-        <div style="background:var(--white);border:2px solid var(--orange);border-radius:var(--radius-lg);padding:36px;position:relative;overflow:hidden;">
-          <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--orange);"></div>
-          <h3 style="font-size:1.05rem;font-weight:700;color:var(--orange);margin-bottom:20px;display:flex;align-items:center;gap:10px;"><i data-lucide="alert-circle" class="ico" style="width:20px;height:20px;"></i> Requires Separate Quotation</h3>
-          <div style="display:flex;flex-direction:column;gap:12px;">
-            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
-              <span style="color:var(--orange);font-weight:700;">&#8594;</span> Adding entirely new pages
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
-              <span style="color:var(--orange);font-weight:700;">&#8594;</span> Redesigning existing sections or layouts
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
-              <span style="color:var(--orange);font-weight:700;">&#8594;</span> Building new features or tools
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
-              <span style="color:var(--orange);font-weight:700;">&#8594;</span> Third-party integrations (payment gateways, etc.)
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
-              <span style="color:var(--orange);font-weight:700;">&#8594;</span> Major content restructuring
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);">
-              <span style="color:var(--orange);font-weight:700;">&#8594;</span> Platform migration or technology changes
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- How it works -->
-      <div style="max-width:900px;margin:32px auto 0;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:32px 40px;">
-        <h4 style="font-size:1rem;font-weight:700;color:var(--gray-800);margin-bottom:20px;text-align:center;">How It Works for Major Changes</h4>
-        <div style="display:flex;gap:16px;align-items:flex-start;">
-          <div style="flex:1;text-align:center;">
-            <div style="width:40px;height:40px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin:0 auto 10px;">1</div>
-            <strong style="font-size:.85rem;display:block;margin-bottom:4px;">Email Us</strong>
-            <span style="font-size:.8rem;color:var(--gray-500);">Send the details of what you need changed or added</span>
-          </div>
-          <div style="padding-top:18px;color:var(--gray-300);font-size:1.2rem;">&#8594;</div>
-          <div style="flex:1;text-align:center;">
-            <div style="width:40px;height:40px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin:0 auto 10px;">2</div>
-            <strong style="font-size:.85rem;display:block;margin-bottom:4px;">We Review</strong>
-            <span style="font-size:.8rem;color:var(--gray-500);">We assess the scope and provide a clear quotation</span>
-          </div>
-          <div style="padding-top:18px;color:var(--gray-300);font-size:1.2rem;">&#8594;</div>
-          <div style="flex:1;text-align:center;">
-            <div style="width:40px;height:40px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin:0 auto 10px;">3</div>
-            <strong style="font-size:.85rem;display:block;margin-bottom:4px;">You Approve</strong>
-            <span style="font-size:.8rem;color:var(--gray-500);">Confirm the quote and timeline that works for you</span>
-          </div>
-          <div style="padding-top:18px;color:var(--gray-300);font-size:1.2rem;">&#8594;</div>
-          <div style="flex:1;text-align:center;">
-            <div style="width:40px;height:40px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin:0 auto 10px;">4</div>
-            <strong style="font-size:.85rem;display:block;margin-bottom:4px;">We Deliver</strong>
-            <span style="font-size:.8rem;color:var(--gray-500);">Work begins and is delivered to your satisfaction</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div style="height:48px;"></div>
-
-  <div class="container">
-    <div class="page-nav">
-      <a href="features.html">← Features & Tech</a>
-      <a href="index.html">Back to Overview →</a>
-    </div>
-  </div>
-
-  <footer class="site-footer">
-    <strong>XASCOM Website Redesign Proposal</strong> · Prepared on April 9, 2026 · Confidential Document
-  </footer>
-
-<script>lucide.createIcons();</script>
+    <script>lucide.createIcons();</script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,156 +8,494 @@
   <link rel="stylesheet" href="styles.css">
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
   <style>
-    .ico { display: inline-block; width: 16px; height: 16px; vertical-align: -2px; }
-    .card-icon .ico, .feature-icon .ico, .page-icon .ico, .nav-card .icon .ico { width: 24px; height: 24px; vertical-align: middle; }
-    .audit-score-card .ico { width: 28px; height: 28px; display: block; margin: 0 auto 4px; }
-    .legal-card .ico { width: 32px; height: 32px; display: block; margin: 0 auto 4px; }
-    .step-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--blue); color: white; font-size: .8rem; font-weight: 800; }
+    .ico {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      vertical-align: -2px;
+    }
+
+    .card-icon .ico,
+    .feature-icon .ico,
+    .page-icon .ico,
+    .nav-card .icon .ico {
+      width: 24px;
+      height: 24px;
+      vertical-align: middle;
+    }
+
+    .audit-score-card .ico {
+      width: 28px;
+      height: 28px;
+      display: block;
+      margin: 0 auto 4px;
+    }
+
+    .legal-card .ico {
+      width: 32px;
+      height: 32px;
+      display: block;
+      margin: 0 auto 4px;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: white;
+      font-size: .8rem;
+      font-weight: 800;
+    }
   </style>
   <style>
-    body { background: var(--gray-50); }
+    body {
+      background: var(--gray-50);
+    }
 
     .slide {
-      max-width: 1080px; margin: 40px auto;
-      background: var(--white); border-radius: var(--radius-lg);
-      box-shadow: var(--shadow); overflow: hidden;
+      max-width: 1080px;
+      margin: 40px auto;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
     }
 
     /* cover */
     .cover-slide {
       background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, var(--navy-light) 100%);
-      color: var(--white); padding: 80px 72px; position: relative; overflow: hidden;
-      min-height: 460px; display: flex; flex-direction: column; justify-content: center;
+      color: var(--white);
+      padding: 80px 72px;
+      position: relative;
+      overflow: hidden;
+      min-height: 460px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
+
     .cover-slide::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle at 80% 20%, rgba(37,99,235,.12) 0%, transparent 50%),
-                  radial-gradient(circle at 20% 80%, rgba(245,158,11,.08) 0%, transparent 40%);
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(37, 99, 235, .12) 0%, transparent 50%),
+        radial-gradient(circle at 20% 80%, rgba(245, 158, 11, .08) 0%, transparent 40%);
     }
-    .cover-slide > * { position: relative; z-index: 1; }
+
+    .cover-slide>* {
+      position: relative;
+      z-index: 1;
+    }
+
     .cover-topline {
-      font-size: .7rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
-      color: var(--gold-light); margin-bottom: 40px;
-      display: flex; align-items: center; gap: 12px;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    .cover-topline::before { content: ''; width: 32px; height: 2px; background: var(--gold-light); }
+
+    .cover-topline::before {
+      content: '';
+      width: 32px;
+      height: 2px;
+      background: var(--gold-light);
+    }
+
     .cover-slide h1 {
-      font-family: var(--font-head); font-size: 2.8rem; font-weight: 800;
-      line-height: 1.2; margin-bottom: 16px; max-width: 640px;
+      font-family: var(--font-head);
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      max-width: 640px;
     }
+
     .cover-slide h1 span {
       display: block;
       background: linear-gradient(135deg, var(--gold-light), var(--gold));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
+
     .cover-subtitle {
-      font-size: 1rem; color: rgba(255,255,255,.55); line-height: 1.7;
-      max-width: 520px; margin-bottom: 48px;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, .55);
+      line-height: 1.7;
+      max-width: 520px;
+      margin-bottom: 48px;
     }
+
     .cover-meta {
-      display: flex; gap: 40px; flex-wrap: wrap;
-      padding-top: 32px; border-top: 1px solid rgba(255,255,255,.1); font-size: .8rem;
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, .1);
+      font-size: .8rem;
     }
-    .cover-meta dt { color: rgba(255,255,255,.35); text-transform: uppercase; letter-spacing: 1px; font-size: .65rem; font-weight: 600; margin-bottom: 4px; }
-    .cover-meta dd { color: rgba(255,255,255,.8); font-weight: 600; }
+
+    .cover-meta dt {
+      color: rgba(255, 255, 255, .35);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: .65rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .cover-meta dd {
+      color: rgba(255, 255, 255, .8);
+      font-weight: 600;
+    }
+
     @media (max-width: 768px) {
-      .cover-slide { padding: 48px 32px; min-height: auto; }
-      .cover-slide h1 { font-size: 2rem; }
+      .cover-slide {
+        padding: 48px 32px;
+        min-height: auto;
+      }
+
+      .cover-slide h1 {
+        font-size: 2rem;
+      }
     }
 
     /* slide body */
-    .slide-body { padding: 56px 72px; }
-    @media (max-width: 768px) { .slide-body { padding: 36px 28px; } }
-    .slide-label {
-      font-size: .65rem; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--blue); margin-bottom: 8px;
+    .slide-body {
+      padding: 56px 72px;
     }
+
+    @media (max-width: 768px) {
+      .slide-body {
+        padding: 36px 28px;
+      }
+    }
+
+    .slide-label {
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+
     .slide-heading {
-      font-family: var(--font-head); font-size: 1.6rem; font-weight: 700;
-      color: var(--gray-900); margin-bottom: 32px; line-height: 1.3;
+      font-family: var(--font-head);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 32px;
+      line-height: 1.3;
     }
 
     /* TOC */
-    .toc-list { list-style: none; }
-    .toc-item {
-      display: flex; align-items: center; gap: 20px;
-      padding: 20px 24px; border-bottom: 1px solid var(--gray-100);
-      transition: var(--transition); text-decoration: none; color: var(--gray-800);
-      border-radius: 10px; margin-bottom: 2px;
+    .toc-list {
+      list-style: none;
     }
-    .toc-item:last-child { border-bottom: none; }
-    .toc-item:hover { background: var(--sky-pale); }
+
+    .toc-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--gray-100);
+      transition: var(--transition);
+      text-decoration: none;
+      color: var(--gray-800);
+      border-radius: 10px;
+      margin-bottom: 2px;
+    }
+
+    .toc-item:last-child {
+      border-bottom: none;
+    }
+
+    .toc-item:hover {
+      background: var(--sky-pale);
+    }
+
     .toc-num {
-      width: 36px; height: 36px; border-radius: 10px; background: var(--gray-100);
-      display: flex; align-items: center; justify-content: center;
-      font-size: .8rem; font-weight: 800; color: var(--gray-500); flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 800;
+      color: var(--gray-500);
+      flex-shrink: 0;
       transition: var(--transition);
     }
-    .toc-item:hover .toc-num { background: var(--blue); color: var(--white); }
-    .toc-text { flex: 1; }
-    .toc-text h4 { font-size: .95rem; font-weight: 700; color: var(--gray-900); margin-bottom: 2px; }
-    .toc-text p { font-size: .8rem; color: var(--gray-500); }
-    .toc-arrow { font-size: .85rem; color: var(--gray-400); transition: var(--transition); }
-    .toc-item:hover .toc-arrow { color: var(--blue); transform: translateX(4px); }
+
+    .toc-item:hover .toc-num {
+      background: var(--blue);
+      color: var(--white);
+    }
+
+    .toc-text {
+      flex: 1;
+    }
+
+    .toc-text h4 {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 2px;
+    }
+
+    .toc-text p {
+      font-size: .8rem;
+      color: var(--gray-500);
+    }
+
+    .toc-arrow {
+      font-size: .85rem;
+      color: var(--gray-400);
+      transition: var(--transition);
+    }
+
+    .toc-item:hover .toc-arrow {
+      color: var(--blue);
+      transform: translateX(4px);
+    }
 
     /* scope bar */
     .scope-bar {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
-      background: var(--gray-200); border-radius: var(--radius); overflow: hidden; margin-bottom: 40px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--gray-200);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 40px;
     }
-    @media (max-width: 600px) { .scope-bar { grid-template-columns: repeat(2, 1fr); } }
-    .scope-item { background: var(--white); padding: 28px 24px; text-align: center; }
-    .scope-item .num { font-size: 1.8rem; font-weight: 800; color: var(--navy); line-height: 1.2; }
-    .scope-item .lbl { font-size: .7rem; color: var(--gray-500); margin-top: 4px; text-transform: uppercase; letter-spacing: .5px; font-weight: 600; }
+
+    @media (max-width: 600px) {
+      .scope-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .scope-item {
+      background: var(--white);
+      padding: 28px 24px;
+      text-align: center;
+    }
+
+    .scope-item .num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.2;
+    }
+
+    .scope-item .lbl {
+      font-size: .7rem;
+      color: var(--gray-500);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      font-weight: 600;
+    }
 
     /* snapshot */
-    .snapshot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    @media (max-width: 600px) { .snapshot-grid { grid-template-columns: 1fr; } }
-    .snapshot-col { padding: 28px; border-radius: var(--radius); }
-    .snapshot-col h4 { font-size: .85rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .snapshot-col--old { background: #fef8f8; border: 1px solid #fde2e2; }
-    .snapshot-col--new { background: #f0fdf6; border: 1px solid #bbf7d0; }
-    .snap-list { list-style: none; }
-    .snap-list li { font-size: .825rem; color: var(--gray-600); padding: 5px 0; padding-left: 20px; position: relative; }
-    .snap-list--bad li::before { content: '\00D7'; position: absolute; left: 0; color: var(--red); font-weight: 700; font-size: .75rem; }
-    .snap-list--good li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; font-size: .75rem; }
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .snapshot-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .snapshot-col {
+      padding: 28px;
+      border-radius: var(--radius);
+    }
+
+    .snapshot-col h4 {
+      font-size: .85rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .snapshot-col--old {
+      background: #fef8f8;
+      border: 1px solid #fde2e2;
+    }
+
+    .snapshot-col--new {
+      background: #f0fdf6;
+      border: 1px solid #bbf7d0;
+    }
+
+    .snap-list {
+      list-style: none;
+    }
+
+    .snap-list li {
+      font-size: .825rem;
+      color: var(--gray-600);
+      padding: 5px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .snap-list--bad li::before {
+      content: '\00D7';
+      position: absolute;
+      left: 0;
+      color: var(--red);
+      font-weight: 700;
+      font-size: .75rem;
+    }
+
+    .snap-list--good li::before {
+      content: '\2713';
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      font-weight: 700;
+      font-size: .75rem;
+    }
 
     /* profile */
-    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-    @media (max-width: 700px) { .profile-grid { grid-template-columns: 1fr; } }
-    .profile-info p { font-size: .9rem; color: var(--gray-600); line-height: 1.75; margin-bottom: 12px; }
-    .profile-details { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
-    .profile-detail { padding: 14px 20px; border-bottom: 1px solid var(--gray-100); border-right: 1px solid var(--gray-100); }
-    .profile-detail:nth-child(even) { border-right: none; }
-    .profile-detail .dt { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--gray-400); margin-bottom: 2px; }
-    .profile-detail .dd { font-size: .85rem; font-weight: 600; color: var(--gray-800); }
-
-    .partners-row { display: flex; flex-wrap: wrap; gap: 8px; }
-    .partner-tag {
-      padding: 6px 14px; border-radius: 6px; font-size: .75rem; font-weight: 600;
-      color: var(--gray-600); background: var(--gray-50); border: 1px solid var(--gray-200);
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
     }
-    .slide-divider { height: 1px; background: var(--gray-200); margin: 40px 0; }
+
+    @media (max-width: 700px) {
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .profile-info p {
+      font-size: .9rem;
+      color: var(--gray-600);
+      line-height: 1.75;
+      margin-bottom: 12px;
+    }
+
+    .profile-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .profile-detail {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--gray-100);
+      border-right: 1px solid var(--gray-100);
+    }
+
+    .profile-detail:nth-child(even) {
+      border-right: none;
+    }
+
+    .profile-detail .dt {
+      font-size: .65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--gray-400);
+      margin-bottom: 2px;
+    }
+
+    .profile-detail .dd {
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .partners-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .partner-tag {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+    }
+
+    .slide-divider {
+      height: 1px;
+      background: var(--gray-200);
+      margin: 40px 0;
+    }
 
     .slide-footer {
-      padding: 20px 72px; background: var(--gray-50); border-top: 1px solid var(--gray-200);
-      display: flex; align-items: center; justify-content: space-between;
-      font-size: .75rem; color: var(--gray-400);
+      padding: 20px 72px;
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .75rem;
+      color: var(--gray-400);
     }
-    @media (max-width: 768px) { .slide-footer { padding: 16px 28px; } }
-    .slide-footer a { font-size: .8rem; font-weight: 600; color: var(--blue); display: inline-flex; align-items: center; gap: 6px; }
 
-    .page-footer { text-align: center; padding: 32px; font-size: .75rem; color: var(--gray-400); }
+    @media (max-width: 768px) {
+      .slide-footer {
+        padding: 16px 28px;
+      }
+    }
+
+    .slide-footer a {
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--blue);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .page-footer {
+      text-align: center;
+      padding: 32px;
+      font-size: .75rem;
+      color: var(--gray-400);
+    }
   </style>
 </head>
+
 <body>
 
   <!-- NAV -->
   <nav class="topnav">
     <div class="topnav-inner">
-      <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit;"><span class="dot"></span> XASCOM Redesign Proposal</a>
+      <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit;"><span class="dot"></span>
+        XASCOM Redesign Proposal</a>
       <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
       </button>
       <ul class="topnav-links">
         <li><a href="index.html" class="active">Overview</a></li>
@@ -173,12 +512,25 @@
     <div class="cover-slide">
       <div class="cover-topline">Confidential · Proposal Document</div>
       <h1>Website Redesign<br>Proposal<br><span>XASCOM Info Solutions</span></h1>
-      <p class="cover-subtitle">A complete audit of your current website, redesign plan with 28+ pages, technology recommendations, and project roadmap — prepared for your review.</p>
+      <p class="cover-subtitle">A complete audit of your current website, redesign plan with 28+ pages, technology
+        recommendations, and project roadmap — prepared for your review.</p>
       <dl class="cover-meta">
-        <div><dt>Prepared For</dt><dd>XASCOM Info Solutions LLP</dd></div>
-        <div><dt>Date</dt><dd>April 9, 2026</dd></div>
-        <div><dt>Document</dt><dd>5 Sections · 28+ Pages Planned</dd></div>
-        <div><dt>Status</dt><dd>Awaiting Client Review</dd></div>
+        <div>
+          <dt>Prepared For</dt>
+          <dd>XASCOM Info Solutions LLP</dd>
+        </div>
+        <div>
+          <dt>Date</dt>
+          <dd>April 9, 2026</dd>
+        </div>
+        <div>
+          <dt>Document</dt>
+          <dd>5 Sections · 28+ Pages Planned</dd>
+        </div>
+        <div>
+          <dt>Status</dt>
+          <dd>Awaiting Client Review</dd>
+        </div>
       </dl>
     </div>
   </div>
@@ -237,10 +589,22 @@
       <h2 class="slide-heading">Scope at a Glance</h2>
 
       <div class="scope-bar">
-        <div class="scope-item"><div class="num">24</div><div class="lbl">Issues Found</div></div>
-        <div class="scope-item"><div class="num">28+</div><div class="lbl">Pages Planned</div></div>
-        <div class="scope-item"><div class="num">70+</div><div class="lbl">Tasks</div></div>
-        <div class="scope-item"><div class="num">9–10</div><div class="lbl">Weeks</div></div>
+        <div class="scope-item">
+          <div class="num">24</div>
+          <div class="lbl">Issues Found</div>
+        </div>
+        <div class="scope-item">
+          <div class="num">28+</div>
+          <div class="lbl">Pages Planned</div>
+        </div>
+        <div class="scope-item">
+          <div class="num">50+</div>
+          <div class="lbl">Tasks</div>
+        </div>
+        <div class="scope-item">
+          <div class="num">5–6</div>
+          <div class="lbl">Weeks</div>
+        </div>
       </div>
 
       <div class="snapshot-grid">
@@ -288,22 +652,56 @@
 
       <div class="profile-grid">
         <div class="profile-info">
-          <p>A trusted insurance advisory firm incorporated in November 2018, serving <strong>8,000+ satisfied customers</strong> with Health, Life, and General Insurance solutions through partnerships with <strong>16 leading insurance companies</strong> in India.</p>
-          <p>Based in the heart of Chennai's Pondy Bazaar, T.Nagar, XASCOM has built its reputation on three core values: <strong>Learning, Hard Work, and Persistence.</strong></p>
-          <p style="font-size:.8rem;color:var(--gray-400);margin-top:20px;">Current website: <a href="https://www.xascom.in" target="_blank" style="color:var(--blue);">www.xascom.in</a></p>
+          <p>A trusted insurance advisory firm incorporated in November 2018, serving <strong>8,000+ satisfied
+              customers</strong> with Health, Life, and General Insurance solutions through partnerships with <strong>16
+              leading insurance companies</strong> in India.</p>
+          <p>Based in the heart of Chennai's Pondy Bazaar, T.Nagar, XASCOM has built its reputation on three core
+            values: <strong>Learning, Hard Work, and Persistence.</strong></p>
+          <p style="font-size:.8rem;color:var(--gray-400);margin-top:20px;">Current website: <a
+              href="https://www.xascom.in" target="_blank" style="color:var(--blue);">www.xascom.in</a></p>
         </div>
         <div>
           <div class="profile-details">
-            <div class="profile-detail"><div class="dt">Company</div><div class="dd">XASCOM Info Solutions LLP</div></div>
-            <div class="profile-detail"><div class="dt">Industry</div><div class="dd">Insurance Advisory</div></div>
-            <div class="profile-detail"><div class="dt">Incorporated</div><div class="dd">November 2018</div></div>
-            <div class="profile-detail"><div class="dt">Location</div><div class="dd">T.Nagar, Chennai</div></div>
-            <div class="profile-detail"><div class="dt">Customers</div><div class="dd">8,000+</div></div>
-            <div class="profile-detail"><div class="dt">Partners</div><div class="dd">16 Companies</div></div>
-            <div class="profile-detail"><div class="dt">Phone</div><div class="dd">+91 72005 34372</div></div>
-            <div class="profile-detail"><div class="dt">Email</div><div class="dd">support@xascom.in</div></div>
-            <div class="profile-detail"><div class="dt">Hours</div><div class="dd">Mon-Sat, 9:30-6:00</div></div>
-            <div class="profile-detail"><div class="dt">Services</div><div class="dd">Health · Life · General</div></div>
+            <div class="profile-detail">
+              <div class="dt">Company</div>
+              <div class="dd">XASCOM Info Solutions LLP</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Industry</div>
+              <div class="dd">Insurance Advisory</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Incorporated</div>
+              <div class="dd">November 2018</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Location</div>
+              <div class="dd">T.Nagar, Chennai</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Customers</div>
+              <div class="dd">8,000+</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Partners</div>
+              <div class="dd">16 Companies</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Phone</div>
+              <div class="dd">+91 72005 34372</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Email</div>
+              <div class="dd">support@xascom.in</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Hours</div>
+              <div class="dd">Mon-Sat, 9:30-6:00</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Services</div>
+              <div class="dd">Health · Life · General</div>
+            </div>
           </div>
         </div>
       </div>
@@ -342,6 +740,7 @@
     Confidential · Prepared April 9, 2026
   </div>
 
-<script>lucide.createIcons();</script>
+  <script>lucide.createIcons();</script>
 </body>
+
 </html>
