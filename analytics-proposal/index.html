@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XASCOM — Analytics &amp; Dashboard Proposal</title>
+  <link rel="stylesheet" href="../presentation/styles.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <style>
+    body{background:var(--gray-50)}
+    .slide{max-width:1080px;margin:40px auto;background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
+    .cover-slide{background:linear-gradient(135deg,#0c1220,#132040 50%,#1a2d5a);color:var(--white);padding:80px 72px;position:relative;overflow:hidden;min-height:460px;display:flex;flex-direction:column;justify-content:center}
+    .cover-slide::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 85% 15%,rgba(16,185,129,.12),transparent 50%),radial-gradient(circle at 15% 85%,rgba(37,99,235,.1),transparent 40%)}
+    .cover-slide>*{position:relative;z-index:1}
+    .cover-topline{font-size:.7rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--green);margin-bottom:40px;display:flex;align-items:center;gap:12px}
+    .cover-topline::before{content:'';width:32px;height:2px;background:var(--green)}
+    .cover-slide h1{font-family:var(--font-head);font-size:2.8rem;font-weight:800;line-height:1.2;margin-bottom:16px;max-width:680px}
+    .cover-slide h1 span{display:block;background:linear-gradient(135deg,var(--green),#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .cover-subtitle{font-size:1rem;color:rgba(255,255,255,.55);line-height:1.7;max-width:540px;margin-bottom:48px}
+    .cover-meta{display:flex;gap:40px;flex-wrap:wrap;padding-top:32px;border-top:1px solid rgba(255,255,255,.1);font-size:.8rem}
+    .cover-meta dt{color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;font-size:.65rem;font-weight:600;margin-bottom:4px}
+    .cover-meta dd{color:rgba(255,255,255,.8);font-weight:600}
+    .slide-body{padding:56px 72px}
+    .slide-label{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+    .slide-heading{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--gray-900);margin-bottom:32px;line-height:1.3}
+    .slide-divider{height:1px;background:var(--gray-200);margin:36px 0}
+    .slide-footer{padding:20px 72px;background:var(--gray-50);border-top:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;font-size:.75rem;color:var(--gray-400)}
+    .slide-footer a{font-size:.8rem;font-weight:600;color:var(--green);display:inline-flex;align-items:center;gap:6px}
+    .page-footer{text-align:center;padding:32px;font-size:.75rem;color:var(--gray-400)}
+    .toc-list{list-style:none}
+    .toc-item{display:flex;align-items:center;gap:20px;padding:20px 24px;border-bottom:1px solid var(--gray-100);transition:var(--transition);text-decoration:none;color:var(--gray-800);border-radius:10px;margin-bottom:2px}
+    .toc-item:last-child{border-bottom:none}
+    .toc-item:hover{background:#ecfdf5}
+    .toc-num{width:36px;height:36px;border-radius:10px;background:var(--gray-100);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:var(--gray-500);flex-shrink:0;transition:var(--transition)}
+    .toc-item:hover .toc-num{background:var(--green);color:var(--white)}
+    .toc-text{flex:1}
+    .toc-text h4{font-size:.95rem;font-weight:700;color:var(--gray-900);margin-bottom:2px}
+    .toc-text p{font-size:.8rem;color:var(--gray-500)}
+    .toc-arrow{font-size:.85rem;color:var(--gray-400);transition:var(--transition);flex-shrink:0;margin-left:auto}
+    .toc-item:hover .toc-arrow{color:var(--green);transform:translateX(4px)}
+    .scope-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--gray-200);border-radius:var(--radius);overflow:hidden;margin-bottom:40px}
+    .scope-item{background:var(--white);padding:28px 24px;text-align:center}
+    .scope-item .num{font-size:1.8rem;font-weight:800;color:var(--navy);line-height:1.2}
+    .scope-item .lbl{font-size:.7rem;color:var(--gray-500);margin-top:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+    .snapshot-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .snapshot-col{padding:28px;border-radius:var(--radius)}
+    .snapshot-col h4{font-size:.85rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .snapshot-col--old{background:#fef8f8;border:1px solid #fde2e2}
+    .snapshot-col--new{background:#f0fdf6;border:1px solid #bbf7d0}
+    .snap-list{list-style:none}
+    .snap-list li{font-size:.825rem;color:var(--gray-600);padding:5px 0;padding-left:20px;position:relative}
+    .snap-list--bad li::before{content:'\00D7';position:absolute;left:0;color:var(--red);font-weight:700}
+    .snap-list--good li::before{content:'\2713';position:absolute;left:0;color:var(--green);font-weight:700}
+    .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+    .profile-info{font-size:.9rem;color:var(--gray-600);line-height:1.7}
+    .profile-info p{margin-bottom:16px}
+    .profile-details{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--gray-200);border-radius:var(--radius);overflow:hidden}
+    .profile-detail{padding:12px 16px;border-bottom:1px solid var(--gray-100);font-size:.85rem}
+    .profile-detail:nth-last-child(-n+2){border-bottom:none}
+    .profile-detail .dt{font-size:.65rem;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+    .profile-detail .dd{font-weight:600;color:var(--gray-800)}
+    .partners-row{display:flex;flex-wrap:wrap;gap:8px}
+    .partner-tag{padding:6px 14px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:6px;font-size:.78rem;font-weight:600;color:var(--gray-600)}
+    /* tablet landscape */
+    @media(max-width:1024px){
+      .slide-body{padding:48px 48px}
+      .cover-slide{padding:64px 48px}
+      .profile-grid{gap:28px}
+    }
+    /* tablet portrait */
+    @media(max-width:768px){
+      .cover-slide{padding:48px 28px;min-height:auto}
+      .cover-slide h1{font-size:2rem}
+      .slide-body{padding:36px 28px}
+      .slide-footer{padding:16px 28px}
+      .scope-bar{grid-template-columns:repeat(2,1fr)}
+      .snapshot-grid{grid-template-columns:1fr}
+      .profile-grid{grid-template-columns:1fr}
+      .profile-details{grid-template-columns:1fr 1fr}
+      .cover-meta{gap:24px}
+      .toc-item{padding:16px 16px}
+    }
+    /* mobile */
+    @media(max-width:480px){
+      .cover-slide{padding:36px 20px}
+      .cover-slide h1{font-size:1.6rem}
+      .cover-subtitle{font-size:.88rem}
+      .cover-meta{flex-direction:column;gap:16px}
+      .slide-body{padding:28px 20px}
+      .slide-footer{padding:14px 20px;flex-direction:column;gap:8px;text-align:center}
+      .slide-heading{font-size:1.3rem}
+      .scope-bar{grid-template-columns:1fr 1fr}
+      .scope-item{padding:20px 16px}
+      .scope-item .num{font-size:1.4rem}
+      .toc-item{padding:14px 12px;gap:12px}
+      .toc-num{width:30px;height:30px;font-size:.7rem}
+      .profile-details{grid-template-columns:1fr}
+      .partners-row{gap:6px}
+      .partner-tag{padding:5px 10px;font-size:.7rem}
+    }
+  </style>
+</head>
+<body>
+  <nav class="topnav"><div class="topnav-inner">
+    <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit"><span class="dot" style="background:var(--green)"></span> XASCOM Analytics Proposal</a>
+    <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <ul class="topnav-links">
+      <li><a href="index.html" class="active">Overview</a></li>
+      <li><a href="problem.html">Problem</a></li>
+      <li><a href="solution.html">Solution</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="timeline.html">Timeline</a></li>
+    </ul>
+  </div></nav>
+
+  <!-- COVER -->
+  <div class="slide">
+    <div class="cover-slide">
+      <div class="cover-topline">Confidential &middot; Project 2</div>
+      <h1>Analytics &amp;<br>Dashboard<br><span>XASCOM Info Solutions</span></h1>
+      <p class="cover-subtitle">Upload your carrier data, track every policy across all 16 partners, and visualize your entire business through real-time analytics.</p>
+      <dl class="cover-meta">
+        <div><dt>Client</dt><dd>XASCOM Info Solutions LLP</dd></div>
+        <div><dt>Date</dt><dd>April 10, 2026</dd></div>
+        <div><dt>Scope</dt><dd>4 Modules &middot; 92 Hours</dd></div>
+        <div><dt>Status</dt><dd>Awaiting Review</dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Contents</div>
+      <h2 class="slide-heading">Proposal Sections</h2>
+      <nav class="toc-list">
+        <a href="problem.html" class="toc-item">
+          <span class="toc-num">01</span>
+          <div class="toc-text"><h4>Problem Analysis</h4><p>Current workflow audit &middot; Sheet forensics &middot; 12 issues identified</p></div>
+          <span class="toc-arrow">&rarr;</span>
+        </a>
+        <a href="solution.html" class="toc-item">
+          <span class="toc-num">02</span>
+          <div class="toc-text"><h4>Proposed Solution</h4><p>Data upload &middot; Policy table &middot; Analytics dashboard &middot; Reports</p></div>
+          <span class="toc-arrow">&rarr;</span>
+        </a>
+        <a href="architecture.html" class="toc-item">
+          <span class="toc-num">03</span>
+          <div class="toc-text"><h4>Architecture &amp; Technology</h4><p>Tech stack &middot; Database schema &middot; Security &middot; Build vs Buy</p></div>
+          <span class="toc-arrow">&rarr;</span>
+        </a>
+        <a href="timeline.html" class="toc-item">
+          <span class="toc-num">04</span>
+          <div class="toc-text"><h4>Timeline &amp; Investment</h4><p>5-week schedule &middot; 4-module breakdown &middot; 50/50 payment plan</p></div>
+          <span class="toc-arrow">&rarr;</span>
+        </a>
+      </nav>
+    </div>
+    <div class="slide-footer"><span>Slide 2</span><a href="problem.html">Problem Analysis &rarr;</a></div>
+  </div>
+
+  <!-- SCOPE -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Scope</div>
+      <h2 class="slide-heading">Project Overview</h2>
+      <div class="scope-bar">
+        <div class="scope-item"><div class="num">192+</div><div class="lbl">Sheets / Year</div></div>
+        <div class="scope-item"><div class="num">8,000+</div><div class="lbl">Policies</div></div>
+        <div class="scope-item"><div class="num">16</div><div class="lbl">Carriers</div></div>
+        <div class="scope-item"><div class="num">4</div><div class="lbl">Modules</div></div>
+      </div>
+      <div class="snapshot-grid">
+        <div class="snapshot-col snapshot-col--old">
+          <h4><span style="color:var(--red)">&bull;</span> Current State</h4>
+          <ul class="snap-list snap-list--bad">
+            <li>192 separate Google Sheet tabs per year</li>
+            <li>No unified view across all 16 carriers</li>
+            <li>Manual file reformatting every month</li>
+            <li>Zero analytics or dashboards</li>
+            <li>No carrier or product performance tracking</li>
+            <li>No premium trend visibility</li>
+            <li>Manual report compilation</li>
+            <li>No renewal pipeline view</li>
+          </ul>
+        </div>
+        <div class="snapshot-col snapshot-col--new">
+          <h4><span style="color:var(--green)">&bull;</span> Proposed System</h4>
+          <ul class="snap-list snap-list--good">
+            <li>Upload files or enter data manually</li>
+            <li>Unified dashboard across all 16 carriers</li>
+            <li>One-click carrier template mapping</li>
+            <li>Real-time KPI cards and charts</li>
+            <li>Carrier breakdown &amp; product mix analytics</li>
+            <li>Premium trend &amp; growth analysis</li>
+            <li>One-click MIS report export</li>
+            <li>30/60/90 day renewal pipeline</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Slide 3</span><a href="problem.html">Problem Analysis &rarr;</a></div>
+  </div>
+
+  <!-- CLIENT PROFILE -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Client Profile</div>
+      <h2 class="slide-heading">XASCOM Info Solutions LLP</h2>
+
+      <div class="profile-grid">
+        <div class="profile-info">
+          <p>A trusted insurance advisory firm incorporated in November 2018, serving <strong>8,000+ satisfied customers</strong> with Health, Life, and General Insurance solutions through partnerships with <strong>16 leading insurance companies</strong> in India.</p>
+          <p>Based in the heart of Chennai's Pondy Bazaar, T.Nagar, XASCOM has built its reputation on three core values: <strong>Learning, Hard Work, and Persistence.</strong></p>
+          <p style="font-size:.8rem;color:var(--gray-400);margin-top:20px;">Current website: <a href="https://www.xascom.in" target="_blank" rel="noopener" style="color:var(--green);">www.xascom.in</a></p>
+        </div>
+        <div>
+          <div class="profile-details">
+            <div class="profile-detail">
+              <div class="dt">Company</div>
+              <div class="dd">XASCOM Info Solutions LLP</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Industry</div>
+              <div class="dd">Insurance Advisory</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Incorporated</div>
+              <div class="dd">November 2018</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Location</div>
+              <div class="dd">T.Nagar, Chennai</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Customers</div>
+              <div class="dd">8,000+</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Partners</div>
+              <div class="dd">16 Companies</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Phone</div>
+              <div class="dd">+91 72005 34372</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Email</div>
+              <div class="dd">support@xascom.in</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Hours</div>
+              <div class="dd">Mon-Sat, 9:30-6:00</div>
+            </div>
+            <div class="profile-detail">
+              <div class="dt">Services</div>
+              <div class="dd">Health &middot; Life &middot; General</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-divider"></div>
+
+      <div class="slide-label">Insurance Partners</div>
+      <div style="margin-top:12px;" class="partners-row">
+        <span class="partner-tag">Star Health</span>
+        <span class="partner-tag">Care Insurance</span>
+        <span class="partner-tag">Chola MS</span>
+        <span class="partner-tag">Tata AIG</span>
+        <span class="partner-tag">Tata AIA</span>
+        <span class="partner-tag">LIC of India</span>
+        <span class="partner-tag">New India Assurance</span>
+        <span class="partner-tag">United India Insurance</span>
+        <span class="partner-tag">Royal Sundaram</span>
+        <span class="partner-tag">Kotak Life</span>
+        <span class="partner-tag">HDFC Ergo</span>
+        <span class="partner-tag">ICICI Lombard</span>
+        <span class="partner-tag">Max Life</span>
+        <span class="partner-tag">SBI General</span>
+        <span class="partner-tag">HDFC Life</span>
+        <span class="partner-tag">SBI Life</span>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Slide 4</span><a href="problem.html">Next: Problem Analysis &rarr;</a></div>
+  </div>
+
+  <div class="page-footer">
+    <strong style="color:var(--gray-500);">XASCOM Analytics &amp; Dashboard Proposal</strong><br>
+    Confidential &middot; Prepared April 10, 2026
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

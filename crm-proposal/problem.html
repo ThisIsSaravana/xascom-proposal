@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Problem Analysis — XASCOM CRM Proposal</title>
+  <link rel="stylesheet" href="../presentation/styles.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <style>
+    .ico{display:inline-block;width:16px;height:16px;vertical-align:-2px}
+    .card-icon .ico{width:24px;height:24px;vertical-align:middle}
+    body{background:var(--gray-50)}
+    .slide{max-width:1080px;margin:40px auto;background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
+    .slide-body{padding:56px 72px}
+    .slide-label{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+    .slide-heading{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--gray-900);margin-bottom:32px;line-height:1.3}
+    .slide-divider{height:1px;background:var(--gray-200);margin:36px 0}
+    .slide-footer{padding:20px 72px;background:var(--gray-50);border-top:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;font-size:.75rem;color:var(--gray-400)}
+    .slide-footer a{font-size:.8rem;font-weight:600;color:var(--green);display:inline-flex;align-items:center;gap:6px}
+    .page-footer{text-align:center;padding:32px;font-size:.75rem;color:var(--gray-400)}
+
+    /* workflow */
+    .wf-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;margin:24px 0}
+    .wf-step{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:12px 16px;text-align:center;min-width:120px;font-size:.78rem;font-weight:600;color:var(--gray-700)}
+    .wf-step--bad{border-color:#fecaca;background:#fef8f8;color:var(--red)}
+    .wf-arrow{color:var(--gray-300);font-size:1rem}
+
+    /* feedback */
+    .fb-box{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px 20px;margin-bottom:10px}
+    .fb-cell{font-family:'Courier New',monospace;font-size:.78rem;color:var(--red);font-weight:600;padding:8px 12px;background:#fef8f8;border:1px dashed #fecaca;border-radius:6px;margin-bottom:8px;word-break:break-all}
+    .fb-tags{display:flex;flex-wrap:wrap;gap:6px}
+    .fb-tag{padding:3px 8px;border-radius:5px;font-size:.65rem;font-weight:600}
+    .fb-tag--d{background:#dbeafe;color:#1d4ed8}
+    .fb-tag--r{background:#fef3c7;color:#92400e}
+    .fb-tag--t{background:#e0e7ff;color:#3730a3}
+    .fb-tag--n{background:#f3e8ff;color:#6b21a8}
+
+    /* issue list */
+    .issue-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-50);font-size:.825rem}
+    .issue-item:last-child{border-bottom:none}
+    .issue-n{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;flex-shrink:0}
+    .issue-n--c{background:#fef2f2;color:#dc2626}
+    .issue-n--h{background:#fff7ed;color:#ea580c}
+    .issue-n--m{background:#fefce8;color:#ca8a04}
+    .issue-item strong{color:var(--gray-800);font-weight:600}
+    .issue-item span{color:var(--gray-500)}
+
+    @media(max-width:768px){.slide-body{padding:36px 28px}.slide-footer{padding:16px 28px}}
+  </style>
+</head>
+<body>
+  <nav class="topnav"><div class="topnav-inner">
+    <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit"><span class="dot" style="background:var(--green)"></span> XASCOM CRM Proposal</a>
+    <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <ul class="topnav-links">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="problem.html" class="active">Problem</a></li>
+      <li><a href="solution.html">Solution</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="timeline.html">Timeline</a></li>
+    </ul>
+  </div></nav>
+
+  <section class="hero page-hero">
+    <div class="hero-badge">Section 01</div>
+    <h1>Problem Analysis</h1>
+    <p>Current workflow audit and identified operational gaps.</p>
+  </section>
+
+  <!-- CURRENT WORKFLOW -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Current Workflow</div>
+      <h2 class="slide-heading">Renewal Operations Flow</h2>
+      <div class="wf-row">
+        <div class="wf-step">Carrier Sends File</div>
+        <span class="wf-arrow">&rarr;</span>
+        <div class="wf-step wf-step--bad">Manual Reformat</div>
+        <span class="wf-arrow">&rarr;</span>
+        <div class="wf-step wf-step--bad">Paste into Sheet</div>
+        <span class="wf-arrow">&rarr;</span>
+        <div class="wf-step wf-step--bad">Verbal Assignment</div>
+        <span class="wf-arrow">&rarr;</span>
+        <div class="wf-step wf-step--bad">Free-text Logging</div>
+        <span class="wf-arrow">&rarr;</span>
+        <div class="wf-step wf-step--bad">Manual Review</div>
+      </div>
+      <div class="highlight-box" style="border-left-color:var(--red)">
+        <p><strong>Scale:</strong> 16 carriers &times; 12 months = ~192 separate sheet tabs/year. Each tab contains 50&ndash;200+ rows with no central view across carriers.</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Problem &middot; Slide 1</span><span></span></div>
+  </div>
+
+  <!-- SHEET STRUCTURE -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Data Forensics</div>
+      <h2 class="slide-heading">Sheet Structure &mdash; &ldquo;FEB&rsquo;24 RENEWAL BASE&rdquo;</h2>
+      <div class="table-wrap">
+        <table style="font-size:.8rem">
+          <thead>
+            <tr><th>Column</th><th>Field</th><th>Example</th><th>Issue</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>B</td><td>Policy No</td><td>11220015036402</td><td>&mdash;</td></tr>
+            <tr><td>E</td><td>Company</td><td>STAR</td><td>&mdash;</td></tr>
+            <tr><td>F</td><td>Fresh/Renewal</td><td>RENEWAL</td><td>No separate workflows</td></tr>
+            <tr><td>J</td><td>Customer Name</td><td>S MUTHU KUMARAN</td><td>&mdash;</td></tr>
+            <tr><td>K</td><td>Mobile</td><td>70107114xx</td><td>No dedup across carriers</td></tr>
+            <tr><td>L&ndash;M</td><td>New Gross / Gross Premium</td><td>42,090 / 42,090</td><td>Change not calculated</td></tr>
+            <tr><td>N</td><td>Product</td><td>COMP, FHO, Young Star</td><td>Inconsistent naming</td></tr>
+            <tr><td>P</td><td>Sum Insured</td><td>&#8377;3L &ndash; &#8377;5Cr</td><td>&mdash;</td></tr>
+            <tr><td>S</td><td>Assigned</td><td><em>(mostly empty)</em></td><td>Verbal assignment</td></tr>
+            <tr style="background:#fef2f2"><td><strong>U</strong></td><td><strong>Status</strong></td><td><strong>CALL BACK, RNR, CLAIM ISSUE</strong></td><td><strong>Mixes outcomes, dispositions &amp; reasons</strong></td></tr>
+            <tr style="background:#fef2f2"><td><strong>V</strong></td><td><strong>Feroz Feedback</strong></td><td><strong>MONEY ISSUES/CALL BACK @3CLK</strong></td><td><strong>Unstructured, overwrites history</strong></td></tr>
+            <tr style="background:#fef2f2"><td><strong>W</strong></td><td><strong>Priya Feedback</strong></td><td><strong>RENEWED, EMPLOYEE EXIT</strong></td><td><strong>Same issues as above</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Problem &middot; Slide 2</span><span></span></div>
+  </div>
+
+  <!-- FEEDBACK EXAMPLES -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Core Issue</div>
+      <h2 class="slide-heading">Feedback Cell Examples (Actual Data)</h2>
+
+      <div class="fb-box">
+        <div class="fb-cell">MONEY ISSUES/NEED SOMETIME/24/02/2024 CALL BACK @3CLK /CALL BACK AFTER SOMETIME MONEY ISSUES</div>
+        <div class="fb-tags">
+          <span class="fb-tag fb-tag--d">Disposition: Answered</span>
+          <span class="fb-tag fb-tag--r">Reason: Money Issues</span>
+          <span class="fb-tag fb-tag--t">Callback: 24/02/24 3PM</span>
+          <span class="fb-tag fb-tag--n">Note: Needs time</span>
+        </div>
+      </div>
+      <div class="fb-box">
+        <div class="fb-cell">CLAIM ISSUES/NEED FEEDBACK AFTER THAT WILL RENEW THE POLICY</div>
+        <div class="fb-tags">
+          <span class="fb-tag fb-tag--d">Disposition: Answered</span>
+          <span class="fb-tag fb-tag--r">Reason: Claim Issue</span>
+          <span class="fb-tag fb-tag--n">Intent: Conditional renewal</span>
+        </div>
+      </div>
+      <div class="fb-box">
+        <div class="fb-cell">RNR/NOT INTEREST TO PAY/DONT TELL ANY REASON</div>
+        <div class="fb-tags">
+          <span class="fb-tag fb-tag--d">Attempt 1: RNR</span>
+          <span class="fb-tag fb-tag--d">Attempt 2: Not Interested</span>
+          <span class="fb-tag fb-tag--r">Reason: Undisclosed</span>
+        </div>
+      </div>
+      <div class="fb-box">
+        <div class="fb-cell">NO:391/3A,VASANTHAN NAGAR,PERIYAR NAGAR SOUTH,VIRUDHACHALAM,606001</div>
+        <div class="fb-tags">
+          <span class="fb-tag" style="background:#fce7f3;color:#9d174d">Full postal address in feedback cell</span>
+        </div>
+      </div>
+
+      <div class="slide-divider"></div>
+
+      <div class="compare-grid">
+        <div class="compare-card compare-card--old">
+          <h3 style="color:var(--red);font-size:.9rem">Current: Single Cell</h3>
+          <div class="fb-cell" style="margin:12px 0 0;font-size:.7rem">MONEY ISSUES/CALL BACK @3CLK</div>
+        </div>
+        <div class="compare-card compare-card--new">
+          <h3 style="color:var(--green);font-size:.9rem">Required: Structured Fields</h3>
+          <table style="width:100%;font-size:.78rem;border-collapse:collapse;margin-top:12px">
+            <tr><td style="padding:4px 0;color:var(--gray-500)">Call Outcome</td><td style="padding:4px 0;font-weight:600"><span class="badge badge--blue">Answered</span></td></tr>
+            <tr><td style="padding:4px 0;color:var(--gray-500)">Intent</td><td style="padding:4px 0;font-weight:600"><span class="badge badge--medium">Will Call Back</span></td></tr>
+            <tr><td style="padding:4px 0;color:var(--gray-500)">Reason</td><td style="padding:4px 0;font-weight:600"><span class="badge badge--high">Money Issues</span></td></tr>
+            <tr><td style="padding:4px 0;color:var(--gray-500)">Callback</td><td style="padding:4px 0;font-weight:600">24 Feb 2024, 3:00 PM</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Problem &middot; Slide 3</span><span></span></div>
+  </div>
+
+  <!-- 24 ISSUES -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Issues Identified</div>
+      <h2 class="slide-heading">24 Operational Gaps</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 40px">
+        <div>
+          <div class="issue-item"><span class="issue-n issue-n--c">1</span><div><strong>Call history destroyed</strong> &mdash; <span>overwritten on each attempt</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--c">2</span><div><strong>Unstructured feedback</strong> &mdash; <span>dates, reasons, notes in one cell</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--c">3</span><div><strong>No callback reminders</strong> &mdash; <span>text-only, no alerts triggered</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--c">4</span><div><strong>192 scattered sheets</strong> &mdash; <span>no cross-carrier visibility</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--c">5</span><div><strong>No grace period flags</strong> &mdash; <span>15-30 day window unmarked</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--c">6</span><div><strong>Manual file reformatting</strong> &mdash; <span>each carrier, every month</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--h">7</span><div><strong>No agent performance data</strong> &mdash; <span>renewal rates unknown</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--h">8</span><div><strong>Premium change invisible</strong> &mdash; <span>agents unaware of hikes</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--h">9</span><div><strong>Verbal-only assignment</strong> &mdash; <span>column S mostly empty</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--h">10</span><div><strong>No commission tracking</strong> &mdash; <span>per-carrier rates not applied</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--h">11</span><div><strong>No call targets</strong> &mdash; <span>daily quotas undefined</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--h">12</span><div><strong>No SLA/aging alerts</strong> &mdash; <span>stale leads undetected</span></div></div>
+        </div>
+        <div>
+          <div class="issue-item"><span class="issue-n issue-n--h">13</span><div><strong>No lost revenue analysis</strong> &mdash; <span>leakage unquantified</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--h">14</span><div><strong>No customer dedup</strong> &mdash; <span>same person across carriers</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--h">15</span><div><strong>No export / MIS</strong> &mdash; <span>manual report compilation</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--h">16</span><div><strong>Fresh &amp; Renewal mixed</strong> &mdash; <span>no workflow separation</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--m">17</span><div><strong>No value prioritization</strong> &mdash; <span>&#8377;42K = &#8377;900 visually</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--m">18</span><div><strong>No calendar view</strong> &mdash; <span>callbacks in list only</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--m">19</span><div><strong>Duplicate phone numbers</strong> &mdash; <span>same person called multiple times</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--m">20</span><div><strong>No pre-call warming</strong> &mdash; <span>no SMS/WhatsApp before calling</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--m">21</span><div><strong>No claim escalation</strong> &mdash; <span>claim objections unrouted</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--m">22</span><div><strong>No policy chaining</strong> &mdash; <span>old &rarr; new link missing</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--m">23</span><div><strong>No data archival</strong> &mdash; <span>completed cycles accumulate</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--m">24</span><div><strong>Cannot scale past 2 agents</strong> &mdash; <span>new agent = new column</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Problem &middot; Slide 4</span><a href="solution.html">Proposed Solution &rarr;</a></div>
+  </div>
+
+  <div class="container" style="max-width:1080px">
+    <div class="page-nav">
+      <a href="index.html">&larr; Overview</a>
+      <a href="solution.html">Solution &rarr;</a>
+    </div>
+  </div>
+  <p class="page-footer">XASCOM CRM &amp; Analytics Dashboard &middot; Confidential &middot; April 2026</p>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

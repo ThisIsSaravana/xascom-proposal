@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proposed Solution — XASCOM CRM Proposal</title>
+  <link rel="stylesheet" href="../presentation/styles.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <style>
+    body{background:var(--gray-50)}
+    .slide{max-width:1080px;margin:40px auto;background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
+    .slide-body{padding:56px 72px}
+    .slide-label{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+    .slide-heading{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--gray-900);margin-bottom:32px;line-height:1.3}
+    .slide-divider{height:1px;background:var(--gray-200);margin:36px 0}
+    .slide-footer{padding:20px 72px;background:var(--gray-50);border-top:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;font-size:.75rem;color:var(--gray-400)}
+    .slide-footer a{font-size:.8rem;font-weight:600;color:var(--green);display:inline-flex;align-items:center;gap:6px}
+    .page-footer{text-align:center;padding:32px;font-size:.75rem;color:var(--gray-400)}
+
+    /* module cards */
+    .mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .mod-card{border:1px solid var(--gray-200);border-radius:12px;padding:28px;position:relative;overflow:hidden}
+    .mod-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+    .mod-card--blue::before{background:#3b82f6}
+    .mod-card--green::before{background:var(--green)}
+    .mod-card--gold::before{background:var(--gold)}
+    .mod-card--purple::before{background:#8b5cf6}
+    .mod-title{font-size:1rem;font-weight:700;color:var(--gray-900);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+    .mod-title i{width:20px;height:20px}
+    .mod-list{list-style:none;padding:0;margin:0}
+    .mod-list li{padding:6px 0;font-size:.82rem;color:var(--gray-600);display:flex;align-items:flex-start;gap:8px}
+    .mod-list li::before{content:'→';color:var(--gray-300);font-weight:600;flex-shrink:0}
+
+    /* taxonomy */
+    .tax-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .tax-col{background:var(--gray-50);border-radius:10px;padding:16px}
+    .tax-col h4{font-size:.78rem;font-weight:700;color:var(--gray-700);margin-bottom:10px;text-align:center}
+    .tax-opt{padding:4px 10px;margin:3px 0;border-radius:5px;font-size:.72rem;font-weight:600;text-align:center}
+    .tax-opt--b{background:#dbeafe;color:#1d4ed8}
+    .tax-opt--g{background:#dcfce7;color:#16a34a}
+    .tax-opt--y{background:#fef3c7;color:#92400e}
+    .tax-opt--r{background:#fef2f2;color:#dc2626}
+    .tax-opt--p{background:#f3e8ff;color:#6b21a8}
+
+    /* findings */
+    .fi-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--gray-50);font-size:.8rem}
+    .fi-row:last-child{border-bottom:none}
+    .fi-n{width:22px;height:22px;border-radius:50%;background:var(--green);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0}
+    .fi-text{color:var(--gray-600)}
+    .fi-text strong{color:var(--gray-800)}
+
+    @media(max-width:768px){.slide-body{padding:36px 28px}.mod-grid,.tax-grid{grid-template-columns:1fr}.slide-footer{padding:16px 28px}}
+  </style>
+</head>
+<body>
+  <nav class="topnav"><div class="topnav-inner">
+    <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit"><span class="dot" style="background:var(--green)"></span> XASCOM CRM Proposal</a>
+    <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <ul class="topnav-links">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="problem.html">Problem</a></li>
+      <li><a href="solution.html" class="active">Solution</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="timeline.html">Timeline</a></li>
+    </ul>
+  </div></nav>
+
+  <section class="hero page-hero">
+    <div class="hero-badge">Section 02</div>
+    <h1>Proposed Solution</h1>
+    <p>Four integrated modules addressing all 24 operational gaps.</p>
+  </section>
+
+  <!-- MODULE OVERVIEW -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">System Design</div>
+      <h2 class="slide-heading">Four Core Modules</h2>
+      <div class="mod-grid">
+        <div class="mod-card mod-card--blue">
+          <div class="mod-title"><i data-lucide="upload-cloud"></i> M1 &mdash; Data Pipeline</div>
+          <ul class="mod-list">
+            <li>Upload carrier Excel/CSV in any format</li>
+            <li>Auto-detect column mapping per carrier</li>
+            <li>Save mapping templates for reuse</li>
+            <li>Normalize product names &amp; phone numbers</li>
+            <li>Match/merge duplicate customers across carriers</li>
+            <li>Flag premium changes (old vs new)</li>
+            <li>Compute days-to-expiry &amp; grace period</li>
+          </ul>
+        </div>
+        <div class="mod-card mod-card--green">
+          <div class="mod-title"><i data-lucide="headphones"></i> M2 &mdash; Agent CRM</div>
+          <ul class="mod-list">
+            <li>Auto-assign policies by round-robin / rules</li>
+            <li>Click-to-call with structured disposition form</li>
+            <li>4 mandatory fields per call log (see taxonomy below)</li>
+            <li>Callback scheduling with calendar + reminders</li>
+            <li>Full call history timeline per customer</li>
+            <li>Policy card: premium, product, SI, expiry, carrier</li>
+            <li>Daily task queue with priority sorting</li>
+          </ul>
+        </div>
+        <div class="mod-card mod-card--gold">
+          <div class="mod-title"><i data-lucide="bar-chart-3"></i> M3 &mdash; Analytics Dashboard</div>
+          <ul class="mod-list">
+            <li>Real-time renewal rate by carrier, product, agent</li>
+            <li>Pipeline funnel: Pending &rarr; In Progress &rarr; Renewed / Lost</li>
+            <li>Premium volume &amp; commission estimates</li>
+            <li>Agent leaderboard &amp; daily call targets</li>
+            <li>Aging analysis: stale leads flagged</li>
+            <li>Loss reason breakdown (top 5 reasons)</li>
+            <li>Exportable MIS reports (CSV)</li>
+          </ul>
+        </div>
+        <div class="mod-card mod-card--purple">
+          <div class="mod-title"><i data-lucide="message-circle"></i> M4 &mdash; Communication</div>
+          <ul class="mod-list">
+            <li>Pre-call SMS/WhatsApp reminder (bulk or single)</li>
+            <li>Renewal due notification to customer</li>
+            <li>Expiry alert escalation to manager</li>
+            <li>Template library for common messages</li>
+            <li>Delivery status tracking</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Solution &middot; Slide 1</span><span></span></div>
+  </div>
+
+  <!-- DISPOSITION TAXONOMY -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Data Model</div>
+      <h2 class="slide-heading">Structured Disposition Taxonomy</h2>
+      <div class="tax-grid">
+        <div class="tax-col">
+          <h4>Call Outcome</h4>
+          <div class="tax-opt tax-opt--b">Answered</div>
+          <div class="tax-opt tax-opt--y">RNR</div>
+          <div class="tax-opt tax-opt--r">Wrong Number</div>
+          <div class="tax-opt tax-opt--r">Switched Off</div>
+          <div class="tax-opt tax-opt--y">Busy</div>
+        </div>
+        <div class="tax-col">
+          <h4>Customer Intent</h4>
+          <div class="tax-opt tax-opt--g">Will Renew</div>
+          <div class="tax-opt tax-opt--b">Call Back Later</div>
+          <div class="tax-opt tax-opt--y">Thinking / Undecided</div>
+          <div class="tax-opt tax-opt--r">Not Interested</div>
+          <div class="tax-opt tax-opt--p">Already Renewed Elsewhere</div>
+        </div>
+        <div class="tax-col">
+          <h4>Loss Reason</h4>
+          <div class="tax-opt tax-opt--y">Money Issues</div>
+          <div class="tax-opt tax-opt--y">Premium Too High</div>
+          <div class="tax-opt tax-opt--r">Claim Dispute</div>
+          <div class="tax-opt tax-opt--r">Better Offer Elsewhere</div>
+          <div class="tax-opt tax-opt--p">No Reason Given</div>
+        </div>
+        <div class="tax-col">
+          <h4>Callback Date</h4>
+          <div class="tax-opt tax-opt--b">Date Picker</div>
+          <div class="tax-opt tax-opt--b">Time Picker</div>
+          <div class="tax-opt" style="background:#e5e7eb;color:var(--gray-600)">Auto-added to task queue</div>
+          <div class="tax-opt" style="background:#e5e7eb;color:var(--gray-600)">Reminder notification</div>
+        </div>
+      </div>
+      <div class="highlight-box" style="margin-top:24px;border-left-color:var(--green)">
+        <strong>Result:</strong> Every call produces structured, filterable data instead of overwritten free-text. Full audit trail preserved.
+      </div>
+    </div>
+    <div class="slide-footer"><span>Solution &middot; Slide 2</span><span></span></div>
+  </div>
+
+  <!-- 25 IMPROVEMENTS -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Gap Resolution</div>
+      <h2 class="slide-heading">25 Improvements Over Current Workflow</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 40px">
+        <div>
+          <div class="fi-row"><span class="fi-n">1</span><div class="fi-text"><strong>Structured call logging</strong> replaces free-text</div></div>
+          <div class="fi-row"><span class="fi-n">2</span><div class="fi-text"><strong>Full call history</strong> preserved per customer</div></div>
+          <div class="fi-row"><span class="fi-n">3</span><div class="fi-text"><strong>Automated callback</strong> reminders with notifications</div></div>
+          <div class="fi-row"><span class="fi-n">4</span><div class="fi-text"><strong>Unified view</strong> across all 16 carriers</div></div>
+          <div class="fi-row"><span class="fi-n">5</span><div class="fi-text"><strong>Grace period</strong> countdown &amp; color flags</div></div>
+          <div class="fi-row"><span class="fi-n">6</span><div class="fi-text"><strong>One-click file import</strong> with saved templates</div></div>
+          <div class="fi-row"><span class="fi-n">7</span><div class="fi-text"><strong>Agent performance</strong> metrics &amp; leaderboard</div></div>
+          <div class="fi-row"><span class="fi-n">8</span><div class="fi-text"><strong>Premium change</strong> alerts (old vs new)</div></div>
+          <div class="fi-row"><span class="fi-n">9</span><div class="fi-text"><strong>Rule-based assignment</strong> with audit log</div></div>
+          <div class="fi-row"><span class="fi-n">10</span><div class="fi-text"><strong>Commission tracking</strong> per carrier/product</div></div>
+          <div class="fi-row"><span class="fi-n">11</span><div class="fi-text"><strong>Daily call targets</strong> with progress tracking</div></div>
+          <div class="fi-row"><span class="fi-n">12</span><div class="fi-text"><strong>SLA/aging alerts</strong> for untouched leads</div></div>
+          <div class="fi-row"><span class="fi-n">13</span><div class="fi-text"><strong>Lost revenue analysis</strong> by reason/carrier</div></div>
+        </div>
+        <div>
+          <div class="fi-row"><span class="fi-n">14</span><div class="fi-text"><strong>Customer deduplication</strong> by phone/name</div></div>
+          <div class="fi-row"><span class="fi-n">15</span><div class="fi-text"><strong>One-click MIS export</strong> to CSV</div></div>
+          <div class="fi-row"><span class="fi-n">16</span><div class="fi-text"><strong>Separate workflows</strong> for fresh &amp; renewal</div></div>
+          <div class="fi-row"><span class="fi-n">17</span><div class="fi-text"><strong>Premium-based priority</strong> sorting</div></div>
+          <div class="fi-row"><span class="fi-n">18</span><div class="fi-text"><strong>Calendar view</strong> for scheduled callbacks</div></div>
+          <div class="fi-row"><span class="fi-n">19</span><div class="fi-text"><strong>Duplicate call prevention</strong> across agents</div></div>
+          <div class="fi-row"><span class="fi-n">20</span><div class="fi-text"><strong>Pre-call SMS/WhatsApp</strong> warming</div></div>
+          <div class="fi-row"><span class="fi-n">21</span><div class="fi-text"><strong>Claim escalation</strong> routing to manager</div></div>
+          <div class="fi-row"><span class="fi-n">22</span><div class="fi-text"><strong>Policy chaining</strong> (old &rarr; new link)</div></div>
+          <div class="fi-row"><span class="fi-n">23</span><div class="fi-text"><strong>Automated archival</strong> of completed cycles</div></div>
+          <div class="fi-row"><span class="fi-n">24</span><div class="fi-text"><strong>Unlimited agents</strong> (no column-per-agent)</div></div>
+          <div class="fi-row"><span class="fi-n">25</span><div class="fi-text"><strong>Role-based access</strong> (Admin / Manager / Agent)</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Solution &middot; Slide 3</span><a href="architecture.html">Architecture &rarr;</a></div>
+  </div>
+
+  <div class="container" style="max-width:1080px">
+    <div class="page-nav">
+      <a href="problem.html">&larr; Problem</a>
+      <a href="architecture.html">Architecture &rarr;</a>
+    </div>
+  </div>
+  <p class="page-footer">XASCOM CRM &amp; Analytics Dashboard &middot; Confidential &middot; April 2026</p>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

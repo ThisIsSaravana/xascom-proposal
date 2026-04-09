@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proposed Solution — XASCOM Analytics Proposal</title>
+  <link rel="stylesheet" href="../presentation/styles.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <style>
+    body{background:var(--gray-50)}
+    .slide{max-width:1080px;margin:40px auto;background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
+    .slide-body{padding:56px 72px}
+    .slide-label{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+    .slide-heading{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--gray-900);margin-bottom:32px;line-height:1.3}
+    .slide-divider{height:1px;background:var(--gray-200);margin:36px 0}
+    .slide-footer{padding:20px 72px;background:var(--gray-50);border-top:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;font-size:.75rem;color:var(--gray-400)}
+    .slide-footer a{font-size:.8rem;font-weight:600;color:var(--green);display:inline-flex;align-items:center;gap:6px}
+    .page-footer{text-align:center;padding:32px;font-size:.75rem;color:var(--gray-400)}
+
+    /* module cards */
+    .mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .mod-card{border:1px solid var(--gray-200);border-radius:12px;padding:28px;position:relative;overflow:hidden}
+    .mod-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+    .mod-card--blue::before{background:#3b82f6}
+    .mod-card--green::before{background:var(--green)}
+    .mod-card--gold::before{background:var(--gold)}
+    .mod-card--purple::before{background:#8b5cf6}
+    .mod-title{font-size:1rem;font-weight:700;color:var(--gray-900);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+    .mod-title i{width:20px;height:20px}
+    .mod-list{list-style:none;padding:0;margin:0}
+    .mod-list li{padding:6px 0;font-size:.82rem;color:var(--gray-600);display:flex;align-items:flex-start;gap:8px}
+    .mod-list li::before{content:'→';color:var(--gray-300);font-weight:600;flex-shrink:0}
+
+    /* dashboard preview */
+    .dash-preview{background:#0f172a;border-radius:12px;padding:32px;color:#fff}
+    .kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+    .kpi-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:16px}
+    .kpi-label{font-size:.65rem;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+    .kpi-val{font-size:1.4rem;font-weight:800;color:#fff}
+    .kpi-change{font-size:.7rem;font-weight:600;margin-top:4px}
+    .kpi-change--up{color:#4ade80}
+    .kpi-change--neutral{color:rgba(255,255,255,.4)}
+    .chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .chart-placeholder{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:20px;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+    .chart-placeholder i{width:28px;height:28px;color:rgba(255,255,255,.2);margin-bottom:8px}
+    .chart-placeholder span{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.35)}
+
+    /* screen list */
+    .screen-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .screen-card{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:16px;text-align:center}
+    .screen-card i{width:24px;height:24px;color:var(--green);margin-bottom:6px}
+    .screen-name{font-size:.82rem;font-weight:700;color:var(--gray-800)}
+    .screen-desc{font-size:.7rem;color:var(--gray-500);margin-top:2px}
+
+    /* findings */
+    .fi-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--gray-50);font-size:.8rem}
+    .fi-row:last-child{border-bottom:none}
+    .fi-n{width:22px;height:22px;border-radius:50%;background:var(--green);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0}
+    .fi-text{color:var(--gray-600)}
+    .fi-text strong{color:var(--gray-800)}
+
+    /* tablet landscape */
+    @media(max-width:1024px){
+      .slide-body{padding:48px 48px}
+      .screen-grid{grid-template-columns:repeat(3,1fr)}
+    }
+    /* tablet portrait */
+    @media(max-width:768px){
+      .slide-body{padding:36px 28px}
+      .slide-footer{padding:16px 28px}
+      .mod-grid{grid-template-columns:1fr}
+      .chart-row{grid-template-columns:1fr}
+      .kpi-row{grid-template-columns:1fr 1fr}
+      .screen-grid{grid-template-columns:1fr 1fr}
+      .screen-card[style*="grid-column:span 2"]{grid-column:span 2}
+    }
+    /* small tablet */
+    @media(max-width:600px){
+      .kpi-row{grid-template-columns:1fr 1fr}
+      div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}
+    }
+    /* mobile */
+    @media(max-width:480px){
+      .slide-body{padding:28px 20px}
+      .slide-footer{padding:14px 20px;flex-direction:column;gap:8px;text-align:center}
+      .slide-heading{font-size:1.3rem}
+      .kpi-row{grid-template-columns:1fr}
+      .kpi-val{font-size:1.1rem}
+      .screen-grid{grid-template-columns:1fr 1fr}
+      .screen-card[style*="grid-column:span 2"]{grid-column:span 2}
+      .dash-preview{padding:20px}
+      .fi-row{font-size:.75rem}
+      .fi-n{width:20px;height:20px;font-size:.58rem}
+    }
+  </style>
+</head>
+<body>
+  <nav class="topnav"><div class="topnav-inner">
+    <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit"><span class="dot" style="background:var(--green)"></span> XASCOM Analytics Proposal</a>
+    <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <ul class="topnav-links">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="problem.html">Problem</a></li>
+      <li><a href="solution.html" class="active">Solution</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="timeline.html">Timeline</a></li>
+    </ul>
+  </div></nav>
+
+  <section class="hero page-hero">
+    <div class="hero-badge">Section 02</div>
+    <h1>Proposed Solution</h1>
+    <p>Four modules addressing all 12 data and analytics gaps.</p>
+  </section>
+
+  <!-- MODULE OVERVIEW -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">System Design</div>
+      <h2 class="slide-heading">Four Core Modules</h2>
+      <div class="mod-grid">
+        <div class="mod-card mod-card--blue">
+          <div class="mod-title"><i data-lucide="upload-cloud"></i> M1 &mdash; Data Ingestion</div>
+          <ul class="mod-list">
+            <li>Drag-drop file upload (Excel / CSV)</li>
+            <li>Visual column mapping UI</li>
+            <li>Save mapping template per carrier (map once, reuse forever)</li>
+            <li>Manual entry form for individual policies</li>
+            <li>Data validation &mdash; missing fields, duplicates, format errors</li>
+            <li>Preview mapped data before confirming import</li>
+            <li>Full upload history with date, carrier, record count</li>
+          </ul>
+        </div>
+        <div class="mod-card mod-card--green">
+          <div class="mod-title"><i data-lucide="table"></i> M2 &mdash; Data Management</div>
+          <ul class="mod-list">
+            <li>Single searchable table replacing all 192 sheet tabs</li>
+            <li>Filter by carrier, product, status, date range, premium band</li>
+            <li>Quick search by policy number, customer name, or mobile</li>
+            <li>Inline editing &mdash; click any field to update</li>
+            <li>Bulk actions &mdash; select multiple, change status, export</li>
+            <li>Show/hide columns per preference</li>
+            <li>Export filtered data as CSV / Excel</li>
+          </ul>
+        </div>
+        <div class="mod-card mod-card--gold">
+          <div class="mod-title"><i data-lucide="bar-chart-3"></i> M3 &mdash; Analytics Dashboard</div>
+          <ul class="mod-list">
+            <li>6 KPI cards &mdash; total policies, premium, carriers, renewal rate, customers, avg premium</li>
+            <li>Carrier breakdown chart (policies &amp; premium per carrier)</li>
+            <li>Product mix donut (COMP, FHO, PA, Arogya, etc.)</li>
+            <li>Premium trend line (monthly growth/decline)</li>
+            <li>Renewal rate by month (bar chart)</li>
+            <li>Fresh vs Renewal split &amp; premium band distribution</li>
+            <li>Top 10 customers by premium &amp; carrier growth YoY</li>
+            <li>Global filters &mdash; date, carrier, product, status</li>
+          </ul>
+        </div>
+        <div class="mod-card mod-card--purple">
+          <div class="mod-title"><i data-lucide="file-text"></i> M4 &mdash; Reports &amp; Export</div>
+          <ul class="mod-list">
+            <li>Monthly MIS report &mdash; summary of policies, premium, renewals</li>
+            <li>Carrier performance report &mdash; per carrier ranking</li>
+            <li>Product mix report &mdash; distribution with breakdowns</li>
+            <li>Renewal pipeline &mdash; expirations in next 30/60/90 days</li>
+            <li>Customer report &mdash; policy count, total premium, carriers</li>
+            <li>Export to CSV, Excel, or PDF</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Solution &middot; Slide 1</span><span></span></div>
+  </div>
+
+  <!-- DASHBOARD PREVIEW -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Dashboard Preview</div>
+      <h2 class="slide-heading">What Your Dashboard Will Look Like</h2>
+      <div class="dash-preview">
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-label">Total Policies</div>
+            <div class="kpi-val">8,247</div>
+            <div class="kpi-change kpi-change--up">&uarr; 12% vs last year</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Total Premium</div>
+            <div class="kpi-val">&#8377;3.2 Cr</div>
+            <div class="kpi-change kpi-change--up">&uarr; 8% vs last year</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Active Carriers</div>
+            <div class="kpi-val">16</div>
+            <div class="kpi-change kpi-change--neutral">All partners tracked</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Renewal Rate</div>
+            <div class="kpi-val">74.3%</div>
+            <div class="kpi-change kpi-change--up">&uarr; 3.1% vs last year</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Total Customers</div>
+            <div class="kpi-val">6,891</div>
+            <div class="kpi-change kpi-change--up">&uarr; 520 new this year</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Avg Premium</div>
+            <div class="kpi-val">&#8377;3,880</div>
+            <div class="kpi-change kpi-change--up">&uarr; 5% vs last year</div>
+          </div>
+        </div>
+        <div class="chart-row">
+          <div class="chart-placeholder">
+            <i data-lucide="bar-chart-horizontal"></i>
+            <span>Carrier Breakdown<br>Star Health: 2,400 &middot; Care: 1,200 &middot; Chola MS: 980...</span>
+          </div>
+          <div class="chart-placeholder">
+            <i data-lucide="pie-chart"></i>
+            <span>Product Mix<br>COMP 38% &middot; FHO 24% &middot; PA 12% &middot; Young Star 10%...</span>
+          </div>
+          <div class="chart-placeholder">
+            <i data-lucide="trending-up"></i>
+            <span>Premium Trend<br>Monthly premium volume &mdash; Apr 23 to Mar 24</span>
+          </div>
+          <div class="chart-placeholder">
+            <i data-lucide="calendar"></i>
+            <span>Renewal Pipeline<br>Next 30d: 340 &middot; 60d: 680 &middot; 90d: 1,020</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Solution &middot; Slide 2</span><span></span></div>
+  </div>
+
+  <!-- 7 SCREENS -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Application Screens</div>
+      <h2 class="slide-heading">7 Screens You'll Get</h2>
+      <div class="screen-grid">
+        <div class="screen-card">
+          <i data-lucide="log-in"></i>
+          <div class="screen-name">Login</div>
+          <div class="screen-desc">Email &amp; password auth</div>
+        </div>
+        <div class="screen-card">
+          <i data-lucide="layout-dashboard"></i>
+          <div class="screen-name">Dashboard</div>
+          <div class="screen-desc">KPI cards + 8 charts</div>
+        </div>
+        <div class="screen-card">
+          <i data-lucide="table"></i>
+          <div class="screen-name">Policy Table</div>
+          <div class="screen-desc">Search, filter, edit, export</div>
+        </div>
+        <div class="screen-card">
+          <i data-lucide="upload-cloud"></i>
+          <div class="screen-name">Upload</div>
+          <div class="screen-desc">File upload + column mapping</div>
+        </div>
+        <div class="screen-card">
+          <i data-lucide="plus-circle"></i>
+          <div class="screen-name">Manual Entry</div>
+          <div class="screen-desc">Add individual policies</div>
+        </div>
+        <div class="screen-card">
+          <i data-lucide="file-bar-chart"></i>
+          <div class="screen-name">Reports</div>
+          <div class="screen-desc">MIS, carrier, product reports</div>
+        </div>
+        <div class="screen-card" style="grid-column:span 2">
+          <i data-lucide="settings"></i>
+          <div class="screen-name">Settings</div>
+          <div class="screen-desc">Carrier management, user management (admin only)</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Solution &middot; Slide 3</span><span></span></div>
+  </div>
+
+  <!-- PROACTIVE FEATURES -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Bonus</div>
+      <h2 class="slide-heading">10 Features We Proactively Added</h2>
+      <p style="font-size:.88rem;color:var(--gray-500);margin-top:-20px;margin-bottom:32px;">Things you'll need but may not have thought of yet.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 40px">
+        <div>
+          <div class="fi-row"><span class="fi-n">1</span><div class="fi-text"><strong>Carrier mapping templates</strong> &mdash; map once per carrier, never reformat again</div></div>
+          <div class="fi-row"><span class="fi-n">2</span><div class="fi-text"><strong>Premium change indicator</strong> &mdash; shows &uarr;12% or &darr;5% vs previous year</div></div>
+          <div class="fi-row"><span class="fi-n">3</span><div class="fi-text"><strong>Customer deduplication</strong> &mdash; same customer across carriers linked via mobile</div></div>
+          <div class="fi-row"><span class="fi-n">4</span><div class="fi-text"><strong>Renewal pipeline</strong> &mdash; policies expiring in next 30/60/90 days</div></div>
+          <div class="fi-row"><span class="fi-n">5</span><div class="fi-text"><strong>Premium band analysis</strong> &mdash; portfolio distribution by premium range</div></div>
+        </div>
+        <div>
+          <div class="fi-row"><span class="fi-n">6</span><div class="fi-text"><strong>Upload history log</strong> &mdash; full audit trail of every file imported</div></div>
+          <div class="fi-row"><span class="fi-n">7</span><div class="fi-text"><strong>Multi-carrier unified view</strong> &mdash; one dashboard instead of 16 sheets</div></div>
+          <div class="fi-row"><span class="fi-n">8</span><div class="fi-text"><strong>Year-over-year comparison</strong> &mdash; premium growth/decline per carrier</div></div>
+          <div class="fi-row"><span class="fi-n">9</span><div class="fi-text"><strong>Product mix insights</strong> &mdash; which products are growing or declining</div></div>
+          <div class="fi-row"><span class="fi-n">10</span><div class="fi-text"><strong>Export everything</strong> &mdash; any view, any chart, any report &rarr; CSV/Excel/PDF</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Solution &middot; Slide 4</span><a href="architecture.html">Architecture &rarr;</a></div>
+  </div>
+
+  <div class="container" style="max-width:1080px">
+    <div class="page-nav">
+      <a href="problem.html">&larr; Problem</a>
+      <a href="architecture.html">Architecture &rarr;</a>
+    </div>
+  </div>
+  <p class="page-footer">XASCOM Analytics &amp; Dashboard &middot; Confidential &middot; April 2026</p>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timeline &amp; Pricing — XASCOM CRM Proposal</title>
+  <link rel="stylesheet" href="../presentation/styles.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <style>
+    body{background:var(--gray-50)}
+    .slide{max-width:1080px;margin:40px auto;background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
+    .slide-body{padding:56px 72px}
+    .slide-label{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+    .slide-heading{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--gray-900);margin-bottom:32px;line-height:1.3}
+    .slide-divider{height:1px;background:var(--gray-200);margin:36px 0}
+    .slide-footer{padding:20px 72px;background:var(--gray-50);border-top:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;font-size:.75rem;color:var(--gray-400)}
+    .slide-footer a{font-size:.8rem;font-weight:600;color:var(--green);display:inline-flex;align-items:center;gap:6px}
+    .page-footer{text-align:center;padding:32px;font-size:.75rem;color:var(--gray-400)}
+
+    /* module cards */
+    .mc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .mc-card{border:1px solid var(--gray-200);border-radius:10px;padding:20px}
+    .mc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .mc-code{font-size:.7rem;font-weight:800;color:var(--green);background:#dcfce7;padding:3px 8px;border-radius:4px}
+    .mc-hrs{font-size:.82rem;font-weight:800;color:var(--gray-800)}
+    .mc-name{font-size:.88rem;font-weight:700;color:var(--gray-800);margin-bottom:8px}
+    .mc-tasks{list-style:none;padding:0;margin:0}
+    .mc-tasks li{padding:4px 0;font-size:.75rem;color:var(--gray-500);display:flex;align-items:flex-start;gap:6px}
+    .mc-tasks li::before{content:'•';color:var(--gray-300);flex-shrink:0}
+
+    /* total bar */
+    .total-bar{background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:12px;padding:24px 32px;display:flex;align-items:center;justify-content:space-between;color:#fff;margin-top:20px}
+    .total-bar .t-label{font-size:.75rem;font-weight:600;color:rgba(255,255,255,.6)}
+    .total-bar .t-val{font-size:1.4rem;font-weight:800}
+
+    /* gantt */
+    .gantt{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:32px;overflow-x:auto}
+    .gantt-row{display:flex;align-items:center;gap:16px;padding:10px 0;border-bottom:1px solid var(--gray-50)}
+    .gantt-row:last-child{border-bottom:none}
+    .gantt-label{min-width:200px;font-size:.85rem;font-weight:600;color:var(--gray-700);flex-shrink:0}
+
+    /* deliverables */
+    .deliverable-section{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:28px;margin-bottom:16px}
+    .deliverable-section h4{font-size:.95rem;font-weight:700;color:var(--gray-800);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+    .del-item{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:.875rem;color:var(--gray-600);border-bottom:1px solid var(--gray-50)}
+    .del-item:last-child{border-bottom:none}
+    .del-check{color:var(--green);font-size:.75rem;font-weight:600}
+
+    /* CTA */
+    .cta-box{text-align:center;padding:48px 32px;background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:12px;color:#fff}
+    .cta-box h2{font-size:1.5rem;font-weight:800;margin-bottom:12px}
+    .cta-box p{font-size:.88rem;color:rgba(255,255,255,.6);margin-bottom:24px}
+    .cta-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:var(--green);color:#fff;border-radius:8px;font-size:.9rem;font-weight:700;text-decoration:none}
+
+    @media(max-width:768px){.slide-body{padding:36px 28px}.mc-grid{grid-template-columns:1fr}.slide-footer{padding:16px 28px}}
+  </style>
+</head>
+<body>
+  <nav class="topnav"><div class="topnav-inner">
+    <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit"><span class="dot" style="background:var(--green)"></span> XASCOM CRM Proposal</a>
+    <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <ul class="topnav-links">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="problem.html">Problem</a></li>
+      <li><a href="solution.html">Solution</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="timeline.html" class="active">Timeline</a></li>
+    </ul>
+  </div></nav>
+
+  <section class="hero page-hero">
+    <div class="hero-badge">Section 04</div>
+    <h1>Timeline &amp; Pricing</h1>
+    <p>Module breakdown, weekly schedule, payment plan, and deliverables.</p>
+  </section>
+
+  <!-- MODULE BREAKDOWN -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Effort Breakdown</div>
+      <h2 class="slide-heading">7 Modules &mdash; 186 Hours Total</h2>
+      <div class="mc-grid">
+        <div class="mc-card">
+          <div class="mc-head"><span class="mc-code">M1</span><span class="mc-hrs">18 hrs</span></div>
+          <div class="mc-name">Foundation &amp; Setup</div>
+          <ul class="mc-tasks">
+            <li>Project scaffolding (Next.js + Supabase)</li>
+            <li>Auth system (login, roles, RLS policies)</li>
+            <li>Base UI layout &amp; navigation</li>
+            <li>Database schema &amp; migrations</li>
+          </ul>
+        </div>
+        <div class="mc-card">
+          <div class="mc-head"><span class="mc-code">M2</span><span class="mc-hrs">32 hrs</span></div>
+          <div class="mc-name">Data Pipeline</div>
+          <ul class="mc-tasks">
+            <li>File upload (Excel/CSV) with drag-drop</li>
+            <li>Column auto-detection &amp; mapping UI</li>
+            <li>Carrier template save/load</li>
+            <li>Data normalization &amp; deduplication</li>
+            <li>Premium change calculation</li>
+            <li>Grace period &amp; expiry computation</li>
+          </ul>
+        </div>
+        <div class="mc-card">
+          <div class="mc-head"><span class="mc-code">M3</span><span class="mc-hrs">40 hrs</span></div>
+          <div class="mc-name">Agent CRM</div>
+          <ul class="mc-tasks">
+            <li>Agent task queue with priority sorting</li>
+            <li>Policy detail card</li>
+            <li>Structured disposition form (4 fields)</li>
+            <li>Call history timeline</li>
+            <li>Callback scheduling + calendar view</li>
+            <li>Assignment engine (round-robin / rules)</li>
+          </ul>
+        </div>
+        <div class="mc-card">
+          <div class="mc-head"><span class="mc-code">M4</span><span class="mc-hrs">24 hrs</span></div>
+          <div class="mc-name">Manager Dashboard</div>
+          <ul class="mc-tasks">
+            <li>Team overview &amp; daily targets</li>
+            <li>Agent performance metrics</li>
+            <li>Assignment management &amp; reallocation</li>
+            <li>Escalation queue (claim issues, stale leads)</li>
+          </ul>
+        </div>
+        <div class="mc-card">
+          <div class="mc-head"><span class="mc-code">M5</span><span class="mc-hrs">30 hrs</span></div>
+          <div class="mc-name">Analytics &amp; Reports</div>
+          <ul class="mc-tasks">
+            <li>Renewal rate charts (by carrier, product, agent)</li>
+            <li>Pipeline funnel visualization</li>
+            <li>Premium &amp; commission estimates</li>
+            <li>Loss reason breakdown</li>
+            <li>Aging analysis</li>
+            <li>CSV export / MIS reports</li>
+          </ul>
+        </div>
+        <div class="mc-card">
+          <div class="mc-head"><span class="mc-code">M6</span><span class="mc-hrs">20 hrs</span></div>
+          <div class="mc-name">Communication</div>
+          <ul class="mc-tasks">
+            <li>WhatsApp Business API integration</li>
+            <li>SMS gateway setup</li>
+            <li>Message template library</li>
+            <li>Bulk &amp; single send</li>
+            <li>Delivery status tracking</li>
+          </ul>
+        </div>
+        <div class="mc-card" style="grid-column:span 2">
+          <div class="mc-head"><span class="mc-code">M7</span><span class="mc-hrs">22 hrs</span></div>
+          <div class="mc-name">Security, Testing &amp; Deployment</div>
+          <ul class="mc-tasks" style="display:grid;grid-template-columns:1fr 1fr;gap:0 20px">
+            <li>RLS policy testing per role</li>
+            <li>Audit trail verification</li>
+            <li>End-to-end testing</li>
+            <li>Performance optimization</li>
+            <li>Production deployment (Vercel)</li>
+            <li>User training &amp; documentation</li>
+          </ul>
+        </div>
+      </div>
+      <div class="total-bar">
+        <div><div class="t-label">Total Modules</div><div class="t-val">7</div></div>
+        <div><div class="t-label">Total Tasks</div><div class="t-val">35+</div></div>
+        <div><div class="t-label">Total Effort</div><div class="t-val">186 Hours</div></div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Timeline &middot; Slide 1</span><span></span></div>
+  </div>
+
+  <!-- VISUAL TIMELINE (GANTT) -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label"><i data-lucide="calendar" style="width:14px;height:14px;vertical-align:-2px"></i> Project Timeline</div>
+      <h2 class="slide-heading">Week-by-Week Schedule</h2>
+      <p style="font-size:.88rem;color:var(--gray-500);margin-top:-20px;margin-bottom:32px;">A visual overview of how the project flows from start to launch.</p>
+
+      <div class="gantt">
+        <!-- Week headers -->
+        <div style="display:flex;align-items:center;gap:16px;padding:6px 0 16px;border-bottom:1px solid var(--gray-200);margin-bottom:8px;">
+          <div style="min-width:200px;font-size:.7rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;">Phase</div>
+          <div style="flex:1;display:flex;">
+            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W1</div>
+            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W2</div>
+            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W3</div>
+            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W4</div>
+            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W5</div>
+            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W6</div>
+            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W7</div>
+            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W8</div>
+            <div style="flex:1;font-size:.7rem;font-weight:700;color:var(--gray-400);text-align:center;border-left:1px dashed var(--gray-200);">W9</div>
+          </div>
+        </div>
+        <!-- M1: Foundation -->
+        <div class="gantt-row">
+          <div class="gantt-label">Foundation &amp; Setup</div>
+          <div style="flex:1;display:flex;height:28px;">
+            <div style="flex:2;padding:2px;"><div style="height:100%;background:#2563eb;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">Week 1-2</div></div>
+            <div style="flex:7;"></div>
+          </div>
+        </div>
+        <!-- M2: Data Pipeline -->
+        <div class="gantt-row">
+          <div class="gantt-label">Data Pipeline</div>
+          <div style="flex:1;display:flex;height:28px;">
+            <div style="flex:1;"></div>
+            <div style="flex:2;padding:2px;"><div style="height:100%;background:#10b981;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">Week 2-3</div></div>
+            <div style="flex:6;"></div>
+          </div>
+        </div>
+        <!-- M3: Agent CRM -->
+        <div class="gantt-row">
+          <div class="gantt-label">Agent CRM</div>
+          <div style="flex:1;display:flex;height:28px;">
+            <div style="flex:3;"></div>
+            <div style="flex:2;padding:2px;"><div style="height:100%;background:#f97316;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">Week 4-5</div></div>
+            <div style="flex:4;"></div>
+          </div>
+        </div>
+        <!-- M4: Manager Dashboard -->
+        <div class="gantt-row">
+          <div class="gantt-label">Manager Dashboard</div>
+          <div style="flex:1;display:flex;height:28px;">
+            <div style="flex:4;"></div>
+            <div style="flex:2;padding:2px;"><div style="height:100%;background:#8b5cf6;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">Week 5-6</div></div>
+            <div style="flex:3;"></div>
+          </div>
+        </div>
+        <!-- M5: Analytics -->
+        <div class="gantt-row">
+          <div class="gantt-label">Analytics &amp; Reports</div>
+          <div style="flex:1;display:flex;height:28px;">
+            <div style="flex:5;"></div>
+            <div style="flex:2;padding:2px;"><div style="height:100%;background:#06b6d4;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">Week 6-7</div></div>
+            <div style="flex:2;"></div>
+          </div>
+        </div>
+        <!-- M6: Communication -->
+        <div class="gantt-row">
+          <div class="gantt-label">Communication</div>
+          <div style="flex:1;display:flex;height:28px;">
+            <div style="flex:6;"></div>
+            <div style="flex:2;padding:2px;"><div style="height:100%;background:#ec4899;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">Week 7-8</div></div>
+            <div style="flex:1;"></div>
+          </div>
+        </div>
+        <!-- M7: Security & Launch -->
+        <div class="gantt-row">
+          <div class="gantt-label">Security, Testing &amp; Launch</div>
+          <div style="flex:1;display:flex;height:28px;">
+            <div style="flex:7;"></div>
+            <div style="flex:2;padding:2px;"><div style="height:100%;background:#dc2626;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700;color:white;">Week 8-9</div></div>
+          </div>
+        </div>
+        <!-- Post-launch -->
+        <div class="gantt-row" style="background:#f0fdf4;">
+          <div class="gantt-label" style="color:var(--green);">Free Post-Launch Support</div>
+          <div style="flex:1;display:flex;height:28px;align-items:center;">
+            <div style="flex:9;padding:2px;text-align:center;">
+              <span style="font-size:.75rem;font-weight:600;color:var(--green);">30 days free support after launch (bug fixes, adjustments, training)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Timeline &middot; Slide 2</span><span></span></div>
+  </div>
+
+  <!-- PAYMENT STRUCTURE -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label"><i data-lucide="banknote" style="width:14px;height:14px;vertical-align:-2px"></i> Payment Structure</div>
+      <h2 class="slide-heading">Project Investment</h2>
+      <p style="font-size:.88rem;color:var(--gray-500);margin-top:-20px;margin-bottom:32px;">Complete CRM design &amp; development &mdash; 7 modules, 35+ tasks, all features included. Simple two-payment plan.</p>
+
+      <!-- Total Amount -->
+      <div style="background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:12px;padding:48px 40px;text-align:center;color:white;margin-bottom:40px;">
+        <p style="font-size:.85rem;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Total Project Cost</p>
+        <div style="font-size:3.5rem;font-weight:800;line-height:1.1;margin-bottom:8px;"><span style="font-size:1.8rem;vertical-align:top;margin-right:4px;">&#8377;</span>60,000</div>
+        <p style="font-size:.9rem;color:rgba(255,255,255,.5);">Inclusive of design, development, integrations &amp; 1 month free support</p>
+      </div>
+
+      <!-- Two Payment Cards -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:700px;margin:0 auto;">
+        <!-- Payment 1 -->
+        <div style="background:var(--white);border:2px solid #3b82f6;border-radius:12px;padding:40px 32px;text-align:center;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;right:0;height:4px;background:#3b82f6;"></div>
+          <div style="background:#2563eb;color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;margin:0 auto 16px;">1</div>
+          <h4 style="font-size:1.1rem;font-weight:700;color:var(--gray-900);margin-bottom:8px;">Advance Payment</h4>
+          <div style="font-size:2.2rem;font-weight:800;color:#3b82f6;line-height:1.2;margin-bottom:4px;"><span style="font-size:1.2rem;vertical-align:top;">&#8377;</span>30,000</div>
+          <p style="font-size:.8rem;color:var(--gray-400);margin-bottom:12px;">50% of total</p>
+          <p style="font-size:.875rem;color:var(--gray-500);line-height:1.6;">Paid upfront to kick off the project. Development begins immediately after receiving payment and assets.</p>
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--gray-100);">
+            <span style="font-size:.75rem;font-weight:600;color:#3b82f6;text-transform:uppercase;letter-spacing:.5px;">Before project starts</span>
+          </div>
+        </div>
+        <!-- Payment 2 -->
+        <div style="background:var(--white);border:2px solid var(--green);border-radius:12px;padding:40px 32px;text-align:center;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--green);"></div>
+          <div style="background:#10b981;color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;margin:0 auto 16px;">2</div>
+          <h4 style="font-size:1.1rem;font-weight:700;color:var(--gray-900);margin-bottom:8px;">Pre-Launch Payment</h4>
+          <div style="font-size:2.2rem;font-weight:800;color:var(--green);line-height:1.2;margin-bottom:4px;"><span style="font-size:1.2rem;vertical-align:top;">&#8377;</span>30,000</div>
+          <p style="font-size:.8rem;color:var(--gray-400);margin-bottom:12px;">50% of total</p>
+          <p style="font-size:.875rem;color:var(--gray-500);line-height:1.6;">Paid after full development is complete and reviewed. Once confirmed, we deploy and go live.</p>
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--gray-100);">
+            <span style="font-size:.75rem;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.5px;">Before CRM goes live</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Free support note -->
+      <div style="text-align:center;margin-top:32px;padding:24px 32px;background:#f0fdf4;border-radius:8px;border:1px solid #a7f3d0;">
+        <p style="font-size:.95rem;font-weight:600;color:#065f46;margin-bottom:4px;"><i data-lucide="gift" style="width:16px;height:16px;vertical-align:-2px"></i> &nbsp;1 Month Free Post-Launch Support Included</p>
+        <p style="font-size:.825rem;color:#047857;margin:0;">Bug fixes, minor adjustments, training, documentation &amp; complete handover &mdash; at no additional cost.</p>
+      </div>
+
+      <!-- Satisfaction guarantee -->
+      <div style="text-align:center;margin-top:16px;padding:20px 32px;background:#eff6ff;border-radius:8px;border:1px solid rgba(59,130,246,.15);">
+        <p style="font-size:.9rem;font-weight:600;color:#2563eb;margin-bottom:4px;"><i data-lucide="shield-check" style="width:16px;height:16px;vertical-align:-2px"></i> &nbsp;100% Satisfaction Guarantee</p>
+        <p style="font-size:.825rem;color:var(--gray-500);margin-bottom:0;">The final 50% is only due after you have fully reviewed and confirmed that the work meets your expectations.</p>
+        <p style="font-size:.8rem;color:var(--gray-400);margin-top:10px;line-height:1.6;font-style:italic;">The CRM will only go live once you have personally reviewed everything and given your written confirmation that you are fully satisfied with the work. Your approval is what matters most to us.</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Timeline &middot; Slide 3</span><span></span></div>
+  </div>
+
+  <!-- DELIVERABLES -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label"><i data-lucide="package" style="width:14px;height:14px;vertical-align:-2px"></i> Deliverables</div>
+      <h2 class="slide-heading">What You'll Receive</h2>
+      <p style="font-size:.88rem;color:var(--gray-500);margin-top:-20px;margin-bottom:32px;">A complete breakdown of everything that's included in this project.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div class="deliverable-section">
+          <h4><i data-lucide="monitor" style="width:16px;height:16px;color:var(--green)"></i> CRM Application</h4>
+          <div class="del-item"><span class="del-check">&#9656;</span> Production-deployed CRM on Vercel</div>
+          <div class="del-item"><span class="del-check">&#9656;</span> Source code (full ownership)</div>
+          <div class="del-item"><span class="del-check">&#9656;</span> Mobile-responsive dashboard</div>
+          <div class="del-item"><span class="del-check">&#9656;</span> Admin + Manager + Agent role views</div>
+          <div class="del-item"><span class="del-check">&#9656;</span> Supabase project with configured RLS</div>
+        </div>
+        <div class="deliverable-section">
+          <h4><i data-lucide="upload-cloud" style="width:16px;height:16px;color:var(--green)"></i> Data &amp; Configuration</h4>
+          <div class="del-item"><span class="del-check">&#9656;</span> Carrier mapping templates (16 carriers)</div>
+          <div class="del-item"><span class="del-check">&#9656;</span> Disposition taxonomy configuration</div>
+          <div class="del-item"><span class="del-check">&#9656;</span> Database schema &amp; migrations</div>
+          <div class="del-item"><span class="del-check">&#9656;</span> Database backup configuration</div>
+        </div>
+        <div class="deliverable-section">
+          <h4><i data-lucide="message-circle" style="width:16px;height:16px;color:var(--green)"></i> Integration Deliverables</h4>
+          <div class="del-item"><span class="del-check">&#9656;</span> WhatsApp Business API integration</div>
+          <div class="del-item"><span class="del-check">&#9656;</span> SMS gateway setup</div>
+          <div class="del-item"><span class="del-check">&#9656;</span> Message template library</div>
+          <div class="del-item"><span class="del-check">&#9656;</span> CSV export / MIS reports</div>
+        </div>
+        <div class="deliverable-section">
+          <h4><i data-lucide="book-open" style="width:16px;height:16px;color:var(--green)"></i> Documentation &amp; Support</h4>
+          <div class="del-item"><span class="del-check">&#9656;</span> Technical documentation</div>
+          <div class="del-item"><span class="del-check">&#9656;</span> User training session (remote)</div>
+          <div class="del-item"><span class="del-check">&#9656;</span> Login credentials document</div>
+          <div class="del-item"><span class="del-check">&#9656;</span> 1 month free post-launch support</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Timeline &middot; Slide 4</span><span></span></div>
+  </div>
+
+  <!-- AMC -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label"><i data-lucide="wrench" style="width:14px;height:14px;vertical-align:-2px"></i> Post-Launch</div>
+      <h2 class="slide-heading">Annual Maintenance &mdash; 10% of Project Cost</h2>
+      <p style="font-size:.88rem;color:var(--gray-500);margin-top:-20px;margin-bottom:32px;">Optional yearly maintenance to keep the CRM running smoothly. Covers routine updates and minor fixes.</p>
+
+      <!-- AMC Price card -->
+      <div style="background:var(--white);border:2px solid var(--gray-200);border-radius:12px;padding:40px;max-width:600px;margin:0 auto;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--gray-100);">
+          <div>
+            <h3 style="font-size:1.15rem;font-weight:700;color:var(--gray-900);">Annual Maintenance Contract</h3>
+            <p style="font-size:.85rem;color:var(--gray-500);margin-top:4px;">10% of project cost &mdash; billed yearly</p>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:2rem;font-weight:800;color:var(--green);line-height:1;"><span style="font-size:1rem;vertical-align:top;">&#8377;</span>6,000</div>
+            <span style="font-size:.75rem;color:var(--gray-400);">/year</span>
+          </div>
+        </div>
+
+        <h4 style="font-size:.8rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px;">What's Included</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
+            <i data-lucide="database" style="width:16px;height:16px;color:var(--green);flex-shrink:0;"></i> Database monitoring
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
+            <i data-lucide="bug" style="width:16px;height:16px;color:var(--green);flex-shrink:0;"></i> Bug fixes &amp; patches
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
+            <i data-lucide="lock" style="width:16px;height:16px;color:var(--green);flex-shrink:0;"></i> Security &amp; SSL updates
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
+            <i data-lucide="hard-drive" style="width:16px;height:16px;color:var(--green);flex-shrink:0;"></i> Backup management
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
+            <i data-lucide="monitor" style="width:16px;height:16px;color:var(--green);flex-shrink:0;"></i> Uptime monitoring
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:8px;font-size:.85rem;color:var(--gray-700);">
+            <i data-lucide="mail" style="width:16px;height:16px;color:var(--green);flex-shrink:0;"></i> Priority email support
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Timeline &middot; Slide 5</span><span></span></div>
+  </div>
+
+  <!-- NEED CHANGES AFTER LAUNCH -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label"><i data-lucide="info" style="width:14px;height:14px;vertical-align:-2px"></i> Good to Know</div>
+      <h2 class="slide-heading">Need Changes After Launch?</h2>
+      <p style="font-size:.88rem;color:var(--gray-500);margin-top:-20px;margin-bottom:32px;">The AMC covers routine maintenance. But if you need something bigger, here's how it works.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:32px;">
+        <!-- Covered -->
+        <div style="background:var(--white);border:2px solid var(--green);border-radius:12px;padding:36px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--green);"></div>
+          <h3 style="font-size:1.05rem;font-weight:700;color:var(--green);margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+            <i data-lucide="check-circle" style="width:20px;height:20px;"></i> Covered Under AMC
+          </h3>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);"><span style="color:var(--green);font-weight:700;">&#10003;</span> Fix bugs or broken functionality</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);"><span style="color:var(--green);font-weight:700;">&#10003;</span> Security patches &amp; SSL renewal</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);"><span style="color:var(--green);font-weight:700;">&#10003;</span> Minor UI adjustments</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);"><span style="color:var(--green);font-weight:700;">&#10003;</span> Add new carrier mapping templates</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);"><span style="color:var(--green);font-weight:700;">&#10003;</span> Update disposition options</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);"><span style="color:var(--green);font-weight:700;">&#10003;</span> Backup &amp; uptime monitoring</div>
+          </div>
+        </div>
+        <!-- Not covered -->
+        <div style="background:var(--white);border:2px solid #f97316;border-radius:12px;padding:36px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;right:0;height:4px;background:#f97316;"></div>
+          <h3 style="font-size:1.05rem;font-weight:700;color:#f97316;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+            <i data-lucide="alert-circle" style="width:20px;height:20px;"></i> Requires Separate Quotation
+          </h3>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);"><span style="color:#f97316;font-weight:700;">&#8594;</span> Adding entirely new modules</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);"><span style="color:#f97316;font-weight:700;">&#8594;</span> Redesigning existing dashboard layouts</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);"><span style="color:#f97316;font-weight:700;">&#8594;</span> New third-party integrations</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);"><span style="color:#f97316;font-weight:700;">&#8594;</span> Mobile app development</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);"><span style="color:#f97316;font-weight:700;">&#8594;</span> Major workflow restructuring</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.875rem;color:var(--gray-700);"><span style="color:#f97316;font-weight:700;">&#8594;</span> Platform migration or technology changes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- How it works -->
+      <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:12px;padding:32px 40px;">
+        <h4 style="font-size:1rem;font-weight:700;color:var(--gray-800);margin-bottom:20px;text-align:center;">How It Works for Major Changes</h4>
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div style="flex:1;text-align:center;">
+            <div style="width:40px;height:40px;border-radius:50%;background:#2563eb;color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin:0 auto 10px;">1</div>
+            <strong style="font-size:.85rem;display:block;margin-bottom:4px;">Email Us</strong>
+            <span style="font-size:.8rem;color:var(--gray-500);">Send the details of what you need changed or added</span>
+          </div>
+          <div style="padding-top:18px;color:var(--gray-300);font-size:1.2rem;">&#8594;</div>
+          <div style="flex:1;text-align:center;">
+            <div style="width:40px;height:40px;border-radius:50%;background:#2563eb;color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin:0 auto 10px;">2</div>
+            <strong style="font-size:.85rem;display:block;margin-bottom:4px;">We Review</strong>
+            <span style="font-size:.8rem;color:var(--gray-500);">We assess the scope and provide a clear quotation</span>
+          </div>
+          <div style="padding-top:18px;color:var(--gray-300);font-size:1.2rem;">&#8594;</div>
+          <div style="flex:1;text-align:center;">
+            <div style="width:40px;height:40px;border-radius:50%;background:#2563eb;color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin:0 auto 10px;">3</div>
+            <strong style="font-size:.85rem;display:block;margin-bottom:4px;">You Approve</strong>
+            <span style="font-size:.8rem;color:var(--gray-500);">Confirm the quote and timeline that works for you</span>
+          </div>
+          <div style="padding-top:18px;color:var(--gray-300);font-size:1.2rem;">&#8594;</div>
+          <div style="flex:1;text-align:center;">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin:0 auto 10px;">4</div>
+            <strong style="font-size:.85rem;display:block;margin-bottom:4px;">We Deliver</strong>
+            <span style="font-size:.8rem;color:var(--gray-500);">Work begins and is delivered to your satisfaction</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Timeline &middot; Slide 6</span><span></span></div>
+  </div>
+
+  <div class="container" style="max-width:1080px">
+    <div class="page-nav">
+      <a href="architecture.html">&larr; Architecture</a>
+      <a href="index.html">Overview &rarr;</a>
+    </div>
+  </div>
+  <p class="page-footer">XASCOM CRM &amp; Analytics Dashboard &middot; Confidential &middot; April 2026</p>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

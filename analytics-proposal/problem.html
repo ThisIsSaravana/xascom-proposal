@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Problem Analysis — XASCOM Analytics Proposal</title>
+  <link rel="stylesheet" href="../presentation/styles.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <style>
+    body{background:var(--gray-50)}
+    .slide{max-width:1080px;margin:40px auto;background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
+    .slide-body{padding:56px 72px}
+    .slide-label{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+    .slide-heading{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--gray-900);margin-bottom:32px;line-height:1.3}
+    .slide-divider{height:1px;background:var(--gray-200);margin:36px 0}
+    .slide-footer{padding:20px 72px;background:var(--gray-50);border-top:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;font-size:.75rem;color:var(--gray-400)}
+    .slide-footer a{font-size:.8rem;font-weight:600;color:var(--green);display:inline-flex;align-items:center;gap:6px}
+    .page-footer{text-align:center;padding:32px;font-size:.75rem;color:var(--gray-400)}
+
+    /* workflow */
+    .wf-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;margin:24px 0}
+    .wf-step{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:12px 16px;text-align:center;min-width:120px;font-size:.78rem;font-weight:600;color:var(--gray-700)}
+    .wf-step--bad{border-color:#fecaca;background:#fef8f8;color:var(--red)}
+
+    /* issue list */
+    .issue-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-50);font-size:.825rem}
+    .issue-item:last-child{border-bottom:none}
+    .issue-n{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;flex-shrink:0}
+    .issue-n--c{background:#fef2f2;color:#dc2626}
+    .issue-n--h{background:#fff7ed;color:#ea580c}
+    .issue-n--m{background:#fefce8;color:#ca8a04}
+    .issue-item strong{color:var(--gray-800);font-weight:600}
+    .issue-item span{color:var(--gray-500)}
+
+    /* pain cards */
+    .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .pain-card{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:20px;text-align:center}
+    .pain-card i{width:28px;height:28px;color:var(--red);margin-bottom:8px}
+    .pain-card h4{font-size:.88rem;font-weight:700;color:var(--gray-800);margin-bottom:6px}
+    .pain-card p{font-size:.78rem;color:var(--gray-500);margin:0;line-height:1.4}
+
+    /* tablet landscape */
+    @media(max-width:1024px){
+      .slide-body{padding:48px 48px}
+    }
+    /* tablet portrait */
+    @media(max-width:768px){
+      .slide-body{padding:36px 28px}
+      .slide-footer{padding:16px 28px}
+      .pain-grid{grid-template-columns:1fr 1fr}
+      .wf-row{gap:6px}
+      .wf-step{min-width:100px;font-size:.72rem;padding:10px 12px}
+    }
+    /* small tablet */
+    @media(max-width:600px){
+      .pain-grid{grid-template-columns:1fr}
+      div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}
+    }
+    /* mobile */
+    @media(max-width:480px){
+      .slide-body{padding:28px 20px}
+      .slide-footer{padding:14px 20px;flex-direction:column;gap:8px;text-align:center}
+      .slide-heading{font-size:1.3rem}
+      .wf-row{flex-direction:column;gap:4px}
+      .wf-step{min-width:auto;width:100%}
+      .issue-item{font-size:.78rem}
+      .issue-n{width:20px;height:20px;font-size:.6rem}
+    }
+  </style>
+</head>
+<body>
+  <nav class="topnav"><div class="topnav-inner">
+    <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit"><span class="dot" style="background:var(--green)"></span> XASCOM Analytics Proposal</a>
+    <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <ul class="topnav-links">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="problem.html" class="active">Problem</a></li>
+      <li><a href="solution.html">Solution</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="timeline.html">Timeline</a></li>
+    </ul>
+  </div></nav>
+
+  <section class="hero page-hero">
+    <div class="hero-badge">Section 01</div>
+    <h1>Problem Analysis</h1>
+    <p>Current data management workflow and identified gaps.</p>
+  </section>
+
+  <!-- CURRENT WORKFLOW -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Current Workflow</div>
+      <h2 class="slide-heading">How Data Is Managed Today</h2>
+      <div class="wf-row">
+        <div class="wf-step">Carrier Sends File</div>
+        <span style="color:var(--gray-300);font-size:1rem;">&rarr;</span>
+        <div class="wf-step wf-step--bad">Manual Reformat</div>
+        <span style="color:var(--gray-300);font-size:1rem;">&rarr;</span>
+        <div class="wf-step wf-step--bad">Paste into Sheet Tab</div>
+        <span style="color:var(--gray-300);font-size:1rem;">&rarr;</span>
+        <div class="wf-step wf-step--bad">No Analytics</div>
+        <span style="color:var(--gray-300);font-size:1rem;">&rarr;</span>
+        <div class="wf-step wf-step--bad">Manual Review</div>
+      </div>
+      <div class="highlight-box" style="border-left-color:var(--red)">
+        <p><strong>Scale:</strong> 16 carriers &times; 12 months = ~192 separate sheet tabs/year. Each tab has 50&ndash;200+ rows. No central view, no analytics, no insights.</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Problem &middot; Slide 1</span><span></span></div>
+  </div>
+
+  <!-- SHEET STRUCTURE -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Data Forensics</div>
+      <h2 class="slide-heading">Sheet Structure &mdash; &ldquo;FEB&rsquo;24 RENEWAL BASE&rdquo;</h2>
+      <div class="table-wrap">
+        <table style="font-size:.8rem">
+          <thead>
+            <tr><th>Column</th><th>Field</th><th>Example</th><th>Analytics Potential</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>B</td><td>Policy No</td><td>11220015036402</td><td>Unique record count</td></tr>
+            <tr><td>E</td><td>Company</td><td>STAR</td><td><strong>Carrier analytics</strong></td></tr>
+            <tr><td>F</td><td>Fresh/Renewal</td><td>RENEWAL</td><td><strong>Business mix analysis</strong></td></tr>
+            <tr><td>H&ndash;I</td><td>Start / End Date</td><td>12/02/23 &ndash; 11/02/24</td><td><strong>Renewal pipeline</strong></td></tr>
+            <tr><td>J</td><td>Customer Name</td><td>S MUTHU KUMARAN</td><td>Customer count</td></tr>
+            <tr><td>K</td><td>Mobile</td><td>70107114xx</td><td>Customer deduplication</td></tr>
+            <tr><td>L&ndash;M</td><td>New Gross / Gross Premium</td><td>42,090 / 42,090</td><td><strong>Premium trends &amp; growth</strong></td></tr>
+            <tr><td>N</td><td>Product</td><td>COMP, FHO, Young Star</td><td><strong>Product mix analytics</strong></td></tr>
+            <tr><td>P</td><td>Sum Insured</td><td>&#8377;3L &ndash; &#8377;5Cr</td><td><strong>Coverage band analysis</strong></td></tr>
+            <tr><td>T</td><td>Renewed</td><td>YES / NO</td><td><strong>Renewal rate tracking</strong></td></tr>
+            <tr><td>U</td><td>Status</td><td>RENEWED, NOT RENEWED</td><td><strong>Outcome tracking</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="highlight-box" style="margin-top:24px;border-left-color:var(--green)">
+        <p><strong>Key insight:</strong> Every column in your sheets is a potential analytics dimension. But scattered across 192 tabs, this data produces zero insights today.</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Problem &middot; Slide 2</span><span></span></div>
+  </div>
+
+  <!-- PAIN POINTS -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Pain Points</div>
+      <h2 class="slide-heading">What You Can&rsquo;t Do Today</h2>
+      <div class="pain-grid">
+        <div class="pain-card">
+          <i data-lucide="eye-off"></i>
+          <h4>No Carrier Comparison</h4>
+          <p>Can't see which carrier brings the most premium, clients, or renewals at a glance</p>
+        </div>
+        <div class="pain-card">
+          <i data-lucide="trending-up"></i>
+          <h4>No Growth Tracking</h4>
+          <p>No way to see if premium volume is growing or shrinking month-over-month</p>
+        </div>
+        <div class="pain-card">
+          <i data-lucide="pie-chart"></i>
+          <h4>No Product Mix View</h4>
+          <p>Can't tell which products (COMP, FHO, PA) make up your revenue</p>
+        </div>
+        <div class="pain-card">
+          <i data-lucide="calendar-x"></i>
+          <h4>No Renewal Pipeline</h4>
+          <p>No view of policies expiring in next 30/60/90 days across carriers</p>
+        </div>
+        <div class="pain-card">
+          <i data-lucide="file-x"></i>
+          <h4>Manual Reformatting</h4>
+          <p>Each carrier sends files in different formats &mdash; reformatted manually every month</p>
+        </div>
+        <div class="pain-card">
+          <i data-lucide="download"></i>
+          <h4>No MIS Reports</h4>
+          <p>No way to generate structured reports without manually compiling from sheets</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Problem &middot; Slide 3</span><span></span></div>
+  </div>
+
+  <!-- 12 ISSUES -->
+  <div class="slide">
+    <div class="slide-body">
+      <div class="slide-label">Issues Identified</div>
+      <h2 class="slide-heading">12 Data &amp; Analytics Gaps</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 40px">
+        <div>
+          <div class="issue-item"><span class="issue-n issue-n--c">1</span><div><strong>192 scattered sheets</strong> &mdash; <span>no cross-carrier visibility</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--c">2</span><div><strong>Manual file reformatting</strong> &mdash; <span>each carrier, every month</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--c">3</span><div><strong>Zero analytics</strong> &mdash; <span>no dashboards or KPIs</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--c">4</span><div><strong>No premium trend data</strong> &mdash; <span>growth/decline invisible</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--h">5</span><div><strong>No carrier comparison</strong> &mdash; <span>can't rank by performance</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--h">6</span><div><strong>No product mix insight</strong> &mdash; <span>revenue split unknown</span></div></div>
+        </div>
+        <div>
+          <div class="issue-item"><span class="issue-n issue-n--h">7</span><div><strong>No renewal pipeline</strong> &mdash; <span>upcoming expirations hidden</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--h">8</span><div><strong>No customer dedup</strong> &mdash; <span>same person across carriers</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--h">9</span><div><strong>No export / MIS</strong> &mdash; <span>manual report compilation</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--m">10</span><div><strong>Premium change invisible</strong> &mdash; <span>old vs new not calculated</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--m">11</span><div><strong>No data validation</strong> &mdash; <span>duplicates, blanks unchecked</span></div></div>
+          <div class="issue-item"><span class="issue-n issue-n--m">12</span><div><strong>No upload audit trail</strong> &mdash; <span>who uploaded what, when</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Problem &middot; Slide 4</span><a href="solution.html">Proposed Solution &rarr;</a></div>
+  </div>
+
+  <div class="container" style="max-width:1080px">
+    <div class="page-nav">
+      <a href="index.html">&larr; Overview</a>
+      <a href="solution.html">Solution &rarr;</a>
+    </div>
+  </div>
+  <p class="page-footer">XASCOM Analytics &amp; Dashboard &middot; Confidential &middot; April 2026</p>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
