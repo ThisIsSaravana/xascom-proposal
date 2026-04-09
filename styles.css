@@ -555,3 +555,316 @@ tbody tr:last-child td { border-bottom: none; }
   .hero, .page-hero { padding: 40px 20px; }
   body { font-size: 12px; }
 }
+
+/* ============================================
+   RESPONSIVE — TABLET (max-width: 900px)
+   ============================================ */
+@media (max-width: 900px) {
+  .section { padding: 56px 0; }
+  .container, .container-sm, .container-lg { padding: 0 24px; }
+  .hero { padding: 72px 24px 64px; }
+  .page-hero { padding: 56px 24px 40px; }
+  .hero p { font-size: 1rem; }
+
+  .section-title { font-size: clamp(1.4rem, 3vw, 2rem); }
+  .section-subtitle { font-size: .95rem; }
+
+  .cta-section { margin: 0 16px; padding: 56px 24px; }
+
+  /* Score rows */
+  .score-table-row { flex-wrap: wrap; padding: 14px 18px; gap: 10px; }
+  .score-name { min-width: 100px; }
+  .score-bar-wrap { min-width: 150px; flex: 1 1 100%; order: 4; }
+
+  /* Issue rows */
+  .issue-row { flex-wrap: wrap; padding: 16px 18px; gap: 10px; }
+  .issue-text { min-width: 0; }
+
+  /* Phase cards */
+  .phase-header { padding: 18px 20px; gap: 12px; }
+  .phase-body { padding: 0 20px 20px; }
+  .phase-hours { font-size: .8rem; padding: 6px 14px; }
+
+  /* Page status */
+  .page-status { flex-wrap: wrap; padding: 12px 18px; gap: 6px; }
+  .page-status .url { width: 100%; margin-left: 18px; }
+
+  /* Missing grid */
+  .missing-grid { grid-template-columns: 1fr; gap: 20px; }
+}
+
+/* ============================================
+   RESPONSIVE — MOBILE (max-width: 640px)
+   ============================================ */
+@media (max-width: 640px) {
+  html { font-size: 15px; }
+  .section { padding: 44px 0; }
+  .container, .container-sm, .container-lg { padding: 0 16px; }
+  .hero { padding: 56px 16px 48px; }
+  .page-hero { padding: 48px 16px 32px; }
+  .hero h1 { font-size: 1.6rem; }
+  .page-hero h1 { font-size: 1.4rem; }
+  .hero p { font-size: .9rem; margin-bottom: 24px; }
+  .hero-badge { font-size: .7rem; padding: 6px 14px; }
+
+  .topnav { padding: 0 16px; }
+  .topnav-brand { font-size: 1rem; }
+
+  .section-title { font-size: 1.35rem; }
+  .section-subtitle { font-size: .9rem; margin-bottom: 32px; }
+  .mb-48, .mb-32 { margin-bottom: 24px; }
+
+  /* Cards */
+  .card { padding: 24px; }
+  .card-icon { width: 44px; height: 44px; }
+
+  /* Feature cards */
+  .feature-card { flex-direction: column; align-items: flex-start; }
+
+  /* Tables */
+  .table-wrap { border-radius: 8px; }
+  th, td { padding: 10px 12px; font-size: .8rem; }
+
+  /* Page nav */
+  .page-nav { flex-direction: column; gap: 12px; }
+  .page-nav a { justify-content: center; }
+
+  /* Sitemap */
+  .sitemap-tree { padding: 20px; }
+  .tree-item--l1 { padding-left: 16px; }
+  .tree-item--l2 { padding-left: 32px; }
+  .tree-item--l3 { padding-left: 48px; }
+
+  /* Score rows */
+  .score-table-row { flex-direction: column; align-items: flex-start; gap: 8px; padding: 14px 16px; }
+  .score-icon { width: 32px; height: 32px; border-radius: 8px; }
+  .score-bar-wrap { width: 100%; min-width: 0; }
+  .score-badge { align-self: flex-start; }
+
+  /* Issue rows */
+  .issue-row { flex-direction: column; align-items: flex-start; gap: 8px; padding: 14px 16px; }
+
+  /* Phase cards */
+  .phase-header { flex-direction: column; align-items: flex-start; padding: 16px; gap: 10px; }
+  .phase-num { width: 36px; height: 36px; border-radius: 10px; font-size: .8rem; }
+  .phase-body { padding: 0 16px 16px; }
+  .phase-task { font-size: .8rem; gap: 10px; padding: 8px 0; }
+  .phase-check { width: 16px; height: 16px; }
+
+  /* Gantt chart */
+  .gantt { padding: 16px; overflow-x: auto; }
+  .gantt-label { min-width: 120px; font-size: .75rem; }
+  .gantt-row { gap: 10px; }
+
+  /* Deliverables */
+  .deliverable-section { padding: 20px; }
+  .deliverable-section h4 { font-size: .85rem; }
+  .del-item { font-size: .8rem; padding: 6px 0; }
+
+  /* CTA section */
+  .cta-section { margin: 0 8px; padding: 40px 20px; border-radius: 16px; }
+
+  /* Footer */
+  .site-footer { padding: 28px 16px; font-size: .75rem; }
+
+  /* Comparison */
+  .compare-grid { gap: 16px; }
+  .compare-card { padding: 24px; }
+}
+
+/* ============================================
+   RESPONSIVE INLINE-STYLE OVERRIDES
+   These override inline grid/flex layouts
+   that can't respond to screen size by default
+   ============================================ */
+
+/* -- Tablet -- */
+@media (max-width: 768px) {
+  /* Force all inline 2-col grids to stack */
+  [style*="grid-template-columns: 1fr 1fr"],
+  [style*="grid-template-columns:1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Force 5-col grids to 2+3 wrap */
+  [style*="grid-template-columns: repeat(5"],
+  [style*="grid-template-columns:repeat(5"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Max-widths should be 100% on tablet */
+  [style*="max-width:900px"],
+  [style*="max-width:700px"],
+  [style*="max-width:600px"] {
+    max-width: 100% !important;
+  }
+
+  /* Summary banner stats */
+  .summary-stats {
+    gap: 24px !important;
+  }
+  .summary-stat .num {
+    font-size: 1.8rem !important;
+  }
+
+  /* Summary banner */
+  .summary-banner {
+    padding: 32px 24px !important;
+  }
+  .summary-banner h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Gantt chart — allow horizontal scroll */
+  .gantt {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .gantt-row, .gantt [style*="display:flex"] {
+    min-width: 500px;
+  }
+
+  /* Payment cards grid */
+  [style*="grid-template-columns:1fr 1fr"][style*="max-width:700px"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Milestone markers */
+  .milestone-marker {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: .9rem !important;
+  }
+
+  /* Major changes "How it works" steps */
+  [style*="display:flex"][style*="gap:16px"][style*="align-items:flex-start"] {
+    flex-wrap: wrap !important;
+  }
+  [style*="display:flex"][style*="gap:16px"][style*="align-items:flex-start"] > [style*="padding-top:18px"] {
+    display: none !important;
+  }
+  [style*="display:flex"][style*="gap:16px"][style*="align-items:flex-start"] > [style*="flex:1"] {
+    flex: 0 0 calc(50% - 12px) !important;
+    min-width: 0 !important;
+  }
+}
+
+/* -- Mobile -- */
+@media (max-width: 480px) {
+  /* Force ALL inline grids to single column */
+  [style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Total cost banner — smaller text */
+  [style*="font-size:3.5rem"] {
+    font-size: 2.4rem !important;
+  }
+  [style*="font-size:2.2rem"] {
+    font-size: 1.6rem !important;
+  }
+  [style*="font-size:2rem"][style*="font-weight:800"][style*="color:var(--blue)"] {
+    font-size: 1.5rem !important;
+  }
+
+  /* Payment cards — reduce padding */
+  [style*="padding:40px 32px"][style*="text-align:center"] {
+    padding: 28px 20px !important;
+  }
+  [style*="padding:48px 40px"] {
+    padding: 32px 20px !important;
+  }
+  [style*="padding:40px"] {
+    padding: 24px 16px !important;
+  }
+  [style*="padding:36px"] {
+    padding: 24px 16px !important;
+  }
+  [style*="padding:32px 40px"] {
+    padding: 24px 16px !important;
+  }
+
+  /* Score circles in PageSpeed section */
+  [style*="display:flex"][style*="justify-content:space-between"][style*="gap:12px"] {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 16px !important;
+  }
+
+  /* Step flow — stack vertically */
+  [style*="display:flex"][style*="gap:16px"][style*="align-items:flex-start"] {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  [style*="display:flex"][style*="gap:16px"][style*="align-items:flex-start"] > [style*="padding-top:18px"] {
+    display: none !important;
+  }
+  [style*="display:flex"][style*="gap:16px"][style*="align-items:flex-start"] > [style*="flex:1"] {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+  }
+
+  /* Scope bar on index.html */
+  .scope-bar {
+    flex-direction: column !important;
+    gap: 16px !important;
+    padding: 24px !important;
+  }
+  .scope-item {
+    flex-direction: row !important;
+    gap: 12px !important;
+    justify-content: center !important;
+  }
+
+  /* Snapshot grid (Current vs Proposed) */
+  .snapshot-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Free support callout */
+  [style*="display:flex"][style*="align-items:center"][style*="gap:24px"][style*="padding:32px 40px"] {
+    flex-direction: column !important;
+    text-align: center !important;
+    padding: 24px 16px !important;
+  }
+
+  /* AMC card layout */
+  [style*="display:flex"][style*="align-items:center"][style*="justify-content:space-between"][style*="margin-bottom:28px"] {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 12px !important;
+  }
+  [style*="display:flex"][style*="align-items:center"][style*="justify-content:space-between"][style*="margin-bottom:28px"] > [style*="text-align:right"] {
+    text-align: center !important;
+  }
+
+  /* Quote form step cards */
+  [style*="flex:1;min-width:200px"] {
+    min-width: 0 !important;
+    flex: 0 0 100% !important;
+  }
+
+  /* Inline flex items with min-width */
+  [style*="min-width:110px"] {
+    min-width: 80px !important;
+  }
+  [style*="min-width:120px"] {
+    min-width: 0 !important;
+  }
+  [style*="min-width:180px"] {
+    min-width: 100px !important;
+  }
+
+  /* Gantt chart must scroll */
+  .gantt {
+    padding: 12px !important;
+  }
+  .gantt-row, .gantt > [style*="display:flex"] {
+    min-width: 450px;
+  }
+
+  /* Tech comparison side by side */
+  .tech-compare {
+    grid-template-columns: 1fr !important;
+  }
+}

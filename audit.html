@@ -267,6 +267,77 @@
       font-weight: 700;
       font-size: .8rem;
     }
+
+    /* Responsive — Tablet */
+    @media (max-width: 768px) {
+      .score-table-row {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 14px 16px;
+      }
+      .score-bar-wrap {
+        flex: 1 1 100%;
+        order: 4;
+        min-width: 0;
+      }
+      .issue-row {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .missing-grid {
+        grid-template-columns: 1fr;
+      }
+      .page-status {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .page-status .url {
+        width: 100%;
+      }
+    }
+
+    /* Responsive — Mobile */
+    @media (max-width: 480px) {
+      .score-table-row {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 14px;
+      }
+      .score-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+      }
+      .score-name h4 {
+        font-size: .85rem;
+      }
+      .score-name p {
+        font-size: .75rem;
+      }
+      .score-bar-wrap {
+        width: 100%;
+      }
+      .issue-row {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 14px;
+      }
+      .issue-text strong {
+        font-size: .85rem;
+      }
+      .issue-text span {
+        font-size: .775rem;
+      }
+      .missing-card {
+        padding: 24px;
+      }
+      .missing-card h3 {
+        font-size: .9rem;
+      }
+      .missing-item {
+        font-size: .825rem;
+      }
+    }
   </style>
 </head>
 

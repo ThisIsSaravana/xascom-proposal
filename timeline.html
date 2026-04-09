@@ -354,6 +354,92 @@
             font-size: .75rem;
             font-weight: 600;
         }
+
+        /* Responsive — Tablet */
+        @media (max-width: 768px) {
+            .summary-banner {
+                padding: 32px 20px;
+            }
+            .summary-banner h2 {
+                font-size: 1.5rem;
+            }
+            .summary-stats {
+                gap: 24px;
+            }
+            .summary-stat .num {
+                font-size: 1.8rem;
+            }
+            .gantt {
+                padding: 16px;
+            }
+            .milestone-item {
+                gap: 16px;
+            }
+            .deliverable-section {
+                padding: 20px;
+            }
+        }
+
+        /* Responsive — Mobile */
+        @media (max-width: 480px) {
+            .summary-banner {
+                padding: 24px 16px;
+            }
+            .summary-banner h2 {
+                font-size: 1.25rem;
+            }
+            .summary-stats {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .summary-stat .num {
+                font-size: 1.5rem;
+            }
+            .phase-header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 16px;
+                gap: 10px;
+            }
+            .phase-num {
+                width: 36px;
+                height: 36px;
+                font-size: .8rem;
+            }
+            .phase-body {
+                padding: 0 16px 16px;
+            }
+            .phase-task {
+                font-size: .8rem;
+                gap: 10px;
+            }
+            .phase-check {
+                width: 16px;
+                height: 16px;
+            }
+            .phase-hours {
+                font-size: .75rem;
+                padding: 6px 12px;
+            }
+            .milestone-marker {
+                width: 36px;
+                height: 36px;
+                font-size: .8rem;
+            }
+            .milestone-pct {
+                font-size: 1.1rem;
+                min-width: 40px;
+            }
+            .deliverable-section {
+                padding: 16px;
+            }
+            .deliverable-section h4 {
+                font-size: .85rem;
+            }
+            .del-item {
+                font-size: .8rem;
+            }
+        }
     </style>
 </head>
 

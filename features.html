@@ -260,6 +260,53 @@
             color: var(--gray-500);
             line-height: 1.6;
         }
+
+        /* Responsive — Tablet */
+        @media (max-width: 768px) {
+            .feature-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .legal-card {
+                padding: 24px;
+            }
+        }
+
+        /* Responsive — Mobile */
+        @media (max-width: 480px) {
+            .feature-card {
+                padding: 20px;
+                gap: 12px;
+            }
+            .feature-icon {
+                width: 40px !important;
+                height: 40px !important;
+            }
+            .feature-card h4 {
+                font-size: .9rem;
+            }
+            .feature-card p {
+                font-size: .8rem;
+            }
+            .tech-option-header {
+                padding: 20px;
+            }
+            .tech-option-body {
+                padding: 0 20px 20px;
+            }
+            .tech-option-footer {
+                padding: 20px;
+            }
+            .tech-row {
+                flex-direction: column;
+                gap: 4px;
+            }
+            .legal-card {
+                padding: 20px;
+            }
+            .legal-card h4 {
+                font-size: .85rem;
+            }
+        }
     </style>
 </head>
 
