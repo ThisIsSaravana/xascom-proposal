@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Features & Tech — XASCOM Redesign Proposal</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <style>
+    .ico { display: inline-block; width: 16px; height: 16px; vertical-align: -2px; }
+    .card-icon .ico, .feature-icon .ico, .page-icon .ico, .nav-card .icon .ico { width: 24px; height: 24px; vertical-align: middle; }
+    .audit-score-card .ico { width: 28px; height: 28px; display: block; margin: 0 auto 4px; }
+    .legal-card .ico { width: 32px; height: 32px; display: block; margin: 0 auto 4px; }
+    .step-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--blue); color: white; font-size: .8rem; font-weight: 800; }
+  </style>
+  <style>
+    .feature-card {
+      background: var(--white); border: 1px solid var(--gray-200);
+      border-radius: var(--radius); padding: 28px;
+      display: flex; align-items: flex-start; gap: 16px;
+      transition: var(--transition);
+    }
+    .feature-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .feature-card h4 { font-size: .95rem; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
+    .feature-card p { font-size: .825rem; color: var(--gray-500); line-height: 1.6; }
+
+    .tech-compare {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+    }
+    @media (max-width: 768px) { .tech-compare { grid-template-columns: 1fr; } }
+    .tech-option {
+      background: var(--white); border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg); overflow: hidden;
+    }
+    .tech-option--recommended { border: 2px solid var(--blue); }
+    .tech-option-header {
+      padding: 28px 32px; border-bottom: 1px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .tech-option-header h3 { font-size: 1.1rem; font-weight: 700; }
+    .tech-option-body { padding: 28px 32px; }
+    .tech-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid var(--gray-50);
+      font-size: .875rem;
+    }
+    .tech-row:last-child { border-bottom: none; }
+    .tech-row .label { color: var(--gray-500); }
+    .tech-row .value { font-weight: 600; color: var(--gray-800); text-align: right; }
+    .tech-option-footer {
+      padding: 20px 32px; background: var(--gray-50);
+      border-top: 1px solid var(--gray-200);
+    }
+    .tech-option-footer .pros { list-style: none; }
+    .tech-option-footer .pros li { font-size: .825rem; padding: 4px 0; padding-left: 20px; position: relative; color: var(--gray-600); }
+    .tech-option-footer .pros li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+    .tech-option-footer .cons li::before { content: '\2013'; color: var(--orange); }
+
+    .seo-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;
+    }
+    .seo-card {
+      background: var(--white); border: 1px solid var(--gray-200);
+      border-radius: var(--radius); padding: 32px;
+    }
+    .seo-card h4 { font-size: 1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .seo-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; font-size: .875rem; color: var(--gray-600);
+      border-bottom: 1px solid var(--gray-50);
+    }
+    .seo-item:last-child { border-bottom: none; }
+    .seo-check { color: var(--blue); font-size: .8rem; }
+
+    .legal-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;
+    }
+    .legal-card {
+      background: var(--white); border: 1px solid var(--gray-200);
+      border-radius: var(--radius); padding: 28px; text-align: center;
+    }
+    .legal-card .icon { font-size: 2rem; margin-bottom: 12px; display: block; }
+    .legal-card h4 { font-size: .95rem; font-weight: 700; margin-bottom: 8px; color: var(--gray-900); }
+    .legal-card p { font-size: .8rem; color: var(--gray-500); line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit;"><span class="dot"></span> XASCOM Redesign Proposal</a>
+      <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <ul class="topnav-links">
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="audit.html">Site Audit</a></li>
+        <li><a href="proposal.html">Redesign Plan</a></li>
+        <li><a href="features.html" class="active">Features</a></li>
+        <li><a href="timeline.html">Timeline</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero page-hero">
+    <div class="hero-badge"><i data-lucide="settings" class="ico"></i> Page 4 of 5</div>
+    <h1>Features & Technology</h1>
+    <p>Every feature, integration, and technical choice — designed to make XASCOM's website fast, functional, and future-ready.</p>
+  </section>
+
+  <!-- CORE FEATURES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label"><i data-lucide="wrench" class="ico"></i> Core Features</div>
+      <h2 class="section-title">Must-Have Features</h2>
+      <p class="section-subtitle">These are the essential features every page of your new website will have — non-negotiable for a professional insurance website.</p>
+
+      <div class="grid-3" style="gap:20px;">
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--blue"><i data-lucide="smartphone" class="ico"></i></div>
+          <div>
+            <h4>Responsive Design</h4>
+            <p>Mobile-first design that works perfectly on all devices, from 320px phones to 4K monitors.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--green"><i data-lucide="message-circle" class="ico"></i></div>
+          <div>
+            <h4>WhatsApp Chat Widget</h4>
+            <p>Floating WhatsApp button on every page for instant customer engagement.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--gold"><i data-lucide="phone" class="ico"></i></div>
+          <div>
+            <h4>Click-to-Call</h4>
+            <p>Phone number is clickable on mobile — one tap to call your team directly.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--blue"><i data-lucide="pen-line" class="ico"></i></div>
+          <div>
+            <h4>Lead Capture Forms</h4>
+            <p>Smart forms on every service page plus a dedicated multi-step quote page.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--green"><i data-lucide="mail" class="ico"></i></div>
+          <div>
+            <h4>Email Notifications</h4>
+            <p>Auto-email to your team + confirmation to customer on every form submission.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--gold"><i data-lucide="map-pin" class="ico"></i></div>
+          <div>
+            <h4>Google Maps</h4>
+            <p>Interactive embedded map on contact page showing your T.Nagar office location.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--blue"><i data-lucide="search" class="ico"></i></div>
+          <div>
+            <h4>SEO Optimized</h4>
+            <p>Meta tags, schema markup, sitemap, robots.txt — ready for Google rankings.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--gold"><i data-lucide="lock" class="ico"></i></div>
+          <div>
+            <h4>SSL + Security</h4>
+            <p>HTTPS encryption, secure form handling, XSS protection, security headers.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--blue"><i data-lucide="cookie" class="ico"></i></div>
+          <div>
+            <h4>Cookie Consent</h4>
+            <p>GDPR/DPDP compliant cookie consent banner with accept/decline options.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--green"><i data-lucide="bar-chart-3" class="ico"></i></div>
+          <div>
+            <h4>Analytics</h4>
+            <p>Google Analytics 4 + Meta Pixel for tracking visitors, conversions, and behavior.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--gold"><i data-lucide="zap" class="ico"></i></div>
+          <div>
+            <h4>Speed Optimized</h4>
+            <p>Lazy loading, CDN, image compression, minified code — loads under 2 seconds.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENHANCED FEATURES -->
+  <section class="section section--gray">
+    <div class="container">
+      <div class="section-label"><i data-lucide="sparkles" class="ico"></i> Enhanced Features</div>
+      <h2 class="section-title">Additional Features</h2>
+      <p class="section-subtitle">Beyond the basics — these features elevate the user experience and drive more business.</p>
+
+      <div class="grid-2" style="gap:20px;">
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--blue"><i data-lucide="calculator" class="ico"></i></div>
+          <div>
+            <h4>Premium Calculator <span class="badge badge--high" style="margin-left:8px;">HIGH</span></h4>
+            <p>Basic premium estimation tool giving visitors indicative quotes — drives lead engagement.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--green"><i data-lucide="message-circle" class="ico"></i></div>
+          <div>
+            <h4>Live Chat Widget <span class="badge badge--high" style="margin-left:8px;">HIGH</span></h4>
+            <p>Real-time chat via Tawk.to or Crisp for instant customer conversations.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--gold"><i data-lucide="star" class="ico"></i></div>
+          <div>
+            <h4>Testimonial Management <span class="badge badge--high" style="margin-left:8px;">HIGH</span></h4>
+            <p>Admin panel to add, edit, and manage customer reviews without a developer.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--blue"><i data-lucide="image" class="ico"></i></div>
+          <div>
+            <h4>Gallery Management <span class="badge badge--high" style="margin-left:8px;">HIGH</span></h4>
+            <p>Upload and organize event photos, create albums, manage gallery from admin panel.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--green"><i data-lucide="mail-open" class="ico"></i></div>
+          <div>
+            <h4>Newsletter Subscription <span class="badge badge--medium" style="margin-left:8px;">MEDIUM</span></h4>
+            <p>Mailchimp or Sendinblue integration for email marketing and customer engagement.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon card-icon card-icon--gold"><i data-lucide="smartphone" class="ico"></i></div>
+          <div>
+            <h4>Social Media Feed <span class="badge badge--medium" style="margin-left:8px;">MEDIUM</span></h4>
+            <p>Auto-display latest Instagram/Facebook posts on the website.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADMIN PANEL -->
+  <section class="section">
+    <div class="container-sm">
+      <div class="text-center mb-48">
+        <div class="section-label"><i data-lucide="settings-2" class="ico"></i> Admin Panel</div>
+        <h2 class="section-title">Your Content Management Dashboard</h2>
+        <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">You'll get a simple admin panel to manage your website content — no developer needed for routine updates.</p>
+      </div>
+
+      <div class="grid-3" style="gap:16px;">
+        <div style="background:var(--sky-pale);border-radius:12px;padding:24px;text-align:center;">
+          <div style="font-size:1.5rem;margin-bottom:10px;"><i data-lucide="bar-chart-3" class="ico"></i></div>
+          <strong style="font-size:.875rem;">Dashboard</strong>
+          <p style="font-size:.8rem;color:var(--gray-500);margin-top:4px;">Lead/inquiry summary at a glance</p>
+        </div>
+        <div style="background:var(--sky-pale);border-radius:12px;padding:24px;text-align:center;">
+          <div style="font-size:1.5rem;margin-bottom:10px;"><i data-lucide="pen-line" class="ico"></i></div>
+          <strong style="font-size:.875rem;">Form Submissions</strong>
+          <p style="font-size:.8rem;color:var(--gray-500);margin-top:4px;">View all quote & contact inquiries</p>
+        </div>
+        <div style="background:var(--sky-pale);border-radius:12px;padding:24px;text-align:center;">
+          <div style="font-size:1.5rem;margin-bottom:10px;"><i data-lucide="image" class="ico"></i></div>
+          <strong style="font-size:.875rem;">Gallery Upload</strong>
+          <p style="font-size:.8rem;color:var(--gray-500);margin-top:4px;">Upload & organize event photos</p>
+        </div>
+        <div style="background:var(--sky-pale);border-radius:12px;padding:24px;text-align:center;">
+          <div style="font-size:1.5rem;margin-bottom:10px;"><i data-lucide="star" class="ico"></i></div>
+          <strong style="font-size:.875rem;">Testimonials</strong>
+          <p style="font-size:.8rem;color:var(--gray-500);margin-top:4px;">Add & manage client reviews</p>
+        </div>
+        <div style="background:var(--sky-pale);border-radius:12px;padding:24px;text-align:center;">
+          <div style="font-size:1.5rem;margin-bottom:10px;"><i data-lucide="search" class="ico"></i></div>
+          <strong style="font-size:.875rem;">SEO Settings</strong>
+          <p style="font-size:.8rem;color:var(--gray-500);margin-top:4px;">Edit meta tags per page</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section class="section section--gray">
+    <div class="container">
+      <div class="text-center mb-48">
+        <div class="section-label"><i data-lucide="monitor" class="ico"></i> Technology</div>
+        <h2 class="section-title">Technology Stack Options</h2>
+        <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">We offer two technology approaches. We recommend Option A for best performance, but Option B is also viable.</p>
+      </div>
+
+      <div class="tech-compare">
+        <!-- Option A -->
+        <div class="tech-option tech-option--recommended">
+          <div class="tech-option-header">
+            <div>
+              <h3>Option A: Next.js (Recommended)</h3>
+              <span class="badge badge--blue" style="margin-top:6px;">Recommended</span>
+            </div>
+          </div>
+          <div class="tech-option-body">
+            <div class="tech-row"><span class="label">Frontend</span><span class="value">Next.js 15 (React)</span></div>
+            <div class="tech-row"><span class="label">Styling</span><span class="value">Tailwind CSS + Framer Motion</span></div>
+            <div class="tech-row"><span class="label">Forms</span><span class="value">React Hook Form + Server Actions</span></div>
+            <div class="tech-row"><span class="label">Email</span><span class="value">Resend / Nodemailer</span></div>
+            <div class="tech-row"><span class="label">Hosting</span><span class="value">Vercel</span></div>
+            <div class="tech-row"><span class="label">Database</span><span class="value">PostgreSQL (Supabase)</span></div>
+            <div class="tech-row"><span class="label">Images</span><span class="value">Vercel / Cloudinary CDN</span></div>
+          </div>
+          <div class="tech-option-footer">
+            <ul class="pros">
+              <li>Blazing fast — loads under 1 second</li>
+              <li>SEO-first with server-side rendering</li>
+              <li>Modern UI with smooth animations</li>
+              <li>Scalable and future-proof</li>
+              <li>Zero hosting cost (Vercel free tier)</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Option B -->
+        <div class="tech-option">
+          <div class="tech-option-header">
+            <div>
+              <h3>Option B: WordPress (Rebuilt)</h3>
+              <span class="badge badge--medium" style="margin-top:6px;">Alternative</span>
+            </div>
+          </div>
+          <div class="tech-option-body">
+            <div class="tech-row"><span class="label">Platform</span><span class="value">WordPress 6.x</span></div>
+            <div class="tech-row"><span class="label">Theme</span><span class="value">Custom / Astra Child</span></div>
+            <div class="tech-row"><span class="label">Builder</span><span class="value">Elementor Pro</span></div>
+            <div class="tech-row"><span class="label">Forms</span><span class="value">WPForms Pro / Gravity</span></div>
+            <div class="tech-row"><span class="label">SEO</span><span class="value">Yoast SEO Premium</span></div>
+            <div class="tech-row"><span class="label">Hosting</span><span class="value">Cloudways / SiteGround</span></div>
+            <div class="tech-row"><span class="label">Security</span><span class="value">Wordfence / Sucuri</span></div>
+            <div class="tech-row"><span class="label">Cache</span><span class="value">WP Rocket</span></div>
+          </div>
+          <div class="tech-option-footer">
+            <ul class="pros">
+              <li>Client can edit content very easily</li>
+              <li>Huge plugin ecosystem</li>
+              <li>Many hosting options available</li>
+            </ul>
+            <ul class="pros cons" style="margin-top:12px;">
+              <li>Slower page load speeds</li>
+              <li>Security vulnerabilities if not maintained</li>
+              <li>Needs regular plugin updates</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEO STRATEGY -->
+  <section class="section">
+    <div class="container">
+      <div class="text-center mb-48">
+        <div class="section-label"><i data-lucide="search" class="ico"></i> SEO Strategy</div>
+        <h2 class="section-title">Search Engine Optimization Plan</h2>
+        <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">A comprehensive SEO strategy to help XASCOM rank in Google and drive organic traffic from potential customers.</p>
+      </div>
+
+      <div class="seo-grid">
+        <div class="seo-card">
+          <h4><i data-lucide="file-text" class="ico"></i> On-Page SEO</h4>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Unique meta title & description per page</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Proper H1-H6 heading hierarchy</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Image alt tags for all images</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Schema markup (LocalBusiness, FAQPage)</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Internal linking strategy</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> XML Sitemap + robots.txt</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Canonical URLs</div>
+        </div>
+        <div class="seo-card">
+          <h4><i data-lucide="zap" class="ico"></i> Technical SEO</h4>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Core Web Vitals optimized</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Mobile-first indexing ready</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> PageSpeed score &gt; 90</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Structured data for rich snippets</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Open Graph tags for social sharing</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Twitter Card meta tags</div>
+        </div>
+        <div class="seo-card">
+          <h4><i data-lucide="map-pin" class="ico"></i> Local SEO</h4>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Google Business Profile optimization</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Local schema markup (NAP)</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Chennai area keyword targeting</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> NAP consistency across web</div>
+          <div class="seo-item"><span class="seo-check"><i data-lucide="check" class="ico"></i></span> Content strategy (2 posts/month)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEGAL COMPLIANCE -->
+  <section class="section section--gray">
+    <div class="container">
+      <div class="text-center mb-48">
+        <div class="section-label"><i data-lucide="scale" class="ico"></i> Legal Compliance</div>
+        <h2 class="section-title">Legal & Compliance Pages</h2>
+        <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">Critical legal pages that are currently missing — all will be created with proper legal content.</p>
+      </div>
+
+      <div class="legal-grid">
+        <div class="legal-card">
+          <span class="icon"><i data-lucide="shield-check" class="ico"></i></span>
+          <h4>Privacy Policy</h4>
+          <p>DPDP Act 2023 compliant. Data collection, cookie usage, third-party sharing, user rights.</p>
+          <span class="badge badge--critical" style="margin-top:12px;">Currently Missing</span>
+        </div>
+        <div class="legal-card">
+          <span class="icon"><i data-lucide="clipboard-list" class="ico"></i></span>
+          <h4>Terms & Conditions</h4>
+          <p>Service description, user obligations, liability limitation, IP rights, governing law.</p>
+          <span class="badge badge--critical" style="margin-top:12px;">Currently Missing</span>
+        </div>
+        <div class="legal-card">
+          <span class="icon"><i data-lucide="banknote" class="ico"></i></span>
+          <h4>Refund Policy</h4>
+          <p>Cancellation process, refund eligibility, timeline, contact for refund queries.</p>
+          <span class="badge badge--high" style="margin-top:12px;">Currently Missing</span>
+        </div>
+        <div class="legal-card">
+          <span class="icon"><i data-lucide="alert-triangle" class="ico"></i></span>
+          <h4>Disclaimer</h4>
+          <p>Advisory nature, no coverage guarantee, third-party links, information accuracy.</p>
+          <span class="badge badge--high" style="margin-top:12px;">Currently Missing</span>
+        </div>
+        <div class="legal-card">
+          <span class="icon"><i data-lucide="cookie" class="ico"></i></span>
+          <h4>Cookie Consent</h4>
+          <p>Interactive cookie banner with accept/decline for user consent management.</p>
+          <span class="badge badge--medium" style="margin-top:12px;">Currently Missing</span>
+        </div>
+        <div class="legal-card">
+          <span class="icon"><i data-lucide="accessibility" class="ico"></i></span>
+          <h4>Accessibility (WCAG)</h4>
+          <p>Basic WCAG compliance — alt texts, keyboard nav, contrast ratios, screen reader support.</p>
+          <span class="badge badge--medium" style="margin-top:12px;">Currently Missing</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div style="height:48px;"></div>
+
+  <div class="container">
+    <div class="page-nav">
+      <a href="proposal.html">← Redesign Plan</a>
+      <a href="timeline.html">Timeline & Scope →</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <strong>XASCOM Website Redesign Proposal</strong> · Prepared on April 9, 2026 · Confidential Document
+  </footer>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

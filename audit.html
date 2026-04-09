@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Audit — XASCOM Redesign Proposal</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <style>
+    .ico { display: inline-block; width: 16px; height: 16px; vertical-align: -2px; }
+    .card-icon .ico, .feature-icon .ico, .page-icon .ico, .nav-card .icon .ico { width: 24px; height: 24px; vertical-align: middle; }
+    .audit-score-card .ico { width: 28px; height: 28px; display: block; margin: 0 auto 4px; }
+    .legal-card .ico { width: 32px; height: 32px; display: block; margin: 0 auto 4px; }
+    .step-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--blue); color: white; font-size: .8rem; font-weight: 800; }
+  </style>
+  <style>
+    .score-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 32px; }
+    .score-table-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 18px 24px; background: var(--white);
+      border: 1px solid var(--gray-200); border-radius: 10px;
+      margin-bottom: 10px; transition: var(--transition);
+    }
+    .score-table-row:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+    .score-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .score-icon .ico { width: 20px; height: 20px; color: white; }
+    .score-name { flex: 1; min-width: 120px; }
+    .score-name h4 { font-size: .925rem; font-weight: 700; color: var(--gray-800); }
+    .score-name p { font-size: .8rem; color: var(--gray-500); margin-top: 2px; }
+    .score-bar-wrap { flex: 2; min-width: 200px; }
+    .score-bar-bg { width: 100%; height: 8px; background: var(--gray-100); border-radius: 100px; overflow: hidden; }
+    .score-bar-fill { height: 100%; border-radius: 100px; transition: width .6s ease; }
+    .score-badge {
+      font-size: .75rem; font-weight: 700; padding: 5px 14px;
+      border-radius: 100px; white-space: nowrap; min-width: 110px; text-align: center;
+    }
+    .score-badge--poor { background: #fef2f2; color: var(--red); }
+    .score-badge--below { background: #fff7ed; color: var(--orange); }
+    .score-badge--avg { background: #fffbeb; color: var(--amber); }
+
+    .rating--poor { color: var(--red); }
+    .rating--below { color: var(--orange); }
+    .rating--avg { color: var(--gold); }
+
+    .issue-group {
+      background: var(--white); border: 1px solid var(--gray-200);
+      border-radius: var(--radius); overflow: hidden; margin-top: 24px;
+    }
+    .issue-group-header {
+      padding: 16px 24px; background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .issue-group-header h3 { font-size: .9rem; font-weight: 700; color: var(--gray-800); }
+    .issue-count {
+      font-size: .75rem; font-weight: 700; padding: 4px 12px;
+      border-radius: 100px;
+    }
+
+    .page-status {
+      display: flex; align-items: center; gap: 8px;
+      padding: 16px 24px; border-bottom: 1px solid var(--gray-100);
+    }
+    .page-status:last-child { border-bottom: none; }
+    .page-status .name { flex: 1; font-weight: 600; font-size: .925rem; color: var(--gray-800); }
+    .page-status .url { font-size: .8rem; color: var(--gray-400); font-family: monospace; }
+
+    .missing-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+    }
+    @media (max-width: 700px) { .missing-grid { grid-template-columns: 1fr; } }
+    .missing-card {
+      background: var(--white); border: 1px solid var(--gray-200);
+      border-radius: var(--radius); padding: 32px;
+    }
+    .missing-card h3 {
+      font-size: 1rem; font-weight: 700; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .missing-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid var(--gray-50);
+      font-size: .9rem; color: var(--gray-700);
+    }
+    .missing-item:last-child { border-bottom: none; }
+    .missing-x { color: var(--red); font-weight: 700; font-size: .8rem; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit;"><span class="dot"></span> XASCOM Redesign Proposal</a>
+      <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <ul class="topnav-links">
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="audit.html" class="active">Site Audit</a></li>
+        <li><a href="proposal.html">Redesign Plan</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="timeline.html">Timeline</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero page-hero">
+    <div class="hero-badge"><i data-lucide="search" class="ico"></i> Page 2 of 5</div>
+    <h1>Current Website Audit</h1>
+    <p>We thoroughly analyzed every page of xascom.in. Here's what we found — the good, the broken, and the missing.</p>
+  </section>
+
+  <!-- CURRENT STRUCTURE -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label"><i data-lucide="globe" class="ico"></i> Current Site Structure</div>
+      <h2 class="section-title">Your Website Today — 7 Pages</h2>
+      <p class="section-subtitle">Here's every page on xascom.in and its current status.</p>
+
+      <div class="issue-group">
+        <div class="issue-group-header">
+          <h3>Page Inventory</h3>
+          <span class="issue-count badge badge--blue">8 URLs checked</span>
+        </div>
+        <div class="page-status">
+          <span class="status-dot status-dot--green"></span>
+          <span class="name">Homepage</span>
+          <span class="badge badge--medium" style="margin-left:auto; margin-right:12px;">Cluttered</span>
+          <span class="url">/</span>
+        </div>
+        <div class="page-status">
+          <span class="status-dot status-dot--orange"></span>
+          <span class="name">Health Insurance</span>
+          <span class="badge badge--medium" style="margin-left:auto; margin-right:12px;">Minimal</span>
+          <span class="url">/health-insurance/</span>
+        </div>
+        <div class="page-status">
+          <span class="status-dot status-dot--orange"></span>
+          <span class="name">Life Insurance</span>
+          <span class="badge badge--medium" style="margin-left:auto; margin-right:12px;">Minimal</span>
+          <span class="url">/life-insurance/</span>
+        </div>
+        <div class="page-status">
+          <span class="status-dot status-dot--orange"></span>
+          <span class="name">General Insurance</span>
+          <span class="badge badge--medium" style="margin-left:auto; margin-right:12px;">Minimal</span>
+          <span class="url">/general-insurance/</span>
+        </div>
+        <div class="page-status">
+          <span class="status-dot status-dot--green"></span>
+          <span class="name">Gallery</span>
+          <span class="badge badge--low" style="margin-left:auto; margin-right:12px;">Basic</span>
+          <span class="url">/gallery/</span>
+        </div>
+        <div class="page-status">
+          <span class="status-dot status-dot--orange"></span>
+          <span class="name">Contact Us</span>
+          <span class="badge badge--medium" style="margin-left:auto; margin-right:12px;">Basic</span>
+          <span class="url">/contact-us/</span>
+        </div>
+        <div class="page-status" style="background:#fef2f2;">
+          <span class="status-dot status-dot--red"></span>
+          <span class="name" style="color:var(--red);">Services</span>
+          <span class="badge badge--critical" style="margin-left:auto; margin-right:12px;">404 BROKEN</span>
+          <span class="url">/services/</span>
+        </div>
+        <div class="page-status">
+          <span class="status-dot status-dot--orange"></span>
+          <span class="name">About Us</span>
+          <span class="badge badge--medium" style="margin-left:auto; margin-right:12px;">Basic</span>
+          <span class="url">/about-us/</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENT QUALITY -->
+  <section class="section section--gray">
+    <div class="container">
+      <div class="section-label"><i data-lucide="pen-line" class="ico"></i> Content Quality Assessment</div>
+      <h2 class="section-title">How Each Section Scores</h2>
+      <p class="section-subtitle">We rated every major section of your current website for content quality and user experience.</p>
+
+      <div class="score-table">
+        <div class="score-table-row">
+          <div class="score-icon" style="background:var(--red);"><i data-lucide="image" class="ico"></i></div>
+          <div class="score-name"><h4>Hero Banner</h4><p>Generic slider, no clear CTA</p></div>
+          <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:20%;background:var(--red);"></div></div></div>
+          <div class="score-badge score-badge--poor">Poor</div>
+        </div>
+        <div class="score-table-row">
+          <div class="score-icon" style="background:var(--orange);"><i data-lucide="clipboard-list" class="ico"></i></div>
+          <div class="score-name"><h4>Service Cards</h4><p>Textbook definitions only</p></div>
+          <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:35%;background:var(--orange);"></div></div></div>
+          <div class="score-badge score-badge--below">Below Average</div>
+        </div>
+        <div class="score-table-row">
+          <div class="score-icon" style="background:var(--amber);"><i data-lucide="info" class="ico"></i></div>
+          <div class="score-name"><h4>About Us</h4><p>Decent but poorly formatted</p></div>
+          <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:50%;background:var(--gold);"></div></div></div>
+          <div class="score-badge score-badge--avg">Average</div>
+        </div>
+        <div class="score-table-row">
+          <div class="score-icon" style="background:var(--red);"><i data-lucide="message-circle" class="ico"></i></div>
+          <div class="score-name"><h4>Testimonials</h4><p>5 reviews shown, but basic layout</p></div>
+          <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:35%;background:var(--orange);"></div></div></div>
+          <div class="score-badge score-badge--below">Below Average</div>
+        </div>
+        <div class="score-table-row">
+          <div class="score-icon" style="background:var(--red);"><i data-lucide="file-text" class="ico"></i></div>
+          <div class="score-name"><h4>Insurance Pages</h4><p>Definitions + bullets only</p></div>
+          <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:20%;background:var(--red);"></div></div></div>
+          <div class="score-badge score-badge--poor">Poor</div>
+        </div>
+        <div class="score-table-row">
+          <div class="score-icon" style="background:var(--orange);"><i data-lucide="phone" class="ico"></i></div>
+          <div class="score-name"><h4>Contact Page</h4><p>No map, minimal fields</p></div>
+          <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:35%;background:var(--orange);"></div></div></div>
+          <div class="score-badge score-badge--below">Below Average</div>
+        </div>
+        <div class="score-table-row">
+          <div class="score-icon" style="background:var(--red);"><i data-lucide="pen-tool" class="ico"></i></div>
+          <div class="score-name"><h4>Quote Section</h4><p>Garbled, broken text</p></div>
+          <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:10%;background:var(--red);"></div></div></div>
+          <div class="score-badge score-badge--poor">Poor</div>
+        </div>
+        <div class="score-table-row">
+          <div class="score-icon" style="background:var(--amber);"><i data-lucide="building" class="ico"></i></div>
+          <div class="score-name"><h4>Partner Logos</h4><p>Present but low quality</p></div>
+          <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:50%;background:var(--gold);"></div></div></div>
+          <div class="score-badge score-badge--avg">Average</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 24 ISSUES -->
+  <section class="section">
+    <div class="container">
+      <div class="text-center mb-48">
+        <div class="section-label"><i data-lucide="alert-triangle" class="ico"></i> Critical Issues</div>
+        <h2 class="section-title">24 Issues Found on Your Current Website</h2>
+        <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">These issues are hurting your business — from lost leads to legal non-compliance. Grouped by severity level.</p>
+      </div>
+
+      <!-- CRITICAL -->
+      <div class="issue-group">
+        <div class="issue-group-header">
+          <h3><i data-lucide="circle-dot" class="ico"></i> Critical — Needs Immediate Fix</h3>
+          <span class="issue-count badge badge--critical">3 issues</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num" style="background:#fef2f2;color:var(--red);">1</span>
+          <div class="issue-text">
+            <strong>Services page completely broken (404 error)</strong>
+            <span>The /services/ page redirects to a dead Firebase app. Anyone clicking "Services" sees a blank error. Leads are being lost.</span>
+          </div>
+          <span class="badge badge--critical">CRITICAL</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num" style="background:#fef2f2;color:var(--red);">2</span>
+          <div class="issue-text">
+            <strong>No Privacy Policy page</strong>
+            <span>Legally required under India's Digital Personal Data Protection Act, 2023. Your site collects user data via forms without any policy.</span>
+          </div>
+          <span class="badge badge--critical">CRITICAL</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num" style="background:#fef2f2;color:var(--red);">3</span>
+          <div class="issue-text">
+            <strong>No Terms & Conditions page</strong>
+            <span>No legal framework governing the use of your website and services. Exposes the business to liability risks.</span>
+          </div>
+          <span class="badge badge--critical">CRITICAL</span>
+        </div>
+      </div>
+
+      <!-- HIGH -->
+      <div class="issue-group" style="margin-top:24px;">
+        <div class="issue-group-header">
+          <h3><i data-lucide="circle-dot" class="ico"></i> High Priority — Significant Impact</h3>
+          <span class="issue-count badge badge--high">11 issues</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">4</span>
+          <div class="issue-text">
+            <strong>About Us page exists but is very basic</strong>
+            <span>The /about-us/ page exists but only has a brief paragraph. No company timeline, mission, team, or values section. Needs a proper redesign.</span>
+          </div>
+          <span class="badge badge--high">HIGH</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">5</span>
+          <div class="issue-text">
+            <strong>No Refund/Cancellation Policy</strong>
+            <span>IRDAI compliance risk. Customers need to know the refund process for insurance-related services.</span>
+          </div>
+          <span class="badge badge--high">HIGH</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">6</span>
+          <div class="issue-text">
+            <strong>Outdated UI/UX — 2022 WordPress template</strong>
+            <span>The design looks 4 years old. Doesn't reflect the professionalism and growth XASCOM has achieved.</span>
+          </div>
+          <span class="badge badge--high">HIGH</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">7</span>
+          <div class="issue-text">
+            <strong>Insurance pages have zero product details</strong>
+            <span>Pages only show textbook definitions and bullet lists. No actual plan info, benefits, or CTAs. Users leave for competitors.</span>
+          </div>
+          <span class="badge badge--high">HIGH</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">8</span>
+          <div class="issue-text">
+            <strong>No claim support or process page</strong>
+            <span>Claim support is your key differentiator, but there's no page explaining the process, documents needed, or how to file.</span>
+          </div>
+          <span class="badge badge--high">HIGH</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">9</span>
+          <div class="issue-text">
+            <strong>No premium calculator or quote tool</strong>
+            <span>No way for visitors to get a quick quote or express interest. Zero lead generation mechanism on the site.</span>
+          </div>
+          <span class="badge badge--high">HIGH</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">10</span>
+          <div class="issue-text">
+            <strong>Homepage is overloaded — no clear user journey</strong>
+            <span>Everything is crammed onto one page. Users don't know where to go. No clear path from interest to action.</span>
+          </div>
+          <span class="badge badge--high">HIGH</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">11</span>
+          <div class="issue-text">
+            <strong>No mobile-first responsive design</strong>
+            <span>Majority of insurance searches happen on mobile. The current template isn't optimized for mobile users.</span>
+          </div>
+          <span class="badge badge--high">HIGH</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">12</span>
+          <div class="issue-text">
+            <strong>Content last updated April 2022 — 4 years stale</strong>
+            <span>Customer count still says "7500" in some places. Company milestones, team info, and content haven't been refreshed.</span>
+          </div>
+          <span class="badge badge--high">HIGH</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">13</span>
+          <div class="issue-text">
+            <strong>Poor SEO — no meta descriptions, no structured data</strong>
+            <span>Search engines can't properly index or rank your site. Missing schema markup, meta tags, and sitemap.</span>
+          </div>
+          <span class="badge badge--high">HIGH</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">14</span>
+          <div class="issue-text">
+            <strong>No team/leadership page</strong>
+            <span>People buy from people. No visibility into who runs XASCOM — weakens trust and credibility.</span>
+          </div>
+          <span class="badge badge--high">HIGH</span>
+        </div>
+      </div>
+
+      <!-- MEDIUM -->
+      <div class="issue-group" style="margin-top:24px;">
+        <div class="issue-group-header">
+          <h3><i data-lucide="circle-dot" class="ico"></i> Medium Priority — Should Address</h3>
+          <span class="issue-count badge badge--medium">8 issues</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">15</span>
+          <div class="issue-text">
+            <strong>Only 5 testimonials with basic layout</strong>
+            <span>You have 8,000+ customers but only show 5 reviews in a plain format. No star ratings, photos, or categories. Needs better social proof.</span>
+          </div>
+          <span class="badge badge--medium">MEDIUM</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">16</span>
+          <div class="issue-text">
+            <strong>No FAQ section</strong>
+            <span>Common questions go unanswered on the site, increasing support call volume unnecessarily.</span>
+          </div>
+          <span class="badge badge--medium">MEDIUM</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">17</span>
+          <div class="issue-text">
+            <strong>No blog or resources section</strong>
+            <span>Zero organic SEO value. No content to attract search traffic or educate potential customers.</span>
+          </div>
+          <span class="badge badge--medium">MEDIUM</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">18</span>
+          <div class="issue-text">
+            <strong>Garbled text in "About Insurance" section</strong>
+            <span>The quote section on the homepage displays broken/garbled text — looks unprofessional.</span>
+          </div>
+          <span class="badge badge--medium">MEDIUM</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">19</span>
+          <div class="issue-text">
+            <strong>No WhatsApp chat widget</strong>
+            <span>A WhatsApp link exists in footer, but no floating widget for instant engagement.</span>
+          </div>
+          <span class="badge badge--medium">MEDIUM</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">20</span>
+          <div class="issue-text">
+            <strong>No downloadable brochures or resources</strong>
+            <span>Missed lead capture opportunity. Visitors can't download plan brochures or guides.</span>
+          </div>
+          <span class="badge badge--medium">MEDIUM</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">21</span>
+          <div class="issue-text">
+            <strong>No analytics or tracking</strong>
+            <span>No Google Analytics visible. No way to measure traffic, conversions, or user behavior.</span>
+          </div>
+          <span class="badge badge--medium">MEDIUM</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">22</span>
+          <div class="issue-text">
+            <strong>No cookie consent banner</strong>
+            <span>Website uses cookies but doesn't inform users or ask for consent — compliance issue.</span>
+          </div>
+          <span class="badge badge--medium">MEDIUM</span>
+        </div>
+      </div>
+
+      <!-- LOW -->
+      <div class="issue-group" style="margin-top:24px;">
+        <div class="issue-group-header">
+          <h3><i data-lucide="circle-dot" class="ico"></i> Low Priority — Nice to Fix</h3>
+          <span class="issue-count badge badge--low">2 issues</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">23</span>
+          <div class="issue-text">
+            <strong>No Google Maps on contact page</strong>
+            <span>Contact page shows address as text only. An embedded map would help visitors find the office.</span>
+          </div>
+          <span class="badge badge--low">LOW</span>
+        </div>
+        <div class="issue-row">
+          <span class="issue-num">24</span>
+          <div class="issue-text">
+            <strong>No career/join us page</strong>
+            <span>XASCOM runs Graduate Trainee Programmes but has no careers page for recruitment.</span>
+          </div>
+          <span class="badge badge--low">LOW</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSING PAGES -->
+  <section class="section section--gray">
+    <div class="container">
+      <div class="text-center mb-48">
+        <div class="section-label"><i data-lucide="file-text" class="ico"></i> Missing Pages</div>
+        <h2 class="section-title">Pages Your Website Doesn't Have — But Should</h2>
+      </div>
+
+      <div class="missing-grid">
+        <div class="missing-card">
+          <h3><span style="color:var(--red);"><i data-lucide="x-circle" class="ico"></i></span> Must-Have (Missing)</h3>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Privacy Policy</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Terms & Conditions</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Refund / Cancellation Policy</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Disclaimer</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Detailed product pages per insurance type</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Claim Support process page</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> FAQ page</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Blog / Resources section</div>
+        </div>
+        <div class="missing-card">
+          <h3><span style="color:var(--gold);"><i data-lucide="lightbulb" class="ico"></i></span> Nice-to-Have (Missing)</h3>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Careers page</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Team / Leadership page</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Partner detail pages</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Case Studies / Success Stories</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Insurance Knowledge Hub</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Get a Quote page (lead gen form)</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Testimonials dedicated page</div>
+          <div class="missing-item"><span class="missing-x"><i data-lucide="x" class="ico"></i></span> Sitemap page</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGESPEED INSIGHTS -->
+  <section class="section">
+    <div class="container">
+      <div class="text-center mb-48">
+        <div class="section-label"><i data-lucide="gauge" class="ico"></i> Google PageSpeed Insights</div>
+        <h2 class="section-title">Performance Scores — Tested April 9, 2026</h2>
+        <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">We ran your website through Google's official PageSpeed Insights tool. Here are the real results.</p>
+      </div>
+
+      <!-- Mobile vs Desktop Score Cards -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:48px;">
+
+        <!-- MOBILE -->
+        <div style="background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius-lg);padding:36px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--orange);"></div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:28px;">
+            <i data-lucide="smartphone" class="ico" style="width:20px;height:20px;color:var(--gray-500);"></i>
+            <h3 style="font-size:1.1rem;font-weight:700;color:var(--gray-900);">Mobile</h3>
+            <span style="font-size:.7rem;font-weight:600;color:var(--orange);background:#fff7ed;padding:3px 10px;border-radius:100px;margin-left:auto;">Needs Work</span>
+          </div>
+
+          <!-- Score circles -->
+          <div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:28px;">
+            <div style="text-align:center;flex:1;">
+              <div style="width:64px;height:64px;border-radius:50%;border:4px solid var(--orange);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
+                <span style="font-size:1.3rem;font-weight:800;color:var(--orange);">52</span>
+              </div>
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-500);">Performance</span>
+            </div>
+            <div style="text-align:center;flex:1;">
+              <div style="width:64px;height:64px;border-radius:50%;border:4px solid var(--orange);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
+                <span style="font-size:1.3rem;font-weight:800;color:var(--orange);">84</span>
+              </div>
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-500);">Accessibility</span>
+            </div>
+            <div style="text-align:center;flex:1;">
+              <div style="width:64px;height:64px;border-radius:50%;border:4px solid var(--orange);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
+                <span style="font-size:1.3rem;font-weight:800;color:var(--orange);">77</span>
+              </div>
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-500);">Best Practices</span>
+            </div>
+            <div style="text-align:center;flex:1;">
+              <div style="width:64px;height:64px;border-radius:50%;border:4px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
+                <span style="font-size:1.3rem;font-weight:800;color:var(--green);">92</span>
+              </div>
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-500);">SEO</span>
+            </div>
+          </div>
+
+          <!-- Metrics -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="padding:12px 14px;background:#fef2f2;border-radius:8px;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:2px;">First Contentful Paint</span>
+              <span style="font-size:1.1rem;font-weight:800;color:var(--red);">3.5 s</span>
+            </div>
+            <div style="padding:12px 14px;background:#fef2f2;border-radius:8px;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:2px;">Largest Contentful Paint</span>
+              <span style="font-size:1.1rem;font-weight:800;color:var(--red);">14.6 s</span>
+            </div>
+            <div style="padding:12px 14px;background:var(--green-bg);border-radius:8px;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:2px;">Total Blocking Time</span>
+              <span style="font-size:1.1rem;font-weight:800;color:var(--green);">40 ms</span>
+            </div>
+            <div style="padding:12px 14px;background:#fff7ed;border-radius:8px;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:2px;">Cumulative Layout Shift</span>
+              <span style="font-size:1.1rem;font-weight:800;color:var(--orange);">0.171</span>
+            </div>
+            <div style="padding:12px 14px;background:#fef2f2;border-radius:8px;grid-column:span 2;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:2px;">Speed Index</span>
+              <span style="font-size:1.1rem;font-weight:800;color:var(--red);">9.4 s</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DESKTOP -->
+        <div style="background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius-lg);padding:36px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--orange);"></div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:28px;">
+            <i data-lucide="monitor" class="ico" style="width:20px;height:20px;color:var(--gray-500);"></i>
+            <h3 style="font-size:1.1rem;font-weight:700;color:var(--gray-900);">Desktop</h3>
+            <span style="font-size:.7rem;font-weight:600;color:var(--orange);background:#fff7ed;padding:3px 10px;border-radius:100px;margin-left:auto;">Average</span>
+          </div>
+
+          <!-- Score circles -->
+          <div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:28px;">
+            <div style="text-align:center;flex:1;">
+              <div style="width:64px;height:64px;border-radius:50%;border:4px solid var(--orange);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
+                <span style="font-size:1.3rem;font-weight:800;color:var(--orange);">77</span>
+              </div>
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-500);">Performance</span>
+            </div>
+            <div style="text-align:center;flex:1;">
+              <div style="width:64px;height:64px;border-radius:50%;border:4px solid var(--orange);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
+                <span style="font-size:1.3rem;font-weight:800;color:var(--orange);">84</span>
+              </div>
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-500);">Accessibility</span>
+            </div>
+            <div style="text-align:center;flex:1;">
+              <div style="width:64px;height:64px;border-radius:50%;border:4px solid var(--orange);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
+                <span style="font-size:1.3rem;font-weight:800;color:var(--orange);">77</span>
+              </div>
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-500);">Best Practices</span>
+            </div>
+            <div style="text-align:center;flex:1;">
+              <div style="width:64px;height:64px;border-radius:50%;border:4px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
+                <span style="font-size:1.3rem;font-weight:800;color:var(--green);">92</span>
+              </div>
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-500);">SEO</span>
+            </div>
+          </div>
+
+          <!-- Metrics -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="padding:12px 14px;background:var(--green-bg);border-radius:8px;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:2px;">First Contentful Paint</span>
+              <span style="font-size:1.1rem;font-weight:800;color:var(--green);">0.7 s</span>
+            </div>
+            <div style="padding:12px 14px;background:#fef2f2;border-radius:8px;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:2px;">Largest Contentful Paint</span>
+              <span style="font-size:1.1rem;font-weight:800;color:var(--red);">2.6 s</span>
+            </div>
+            <div style="padding:12px 14px;background:var(--green-bg);border-radius:8px;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:2px;">Total Blocking Time</span>
+              <span style="font-size:1.1rem;font-weight:800;color:var(--green);">20 ms</span>
+            </div>
+            <div style="padding:12px 14px;background:var(--green-bg);border-radius:8px;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:2px;">Cumulative Layout Shift</span>
+              <span style="font-size:1.1rem;font-weight:800;color:var(--green);">0.002</span>
+            </div>
+            <div style="padding:12px 14px;background:#fef2f2;border-radius:8px;grid-column:span 2;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:2px;">Speed Index</span>
+              <span style="font-size:1.1rem;font-weight:800;color:var(--red);">3.7 s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Source note -->
+      <div style="text-align:center;margin-bottom:16px;">
+        <p style="font-size:.8rem;color:var(--gray-400);">Source: Google PageSpeed Insights — Lighthouse 13.0.1 · Captured April 9, 2026</p>
+        <p style="margin-top:8px;"><a href="https://pagespeed.web.dev/analysis/https-www-xascom-in/0dhe3gkwmr?form_factor=desktop" target="_blank" rel="noopener" style="font-size:.8rem;font-weight:600;color:var(--blue);text-decoration:none;display:inline-flex;align-items:center;gap:6px;"><i data-lucide="external-link" class="ico"></i> View Full Report on Google PageSpeed Insights</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPROVEMENT TARGETS -->
+  <section class="section section--gray">
+    <div class="container">
+      <div class="text-center mb-48">
+        <div class="section-label"><i data-lucide="trending-up" class="ico"></i> After Redesign</div>
+        <h2 class="section-title">What We'll Improve — Our Target Scores</h2>
+        <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">With a modern codebase, optimized images, clean code, and proper SEO — here's what we're targeting.</p>
+      </div>
+
+      <!-- Improvement comparison table -->
+      <div style="max-width:900px;margin:0 auto;">
+
+        <!-- Score improvements -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
+
+          <!-- Mobile improvements -->
+          <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:32px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--orange),var(--green));"></div>
+            <h3 style="font-size:1rem;font-weight:700;color:var(--gray-800);margin-bottom:24px;display:flex;align-items:center;gap:8px;"><i data-lucide="smartphone" class="ico" style="width:18px;height:18px;"></i> Mobile Targets</h3>
+
+            <div style="display:flex;flex-direction:column;gap:16px;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="min-width:110px;font-size:.85rem;font-weight:600;color:var(--gray-600);">Performance</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--orange);">52</span>
+                <span style="color:var(--gray-300);">&#8594;</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--green);">90+</span>
+                <span style="font-size:.7rem;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 8px;border-radius:100px;margin-left:auto;">+38</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="min-width:110px;font-size:.85rem;font-weight:600;color:var(--gray-600);">Accessibility</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--orange);">84</span>
+                <span style="color:var(--gray-300);">&#8594;</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--green);">95+</span>
+                <span style="font-size:.7rem;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 8px;border-radius:100px;margin-left:auto;">+11</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="min-width:110px;font-size:.85rem;font-weight:600;color:var(--gray-600);">Best Practices</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--orange);">77</span>
+                <span style="color:var(--gray-300);">&#8594;</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--green);">95+</span>
+                <span style="font-size:.7rem;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 8px;border-radius:100px;margin-left:auto;">+18</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="min-width:110px;font-size:.85rem;font-weight:600;color:var(--gray-600);">SEO</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--green);">92</span>
+                <span style="color:var(--gray-300);">&#8594;</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--green);">98+</span>
+                <span style="font-size:.7rem;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 8px;border-radius:100px;margin-left:auto;">+6</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desktop improvements -->
+          <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:32px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--orange),var(--green));"></div>
+            <h3 style="font-size:1rem;font-weight:700;color:var(--gray-800);margin-bottom:24px;display:flex;align-items:center;gap:8px;"><i data-lucide="monitor" class="ico" style="width:18px;height:18px;"></i> Desktop Targets</h3>
+
+            <div style="display:flex;flex-direction:column;gap:16px;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="min-width:110px;font-size:.85rem;font-weight:600;color:var(--gray-600);">Performance</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--orange);">77</span>
+                <span style="color:var(--gray-300);">&#8594;</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--green);">95+</span>
+                <span style="font-size:.7rem;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 8px;border-radius:100px;margin-left:auto;">+18</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="min-width:110px;font-size:.85rem;font-weight:600;color:var(--gray-600);">Accessibility</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--orange);">84</span>
+                <span style="color:var(--gray-300);">&#8594;</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--green);">95+</span>
+                <span style="font-size:.7rem;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 8px;border-radius:100px;margin-left:auto;">+11</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="min-width:110px;font-size:.85rem;font-weight:600;color:var(--gray-600);">Best Practices</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--orange);">77</span>
+                <span style="color:var(--gray-300);">&#8594;</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--green);">95+</span>
+                <span style="font-size:.7rem;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 8px;border-radius:100px;margin-left:auto;">+18</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="min-width:110px;font-size:.85rem;font-weight:600;color:var(--gray-600);">SEO</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--green);">92</span>
+                <span style="color:var(--gray-300);">&#8594;</span>
+                <span style="font-size:1rem;font-weight:800;color:var(--green);">98+</span>
+                <span style="font-size:.7rem;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 8px;border-radius:100px;margin-left:auto;">+6</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key metric improvements -->
+        <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:36px;">
+          <h3 style="font-size:1rem;font-weight:700;color:var(--gray-800);margin-bottom:24px;text-align:center;">Key Metric Improvements (Mobile)</h3>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;">
+            <div style="text-align:center;padding:16px 8px;background:var(--gray-50);border-radius:10px;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:8px;">FCP</span>
+              <span style="font-size:.95rem;font-weight:800;color:var(--red);display:block;">3.5s</span>
+              <span style="color:var(--gray-300);font-size:.85rem;">&#8595;</span>
+              <span style="font-size:.95rem;font-weight:800;color:var(--green);display:block;">&lt; 1.0s</span>
+            </div>
+            <div style="text-align:center;padding:16px 8px;background:var(--gray-50);border-radius:10px;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:8px;">LCP</span>
+              <span style="font-size:.95rem;font-weight:800;color:var(--red);display:block;">14.6s</span>
+              <span style="color:var(--gray-300);font-size:.85rem;">&#8595;</span>
+              <span style="font-size:.95rem;font-weight:800;color:var(--green);display:block;">&lt; 2.5s</span>
+            </div>
+            <div style="text-align:center;padding:16px 8px;background:var(--gray-50);border-radius:10px;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:8px;">TBT</span>
+              <span style="font-size:.95rem;font-weight:800;color:var(--green);display:block;">40ms</span>
+              <span style="color:var(--gray-300);font-size:.85rem;">&#8595;</span>
+              <span style="font-size:.95rem;font-weight:800;color:var(--green);display:block;">&lt; 50ms</span>
+            </div>
+            <div style="text-align:center;padding:16px 8px;background:var(--gray-50);border-radius:10px;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:8px;">CLS</span>
+              <span style="font-size:.95rem;font-weight:800;color:var(--orange);display:block;">0.171</span>
+              <span style="color:var(--gray-300);font-size:.85rem;">&#8595;</span>
+              <span style="font-size:.95rem;font-weight:800;color:var(--green);display:block;">&lt; 0.1</span>
+            </div>
+            <div style="text-align:center;padding:16px 8px;background:var(--gray-50);border-radius:10px;">
+              <span style="font-size:.7rem;font-weight:600;color:var(--gray-400);display:block;margin-bottom:8px;">Speed Index</span>
+              <span style="font-size:.95rem;font-weight:800;color:var(--red);display:block;">9.4s</span>
+              <span style="color:var(--gray-300);font-size:.85rem;">&#8595;</span>
+              <span style="font-size:.95rem;font-weight:800;color:var(--green);display:block;">&lt; 2.0s</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- How we'll achieve it -->
+        <div style="margin-top:32px;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:32px 36px;">
+          <h4 style="font-size:.95rem;font-weight:700;color:var(--gray-800);margin-bottom:20px;">How We'll Achieve These Improvements</h4>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--gray-700);padding:10px 14px;background:var(--gray-50);border-radius:8px;">
+              <i data-lucide="zap" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Modern framework with server-side rendering
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--gray-700);padding:10px 14px;background:var(--gray-50);border-radius:8px;">
+              <i data-lucide="image" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Optimized images with WebP/AVIF + lazy loading
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--gray-700);padding:10px 14px;background:var(--gray-50);border-radius:8px;">
+              <i data-lucide="code" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Clean, minified CSS & JavaScript
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--gray-700);padding:10px 14px;background:var(--gray-50);border-radius:8px;">
+              <i data-lucide="globe" class="ico" style="color:var(--blue);flex-shrink:0;"></i> CDN for fast global delivery
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--gray-700);padding:10px 14px;background:var(--gray-50);border-radius:8px;">
+              <i data-lucide="accessibility" class="ico" style="color:var(--blue);flex-shrink:0;"></i> WCAG-compliant accessible markup
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--gray-700);padding:10px 14px;background:var(--gray-50);border-radius:8px;">
+              <i data-lucide="search" class="ico" style="color:var(--blue);flex-shrink:0;"></i> Full SEO with meta tags, schema & sitemap
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH INFO -->
+  <section class="section">
+    <div class="container-sm">
+      <div class="section-label"><i data-lucide="monitor" class="ico"></i> Current Technology</div>
+      <h2 class="section-title mb-32">Current Tech Stack</h2>
+      
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Aspect</th><th>Current State</th><th>Assessment</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Platform</strong></td><td>WordPress (outdated theme)</td><td><span class="badge badge--high">Outdated</span></td></tr>
+            <tr><td><strong>Design</strong></td><td>Template-based, circa 2022</td><td><span class="badge badge--high">Needs Redesign</span></td></tr>
+            <tr><td><strong>Hosting</strong></td><td>Likely shared hosting</td><td><span class="badge badge--medium">Review</span></td></tr>
+            <tr><td><strong>SSL</strong></td><td>Present (HTTPS)</td><td><span class="badge badge--green">OK</span></td></tr>
+            <tr><td><strong>SEO</strong></td><td>No meta tags, no schema, no sitemap</td><td><span class="badge badge--critical">Missing</span></td></tr>
+            <tr><td><strong>Analytics</strong></td><td>None visible</td><td><span class="badge badge--critical">Missing</span></td></tr>
+            <tr><td><strong>Mobile Design</strong></td><td>Basic responsive only</td><td><span class="badge badge--high">Poor</span></td></tr>
+            <tr><td><strong>Load Speed</strong></td><td>Unoptimized images, no CDN</td><td><span class="badge badge--high">Slow</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div style="height:48px;"></div>
+
+  <!-- PAGE NAV -->
+  <div class="container">
+    <div class="page-nav">
+      <a href="index.html">← Overview</a>
+      <a href="proposal.html">Redesign Plan →</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <strong>XASCOM Website Redesign Proposal</strong> · Prepared on April 9, 2026 · Confidential Document
+  </footer>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

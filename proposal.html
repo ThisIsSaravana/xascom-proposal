@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redesign Plan — XASCOM Redesign Proposal</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        .ico {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            vertical-align: -2px;
+        }
+
+        .card-icon .ico,
+        .feature-icon .ico,
+        .page-icon .ico,
+        .nav-card .icon .ico {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+        }
+
+        .audit-score-card .ico {
+            width: 28px;
+            height: 28px;
+            display: block;
+            margin: 0 auto 4px;
+        }
+
+        .legal-card .ico {
+            width: 32px;
+            height: 32px;
+            display: block;
+            margin: 0 auto 4px;
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--blue);
+            color: white;
+            font-size: .8rem;
+            font-weight: 800;
+        }
+    </style>
+    <style>
+        .sitemap-visual {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            overflow-x: auto;
+        }
+
+        .sm-root {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .sm-box {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: .875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .sm-box--main {
+            background: var(--navy);
+            color: var(--white);
+            font-size: 1rem;
+            padding: 16px 32px;
+            border-radius: 12px;
+        }
+
+        .sm-box--section {
+            background: var(--blue);
+            color: var(--white);
+        }
+
+        .sm-box--page {
+            background: var(--sky-pale);
+            color: var(--blue);
+            border: 1px solid rgba(37, 99, 235, .2);
+        }
+
+        .sm-box--sub {
+            background: var(--gray-50);
+            color: var(--gray-600);
+            border: 1px solid var(--gray-200);
+            font-weight: 500;
+            font-size: .8rem;
+        }
+
+        .sm-box--legal {
+            background: #fef3c7;
+            color: var(--amber);
+            border: 1px solid #fde68a;
+        }
+
+        .sm-box--new {}
+
+        .sm-branches {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .sm-branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            min-width: 160px;
+        }
+
+        .sm-branch .sm-children {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .sm-connector {
+            width: 2px;
+            height: 20px;
+            background: var(--gray-300);
+        }
+
+        .sm-connector-h {
+            height: 2px;
+            background: var(--gray-300);
+            flex: 1;
+            min-width: 20px;
+        }
+
+        .page-plan-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+
+        .page-plan-header {
+            padding: 28px 32px;
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-plan-header .page-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .page-plan-header h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .page-plan-header p {
+            font-size: .85rem;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .page-plan-body {
+            padding: 32px;
+        }
+
+        .page-plan-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .plan-section-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: var(--gray-50);
+            border-radius: 10px;
+            font-size: .9rem;
+        }
+
+        .plan-section-num {
+            min-width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--blue);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            padding: 0 6px;
+        }
+
+        .plan-section-item strong {
+            display: block;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 2px;
+        }
+
+        .plan-section-item div span {
+            font-size: .825rem;
+            color: var(--gray-500);
+        }
+
+        .subplan-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .subplan-chip {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: .825rem;
+            font-weight: 500;
+            background: var(--sky-pale);
+            color: var(--blue);
+            border: 1px solid rgba(37, 99, 235, .12);
+        }
+
+        .design-note {
+            background: linear-gradient(135deg, var(--sky-pale), #eff6ff);
+            border: 1px solid rgba(37, 99, 235, .15);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            margin-top: 24px;
+        }
+
+        .design-note h4 {
+            font-size: .85rem;
+            font-weight: 700;
+            color: var(--blue);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .design-note ul {
+            list-style: none;
+        }
+
+        .design-note li {
+            padding: 4px 0;
+            font-size: .875rem;
+            color: var(--gray-600);
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .design-note li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--blue);
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav class="topnav">
+        <div class="topnav-inner">
+            <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit;"><span
+                    class="dot"></span> XASCOM Redesign Proposal</a>
+            <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <path d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+            <ul class="topnav-links">
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="audit.html">Site Audit</a></li>
+                <li><a href="proposal.html" class="active">Redesign Plan</a></li>
+                <li><a href="features.html">Features</a></li>
+                <li><a href="timeline.html">Timeline</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero page-hero">
+        <div class="hero-badge"><i data-lucide="building-2" class="ico"></i> Page 3 of 5</div>
+        <h1>The Redesign Plan</h1>
+        <p>A complete new website architecture with 28+ pages — every page planned section-by-section with purpose and
+            functionality.</p>
+    </section>
+
+    <!-- NEW SITEMAP -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-48">
+                <div class="section-label"><i data-lucide="map-pin" class="ico"></i> New Site Architecture</div>
+                <h2 class="section-title">Complete Sitemap — 28+ Pages</h2>
+                <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">Every page your new website will
+                    have. From core service pages to legal compliance — nothing is missed.</p>
+            </div>
+
+            <div class="grid-3" style="gap:16px;">
+                <!-- Column 1: Main Pages -->
+                <div>
+                    <h4
+                        style="font-size:.8rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;padding-left:8px;">
+                        Main Pages</h4>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div class="sm-box sm-box--main" style="justify-content:flex-start;"><i data-lucide="home"
+                                class="ico"></i> Homepage</div>
+                        <div class="sm-box sm-box--section" style="justify-content:flex-start;"><i data-lucide="info"
+                                class="ico"></i> About Us</div>
+                        <div class="sm-box sm-box--section" style="justify-content:flex-start;"><i
+                                data-lucide="clipboard-list" class="ico"></i> Services Overview</div>
+                        <div class="sm-box sm-box--page" style="justify-content:flex-start;"><i
+                                data-lucide="heart-pulse" class="ico"></i> Health Insurance</div>
+                        <div class="sm-box sm-box--sub" style="justify-content:flex-start;margin-left:20px;">Individual
+                            · Family · Group · Senior · Critical Illness · Personal Accident</div>
+                        <div class="sm-box sm-box--page" style="justify-content:flex-start;"><i data-lucide="shield"
+                                class="ico"></i> Life Insurance</div>
+                        <div class="sm-box sm-box--sub" style="justify-content:flex-start;margin-left:20px;">Term · ULIP
+                            · Endowment · Money Back · Whole Life · Child · Retirement</div>
+                        <div class="sm-box sm-box--page" style="justify-content:flex-start;"><i data-lucide="building"
+                                class="ico"></i> General Insurance</div>
+                        <div class="sm-box sm-box--sub" style="justify-content:flex-start;margin-left:20px;">Motor ·
+                            Home · Travel · Business · Fire · Marine</div>
+                    </div>
+                </div>
+
+                <!-- Column 2: Support Pages -->
+                <div>
+                    <h4
+                        style="font-size:.8rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;padding-left:8px;">
+                        Support Pages</h4>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div class="sm-box sm-box--section" style="justify-content:flex-start;"><i
+                                data-lucide="handshake" class="ico"></i> Our Partners</div>
+                        <div class="sm-box sm-box--section" style="justify-content:flex-start;"><i data-lucide="phone"
+                                class="ico"></i> Claim Support</div>
+                        <div class="sm-box sm-box--sub" style="justify-content:flex-start;margin-left:20px;">File a
+                            Claim · Documents · Track · FAQs</div>
+                        <div class="sm-box sm-box--section" style="justify-content:flex-start;"><i data-lucide="image"
+                                class="ico"></i> Gallery</div>
+                        <div class="sm-box sm-box--section" style="justify-content:flex-start;"><i data-lucide="star"
+                                class="ico"></i> Testimonials</div>
+                        <div class="sm-box sm-box--section" style="justify-content:flex-start;"><i
+                                data-lucide="help-circle" class="ico"></i> FAQ</div>
+                        <div class="sm-box sm-box--section" style="justify-content:flex-start;"><i
+                                data-lucide="briefcase" class="ico"></i> Careers</div>
+                    </div>
+                </div>
+
+                <!-- Column 3: Action & Legal -->
+                <div>
+                    <h4
+                        style="font-size:.8rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;padding-left:8px;">
+                        Action & Legal</h4>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div class="sm-box sm-box--section"
+                            style="justify-content:flex-start;background:var(--green);color:white;"><i
+                                data-lucide="pen-line" class="ico"></i> Get a Quote</div>
+                        <div class="sm-box sm-box--section" style="justify-content:flex-start;"><i data-lucide="mail"
+                                class="ico"></i> Contact Us</div>
+                        <div style="height:16px;"></div>
+                        <div class="sm-box sm-box--legal" style="justify-content:flex-start;"><i
+                                data-lucide="scroll-text" class="ico"></i> Privacy Policy</div>
+                        <div class="sm-box sm-box--legal" style="justify-content:flex-start;"><i
+                                data-lucide="scroll-text" class="ico"></i> Terms & Conditions</div>
+                        <div class="sm-box sm-box--legal" style="justify-content:flex-start;"><i
+                                data-lucide="scroll-text" class="ico"></i> Refund Policy</div>
+                        <div class="sm-box sm-box--legal" style="justify-content:flex-start;"><i
+                                data-lucide="scroll-text" class="ico"></i> Disclaimer</div>
+                    </div>
+                    <div
+                        style="margin-top:20px; background:var(--green-bg); border-radius:10px; padding:16px; border:1px solid #a7f3d0;">
+                        <div
+                            style="font-size:.75rem;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:.5px;">
+                            New Pages Total</div>
+                        <div style="font-size:2rem;font-weight:800;color:#059669;line-height:1.3;">28+</div>
+                        <div style="font-size:.8rem;color:#6b7280;">vs 6 currently</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE BY PAGE PLANS -->
+    <section class="section section--gray">
+        <div class="container">
+            <div class="text-center mb-48">
+                <div class="section-label"><i data-lucide="ruler" class="ico"></i> Page-by-Page Breakdown</div>
+                <h2 class="section-title">What Each Page Will Have</h2>
+                <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">Every page designed with
+                    purpose. Here's the section-by-section breakdown of your key pages.</p>
+            </div>
+
+            <!-- HOMEPAGE -->
+            <div class="page-plan-card">
+                <div class="page-plan-header">
+                    <div class="page-icon card-icon card-icon--blue"><i data-lucide="home" class="ico"></i></div>
+                    <div>
+                        <h3>Homepage</h3>
+                        <p>First impression, brand authority, clear user journey, lead generation</p>
+                    </div>
+                </div>
+                <div class="page-plan-body">
+                    <div class="page-plan-sections">
+                        <div class="plan-section-item">
+                            <span class="plan-section-num">1</span>
+                            <div><strong>Sticky Navigation Bar</strong><span>Logo, menu links, "Get a Free Quote" CTA,
+                                    phone number</span></div>
+                        </div>
+                        <div class="plan-section-item">
+                            <span class="plan-section-num">2</span>
+                            <div><strong>Hero Section</strong><span>Full-width with video/animation, bold headline, dual
+                                    CTA, trust badges</span></div>
+                        </div>
+                        <div class="plan-section-item">
+                            <span class="plan-section-num">3</span>
+                            <div><strong>Stats Counter Bar</strong><span>Animated counters: 8,000+ Customers, 16+
+                                    Partners, 7+ Years</span></div>
+                        </div>
+                        <div class="plan-section-item">
+                            <span class="plan-section-num">4</span>
+                            <div><strong>Our Services</strong><span>3 elegant cards with icons, hover animation, "Learn
+                                    More" CTA</span></div>
+                        </div>
+                        <div class="plan-section-item">
+                            <span class="plan-section-num">5</span>
+                            <div><strong>Why Choose XASCOM</strong><span>Icon grid: Expert Guidance, Claim Support, Wide
+                                    Network, and more</span></div>
+                        </div>
+                        <div class="plan-section-item">
+                            <span class="plan-section-num">6</span>
+                            <div><strong>About Us Preview</strong><span>Split layout with image and company intro + core
+                                    values</span></div>
+                        </div>
+                        <div class="plan-section-item">
+                            <span class="plan-section-num">7</span>
+                            <div><strong>Partners Carousel</strong><span>Auto-scrolling logos of all 16 insurance
+                                    partners</span></div>
+                        </div>
+                        <div class="plan-section-item">
+                            <span class="plan-section-num">8</span>
+                            <div><strong>How It Works</strong><span>4-step process: Consult → Compare → Choose →
+                                    Protected</span></div>
+                        </div>
+                        <div class="plan-section-item">
+                            <span class="plan-section-num">9</span>
+                            <div><strong>Testimonials Carousel</strong><span>6-8 client reviews with star ratings and
+                                    photos</span></div>
+                        </div>
+                        <div class="plan-section-item">
+                            <span class="plan-section-num">10</span>
+                            <div><strong>CTA Banner</strong><span>"Ready to secure your future?" with action
+                                    button</span></div>
+                        </div>
+                        <div class="plan-section-item">
+                            <span class="plan-section-num">11</span>
+                            <div><strong>Footer</strong><span>Multi-column: About, Links, Services, Contact, Social,
+                                    Legal, Newsletter</span></div>
+                        </div>
+                    </div>
+                    <div class="design-note">
+                        <h4><i data-lucide="palette" class="ico"></i> Design Note</h4>
+                        <ul>
+                            <li>Professional blue + white + gold accent palette</li>
+                            <li>Modern glassmorphism or clean flat design</li>
+                            <li>Micro-animations on scroll (fade-in, slide-up)</li>
+                            <li>Mobile-first responsive — page loads under 2 seconds</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABOUT US -->
+            <div class="page-plan-card">
+                <div class="page-plan-header">
+                    <div class="page-icon card-icon card-icon--green"><i data-lucide="info" class="ico"></i></div>
+                    <div>
+                        <h3>About Us</h3>
+                        <p>Company story, team, values — building deep trust with visitors</p>
+                    </div>
+                </div>
+                <div class="page-plan-body">
+                    <div class="page-plan-sections">
+                        <div class="plan-section-item"><span class="plan-section-num">1</span>
+                            <div><strong>Page Hero Banner</strong><span>"About XASCOM" with breadcrumb navigation</span>
+                            </div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">2</span>
+                            <div><strong>Our Story Timeline</strong><span>Journey from 2018 to present in timeline
+                                    format</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">3</span>
+                            <div><strong>Mission & Vision</strong><span>Side-by-side cards with icons</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">4</span>
+                            <div><strong>Core Values</strong><span>Learning, Hard Work, Persistence — with proper
+                                    icons</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">5</span>
+                            <div><strong>Our Team</strong><span>Grid with photos, names, designations, LinkedIn</span>
+                            </div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">6</span>
+                            <div><strong>Achievements</strong><span>Milestones and growth numbers</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HEALTH INSURANCE -->
+            <div class="page-plan-card">
+                <div class="page-plan-header">
+                    <div class="page-icon card-icon card-icon--red"><i data-lucide="heart-pulse" class="ico"></i></div>
+                    <div>
+                        <h3>Health Insurance</h3>
+                        <p>Comprehensive health insurance page with plan types, benefits, and lead capture</p>
+                    </div>
+                </div>
+                <div class="page-plan-body">
+                    <div class="page-plan-sections">
+                        <div class="plan-section-item"><span class="plan-section-num">1</span>
+                            <div><strong>Hero Banner</strong><span>Health-specific imagery, headline, quick quote
+                                    CTA</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">2</span>
+                            <div><strong>What is Health Insurance</strong><span>Clean content with icons and
+                                    illustrations</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">3</span>
+                            <div><strong>Types of Plans (Card Grid)</strong><span>6 plan types with details and
+                                    CTAs</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">4</span>
+                            <div><strong>Key Benefits</strong><span>Cashless Treatment, Tax Benefits, No Claim
+                                    Bonus</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">5</span>
+                            <div><strong>Partner Logos</strong><span>Filtered to health insurance partners</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">6</span>
+                            <div><strong>Who Should Buy</strong><span>Persona-based recommendations with icons</span>
+                            </div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">7</span>
+                            <div><strong>Documents Required</strong><span>Checklist format for easy reference</span>
+                            </div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">8</span>
+                            <div><strong>Inline Quote Form</strong><span>Embedded mini-form: Name, Phone, Age,
+                                    Coverage</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">9</span>
+                            <div><strong>FAQ Accordion</strong><span>Health insurance specific questions</span></div>
+                        </div>
+                    </div>
+                    <div class="subplan-chips">
+                        <span class="subplan-chip">Individual Health</span>
+                        <span class="subplan-chip">Family Floater</span>
+                        <span class="subplan-chip">Group Health</span>
+                        <span class="subplan-chip">Senior Citizen</span>
+                        <span class="subplan-chip">Critical Illness</span>
+                        <span class="subplan-chip">Personal Accident</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LIFE INSURANCE -->
+            <div class="page-plan-card">
+                <div class="page-plan-header">
+                    <div class="page-icon card-icon card-icon--blue"><i data-lucide="shield" class="ico"></i></div>
+                    <div>
+                        <h3>Life Insurance</h3>
+                        <p>Same detailed structure as Health — adapted for life insurance products</p>
+                    </div>
+                </div>
+                <div class="page-plan-body">
+                    <p style="font-size:.9rem;color:var(--gray-600);margin-bottom:16px;">9 sections covering: Hero,
+                        Explanation, Plan Types, Benefits (Income Protection, Tax Savings, Wealth Creation), Partners,
+                        Persona Targeting, Documents, Lead Form, FAQs</p>
+                    <div class="subplan-chips">
+                        <span class="subplan-chip">Term Insurance</span>
+                        <span class="subplan-chip">ULIP Plans</span>
+                        <span class="subplan-chip">Endowment</span>
+                        <span class="subplan-chip">Money Back</span>
+                        <span class="subplan-chip">Whole Life</span>
+                        <span class="subplan-chip">Child Plans</span>
+                        <span class="subplan-chip">Retirement Plans</span>
+                    </div>
+                    <div style="margin-top:16px;">
+                        <span style="font-size:.8rem;font-weight:600;color:var(--gray-500);">Partners: </span>
+                        <span style="font-size:.8rem;color:var(--gray-500);">LIC, Tata AIA, HDFC Life, Max Life, SBI
+                            Life, Kotak Life</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GENERAL INSURANCE -->
+            <div class="page-plan-card">
+                <div class="page-plan-header">
+                    <div class="page-icon card-icon card-icon--gold"><i data-lucide="building" class="ico"></i></div>
+                    <div>
+                        <h3>General Insurance</h3>
+                        <p>Same detailed structure — adapted for general/non-life insurance products</p>
+                    </div>
+                </div>
+                <div class="page-plan-body">
+                    <p style="font-size:.9rem;color:var(--gray-600);margin-bottom:16px;">9 sections covering: Hero,
+                        Explanation, Plan Types, Benefits (Asset Protection, Liability Cover, Business Continuity),
+                        Partners, Persona Targeting, Documents, Lead Form, FAQs</p>
+                    <div class="subplan-chips">
+                        <span class="subplan-chip">Motor / Vehicle</span>
+                        <span class="subplan-chip">Home Insurance</span>
+                        <span class="subplan-chip">Travel Insurance</span>
+                        <span class="subplan-chip">Business / Commercial</span>
+                        <span class="subplan-chip">Fire Insurance</span>
+                        <span class="subplan-chip">Marine Insurance</span>
+                    </div>
+                    <div style="margin-top:16px;">
+                        <span style="font-size:.8rem;font-weight:600;color:var(--gray-500);">Partners: </span>
+                        <span style="font-size:.8rem;color:var(--gray-500);">Tata AIG, Chola MS, ICICI Lombard, New
+                            India, United India, SBI General, Royal Sundaram, HDFC Ergo</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CLAIM SUPPORT -->
+            <div class="page-plan-card">
+                <div class="page-plan-header">
+                    <div class="page-icon card-icon card-icon--green"><i data-lucide="phone" class="ico"></i></div>
+                    <div>
+                        <h3>Claim Support</h3>
+                        <p>Showcasing XASCOM's key differentiator — end-to-end claim assistance</p>
+                    </div>
+                </div>
+                <div class="page-plan-body">
+                    <div class="page-plan-sections">
+                        <div class="plan-section-item"><span class="plan-section-num">1</span>
+                            <div><strong>Page Hero</strong><span>"We're With You at Claim Time"</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">2</span>
+                            <div><strong>5-Step Claim Process</strong><span>Visual guide: Intimate → Collect → File →
+                                    Follow-up → Settle</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">3</span>
+                            <div><strong>Documents Required</strong><span>Tabs for Health / Life / General
+                                    checklists</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">4</span>
+                            <div><strong>Claim FAQs</strong><span>Common claim questions in accordion</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">5</span>
+                            <div><strong>Emergency Contact</strong><span>Prominent phone + WhatsApp link</span></div>
+                        </div>
+                        <div class="plan-section-item"><span class="plan-section-num">6</span>
+                            <div><strong>Success Stories</strong><span>Real claim success testimonials</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GET A QUOTE -->
+            <div class="page-plan-card">
+                <div class="page-plan-header">
+                    <div class="page-icon"
+                        style="background:#ecfdf5;color:#059669;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">
+                        <i data-lucide="pen-line" class="ico"></i></div>
+                    <div>
+                        <h3>Get a Quote — Lead Generation</h3>
+                        <p>Multi-step smart form to capture qualified leads with email notifications</p>
+                    </div>
+                </div>
+                <div class="page-plan-body">
+                    <div style="display:flex;gap:16px;flex-wrap:wrap;">
+                        <div
+                            style="flex:1;min-width:200px;background:var(--sky-pale);border-radius:12px;padding:24px;text-align:center;">
+                            <div style="font-size:1.5rem;margin-bottom:8px;"><span class="step-num">1</span></div>
+                            <strong style="font-size:.875rem;display:block;margin-bottom:4px;">Choose Type</strong>
+                            <span style="font-size:.8rem;color:var(--gray-500);">Health / Life / General</span>
+                        </div>
+                        <div
+                            style="flex:1;min-width:200px;background:var(--sky-pale);border-radius:12px;padding:24px;text-align:center;">
+                            <div style="font-size:1.5rem;margin-bottom:8px;"><span class="step-num">2</span></div>
+                            <strong style="font-size:.875rem;display:block;margin-bottom:4px;">Personal Details</strong>
+                            <span style="font-size:.8rem;color:var(--gray-500);">Name, Age, Phone, Email, City</span>
+                        </div>
+                        <div
+                            style="flex:1;min-width:200px;background:var(--sky-pale);border-radius:12px;padding:24px;text-align:center;">
+                            <div style="font-size:1.5rem;margin-bottom:8px;"><span class="step-num">3</span></div>
+                            <strong style="font-size:.875rem;display:block;margin-bottom:4px;">Coverage Details</strong>
+                            <span style="font-size:.8rem;color:var(--gray-500);">Varies by insurance type</span>
+                        </div>
+                        <div
+                            style="flex:1;min-width:200px;background:var(--green-bg);border-radius:12px;padding:24px;text-align:center;">
+                            <div style="font-size:1.5rem;margin-bottom:8px;"><span class="step-num">4</span></div>
+                            <strong style="font-size:.875rem;display:block;margin-bottom:4px;">Confirmation</strong>
+                            <span style="font-size:.8rem;color:var(--gray-500);">Thank you + email sent</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OTHER PAGES SUMMARY -->
+            <div class="page-plan-card">
+                <div class="page-plan-header">
+                    <div class="page-icon card-icon card-icon--gold"><i data-lucide="file-text" class="ico"></i></div>
+                    <div>
+                        <h3>Other Pages</h3>
+                        <p>All additional pages included in the redesign</p>
+                    </div>
+                </div>
+                <div class="page-plan-body">
+                    <div class="grid-2" style="gap:20px;">
+                        <div style="padding:20px;background:var(--gray-50);border-radius:10px;">
+                            <strong style="font-size:.925rem;color:var(--gray-800);"><i data-lucide="handshake"
+                                    class="ico"></i> Our Partners</strong>
+                            <p style="font-size:.825rem;color:var(--gray-500);margin-top:6px;">All 16 partner logos in
+                                grid with company name, type, and description</p>
+                        </div>
+                        <div style="padding:20px;background:var(--gray-50);border-radius:10px;">
+                            <strong style="font-size:.925rem;color:var(--gray-800);"><i data-lucide="help-circle"
+                                    class="ico"></i> FAQ Page</strong>
+                            <p style="font-size:.825rem;color:var(--gray-500);margin-top:6px;">Categorized accordion:
+                                General, Health, Life, General Insurance, Claims, Payment</p>
+                        </div>
+                        <div style="padding:20px;background:var(--gray-50);border-radius:10px;">
+                            <strong style="font-size:.925rem;color:var(--gray-800);"><i data-lucide="image"
+                                    class="ico"></i> Gallery</strong>
+                            <p style="font-size:.825rem;color:var(--gray-500);margin-top:6px;">Masonry grid with
+                                lightbox, category tabs, year filter</p>
+                        </div>
+                        <div style="padding:20px;background:var(--gray-50);border-radius:10px;">
+                            <strong style="font-size:.925rem;color:var(--gray-800);"><i data-lucide="star"
+                                    class="ico"></i> Testimonials</strong>
+                            <p style="font-size:.825rem;color:var(--gray-500);margin-top:6px;">Card grid with photos,
+                                star ratings, insurance type tags</p>
+                        </div>
+                        <div style="padding:20px;background:var(--gray-50);border-radius:10px;">
+                            <strong style="font-size:.925rem;color:var(--gray-800);"><i data-lucide="briefcase"
+                                    class="ico"></i> Careers</strong>
+                            <p style="font-size:.825rem;color:var(--gray-500);margin-top:6px;">Job listings, Graduate
+                                Trainee Programme info, application form with resume upload</p>
+                        </div>
+                        <div style="padding:20px;background:var(--gray-50);border-radius:10px;">
+                            <strong style="font-size:.925rem;color:var(--gray-800);"><i data-lucide="mail"
+                                    class="ico"></i> Contact Us</strong>
+                            <p style="font-size:.825rem;color:var(--gray-500);margin-top:6px;">Info cards, contact form,
+                                Google Maps, social links, WhatsApp button</p>
+                        </div>
+                        <div style="padding:20px;background:#fef3c7;border-radius:10px;">
+                            <strong style="font-size:.925rem;color:var(--gray-800);"><i data-lucide="scroll-text"
+                                    class="ico"></i> Legal (4 Pages)</strong>
+                            <p style="font-size:.825rem;color:var(--gray-500);margin-top:6px;">Privacy Policy (DPDP
+                                Act), Terms & Conditions, Refund Policy, Disclaimer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <div style="height:48px;"></div>
+
+    <div class="container">
+        <div class="page-nav">
+            <a href="audit.html">← Site Audit</a>
+            <a href="features.html">Features & Tech →</a>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <strong>XASCOM Website Redesign Proposal</strong> · Prepared on April 9, 2026 · Confidential Document
+    </footer>
+
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>
