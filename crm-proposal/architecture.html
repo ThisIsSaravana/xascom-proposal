@@ -1,371 +1,674 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Architecture — XASCOM CRM Proposal</title>
-  <link rel="stylesheet" href="../presentation/styles.css">
-  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
-  <style>
-    body{background:var(--gray-50)}
-    .slide{max-width:1080px;margin:40px auto;background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
-    .slide-body{padding:56px 72px}
-    .slide-label{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
-    .slide-heading{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--gray-900);margin-bottom:32px;line-height:1.3}
-    .slide-divider{height:1px;background:var(--gray-200);margin:36px 0}
-    .slide-footer{padding:20px 72px;background:var(--gray-50);border-top:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;font-size:.75rem;color:var(--gray-400)}
-    .slide-footer a{font-size:.8rem;font-weight:600;color:var(--green);display:inline-flex;align-items:center;gap:6px}
-    .page-footer{text-align:center;padding:32px;font-size:.75rem;color:var(--gray-400)}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture — XASCOM CRM Proposal</title>
+    <link rel="stylesheet" href="../presentation/styles.css">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        body {
+            background: var(--gray-50)
+        }
 
-    /* stack cards */
-    .stk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-    .stk-card{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:16px;text-align:center}
-    .stk-card i{width:24px;height:24px;color:var(--green);margin-bottom:6px}
-    .stk-name{font-size:.82rem;font-weight:700;color:var(--gray-800)}
-    .stk-role{font-size:.7rem;color:var(--gray-500);margin-top:2px}
+        .slide {
+            max-width: 1080px;
+            margin: 40px auto;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden
+        }
 
-    /* arch diagram */
-    .arch-box{background:#0f172a;border-radius:12px;padding:32px;color:#fff}
-    .arch-layer{border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:16px;margin-bottom:12px}
-    .arch-layer:last-child{margin-bottom:0}
-    .arch-layer-label{font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px}
-    .arch-items{display:flex;gap:10px;flex-wrap:wrap}
-    .arch-item{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:8px 14px;font-size:.75rem;font-weight:600}
-    .arch-item--green{border-color:rgba(34,197,94,.4);color:#4ade80}
-    .arch-item--blue{border-color:rgba(59,130,246,.4);color:#93c5fd}
-    .arch-item--gold{border-color:rgba(234,179,8,.4);color:#fde68a}
-    .arch-item--purple{border-color:rgba(139,92,246,.4);color:#c4b5fd}
-    .arch-arrow{text-align:center;font-size:.7rem;color:rgba(255,255,255,.3);padding:4px 0}
+        .slide-body {
+            padding: 56px 72px
+        }
 
-    /* db schema */
-    .db-table{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;overflow:hidden;margin-bottom:12px}
-    .db-header{background:var(--gray-800);color:var(--white);padding:8px 14px;font-size:.78rem;font-weight:700;display:flex;align-items:center;gap:8px}
-    .db-header i{width:14px;height:14px}
-    .db-cols{padding:10px 14px;display:flex;flex-wrap:wrap;gap:6px}
-    .db-col{padding:3px 8px;border-radius:4px;font-size:.68rem;font-weight:600}
-    .db-col--pk{background:#dbeafe;color:#1d4ed8}
-    .db-col--fk{background:#fef3c7;color:#92400e}
-    .db-col--f{background:var(--gray-100);color:var(--gray-600)}
+        .slide-label {
+            font-size: .65rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 8px
+        }
 
-    /* comparison */
-    .cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-    .cmp-card{border:1px solid var(--gray-200);border-radius:12px;padding:24px;position:relative}
-    .cmp-card--custom{border-color:var(--green)}
-    .cmp-card h3{font-size:.95rem;font-weight:700;margin-bottom:16px;color:var(--gray-800)}
-    .cmp-list{list-style:none;padding:0;margin:0}
-    .cmp-list li{padding:5px 0;font-size:.8rem;color:var(--gray-600);display:flex;align-items:flex-start;gap:8px}
-    .cmp-list li i{width:14px;height:14px;flex-shrink:0;margin-top:2px}
-    .cmp-price{font-size:1.3rem;font-weight:800;margin:16px 0 0}
-    .cmp-price small{font-size:.7rem;font-weight:500;color:var(--gray-400)}
+        .slide-heading {
+            font-family: var(--font-head);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 32px;
+            line-height: 1.3
+        }
 
-    /* security */
-    .sec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .sec-card{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:16px}
-    .sec-card i{width:20px;height:20px;color:var(--green);margin-bottom:6px}
-    .sec-card h4{font-size:.82rem;font-weight:700;color:var(--gray-800);margin-bottom:6px}
-    .sec-card p{font-size:.75rem;color:var(--gray-500);margin:0;line-height:1.4}
+        .slide-divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: 36px 0
+        }
 
-    @media(max-width:768px){.slide-body{padding:36px 28px}.stk-grid{grid-template-columns:1fr 1fr}.cmp-grid,.sec-grid{grid-template-columns:1fr}.arch-items{flex-direction:column}.slide-footer{padding:16px 28px}}
-  </style>
+        .slide-footer {
+            padding: 20px 72px;
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: .75rem;
+            color: var(--gray-400)
+        }
+
+        .slide-footer a {
+            font-size: .8rem;
+            font-weight: 600;
+            color: var(--green);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .page-footer {
+            text-align: center;
+            padding: 32px;
+            font-size: .75rem;
+            color: var(--gray-400)
+        }
+
+        /* stack cards */
+        .stk-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px
+        }
+
+        .stk-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center
+        }
+
+        .stk-card i {
+            width: 24px;
+            height: 24px;
+            color: var(--green);
+            margin-bottom: 6px
+        }
+
+        .stk-name {
+            font-size: .82rem;
+            font-weight: 700;
+            color: var(--gray-800)
+        }
+
+        .stk-role {
+            font-size: .7rem;
+            color: var(--gray-500);
+            margin-top: 2px
+        }
+
+        /* arch diagram */
+        .arch-box {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 32px;
+            color: #fff
+        }
+
+        .arch-layer {
+            border: 1px solid rgba(255, 255, 255, .15);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px
+        }
+
+        .arch-layer:last-child {
+            margin-bottom: 0
+        }
+
+        .arch-layer-label {
+            font-size: .6rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .4);
+            margin-bottom: 8px
+        }
+
+        .arch-items {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .arch-item {
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-size: .75rem;
+            font-weight: 600
+        }
+
+        .arch-item--green {
+            border-color: rgba(34, 197, 94, .4);
+            color: #4ade80
+        }
+
+        .arch-item--blue {
+            border-color: rgba(59, 130, 246, .4);
+            color: #93c5fd
+        }
+
+        .arch-item--gold {
+            border-color: rgba(234, 179, 8, .4);
+            color: #fde68a
+        }
+
+        .arch-item--purple {
+            border-color: rgba(139, 92, 246, .4);
+            color: #c4b5fd
+        }
+
+        .arch-arrow {
+            text-align: center;
+            font-size: .7rem;
+            color: rgba(255, 255, 255, .3);
+            padding: 4px 0
+        }
+
+        /* db schema */
+        .db-table {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 12px
+        }
+
+        .db-header {
+            background: var(--gray-800);
+            color: var(--white);
+            padding: 8px 14px;
+            font-size: .78rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .db-header i {
+            width: 14px;
+            height: 14px
+        }
+
+        .db-cols {
+            padding: 10px 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px
+        }
+
+        .db-col {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: .68rem;
+            font-weight: 600
+        }
+
+        .db-col--pk {
+            background: #dbeafe;
+            color: #1d4ed8
+        }
+
+        .db-col--fk {
+            background: #fef3c7;
+            color: #92400e
+        }
+
+        .db-col--f {
+            background: var(--gray-100);
+            color: var(--gray-600)
+        }
+
+        /* comparison */
+        .cmp-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px
+        }
+
+        .cmp-card {
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 24px;
+            position: relative
+        }
+
+        .cmp-card--custom {
+            border-color: var(--green)
+        }
+
+        .cmp-card h3 {
+            font-size: .95rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--gray-800)
+        }
+
+        .cmp-list {
+            list-style: none;
+            padding: 0;
+            margin: 0
+        }
+
+        .cmp-list li {
+            padding: 5px 0;
+            font-size: .8rem;
+            color: var(--gray-600);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px
+        }
+
+        .cmp-list li i {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            margin-top: 2px
+        }
+
+        .cmp-price {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin: 16px 0 0
+        }
+
+        .cmp-price small {
+            font-size: .7rem;
+            font-weight: 500;
+            color: var(--gray-400)
+        }
+
+        /* security */
+        .sec-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px
+        }
+
+        .sec-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            padding: 16px
+        }
+
+        .sec-card i {
+            width: 20px;
+            height: 20px;
+            color: var(--green);
+            margin-bottom: 6px
+        }
+
+        .sec-card h4 {
+            font-size: .82rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 6px
+        }
+
+        .sec-card p {
+            font-size: .75rem;
+            color: var(--gray-500);
+            margin: 0;
+            line-height: 1.4
+        }
+
+        @media(max-width:768px) {
+            .slide-body {
+                padding: 36px 28px
+            }
+
+            .stk-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .cmp-grid,
+            .sec-grid {
+                grid-template-columns: 1fr
+            }
+
+            .arch-items {
+                flex-direction: column
+            }
+
+            .slide-footer {
+                padding: 16px 28px
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <nav class="topnav"><div class="topnav-inner">
-    <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit"><span class="dot" style="background:var(--green)"></span> XASCOM CRM Proposal</a>
-    <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-    <ul class="topnav-links">
-      <li><a href="index.html">Overview</a></li>
-      <li><a href="problem.html">Problem</a></li>
-      <li><a href="solution.html">Solution</a></li>
-      <li><a href="architecture.html" class="active">Architecture</a></li>
-      <li><a href="timeline.html">Timeline</a></li>
-    </ul>
-  </div></nav>
+    <nav class="topnav">
+        <div class="topnav-inner">
+            <a href="index.html" class="topnav-brand" style="text-decoration:none;color:inherit"><span class="dot"
+                    style="background:var(--green)"></span> XASCOM CRM Proposal</a>
+            <button class="nav-toggle" onclick="document.querySelector('.topnav-links').classList.toggle('open')"><svg
+                    viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <path d="M4 6h16M4 12h16M4 18h16" />
+                </svg></button>
+            <ul class="topnav-links">
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="problem.html">Problem</a></li>
+                <li><a href="solution.html">Solution</a></li>
+                <li><a href="architecture.html" class="active">Architecture</a></li>
+                <li><a href="timeline.html">Timeline</a></li>
+            </ul>
+        </div>
+    </nav>
 
-  <section class="hero page-hero">
-    <div class="hero-badge">Section 03</div>
-    <h1>Technical Architecture</h1>
-    <p>Technology stack, system design, database schema, and security model.</p>
-  </section>
+    <section class="hero page-hero">
+        <div class="hero-badge">Section 03</div>
+        <h1>Technical Architecture</h1>
+        <p>Technology stack, system design, database schema, and security model.</p>
+    </section>
 
-  <!-- TECH STACK -->
-  <div class="slide">
-    <div class="slide-body">
-      <div class="slide-label">Technology Stack</div>
-      <h2 class="slide-heading">8 Core Components</h2>
-      <div class="stk-grid">
-        <div class="stk-card">
-          <i data-lucide="code-2"></i>
-          <div class="stk-name">Next.js 14</div>
-          <div class="stk-role">Frontend + API</div>
+    <!-- TECH STACK -->
+    <div class="slide">
+        <div class="slide-body">
+            <div class="slide-label">Technology Stack</div>
+            <h2 class="slide-heading">8 Core Components</h2>
+            <div class="stk-grid">
+                <div class="stk-card">
+                    <i data-lucide="code-2"></i>
+                    <div class="stk-name">Next.js 14</div>
+                    <div class="stk-role">Frontend + API</div>
+                </div>
+                <div class="stk-card">
+                    <i data-lucide="database"></i>
+                    <div class="stk-name">Supabase</div>
+                    <div class="stk-role">PostgreSQL + Auth + RLS</div>
+                </div>
+                <div class="stk-card">
+                    <i data-lucide="cloud"></i>
+                    <div class="stk-name">Vercel</div>
+                    <div class="stk-role">Hosting + CDN + SSL</div>
+                </div>
+                <div class="stk-card">
+                    <i data-lucide="palette"></i>
+                    <div class="stk-name">Tailwind CSS</div>
+                    <div class="stk-role">UI Framework</div>
+                </div>
+                <div class="stk-card">
+                    <i data-lucide="bar-chart-3"></i>
+                    <div class="stk-name">Tremor + Recharts</div>
+                    <div class="stk-role">Charts &amp; Dashboard</div>
+                </div>
+                <div class="stk-card">
+                    <i data-lucide="file-spreadsheet"></i>
+                    <div class="stk-name">PapaParse + SheetJS</div>
+                    <div class="stk-role">File Parsing</div>
+                </div>
+                <div class="stk-card">
+                    <i data-lucide="message-circle"></i>
+                    <div class="stk-name">WhatsApp Business API</div>
+                    <div class="stk-role">Customer Messaging</div>
+                </div>
+                <div class="stk-card">
+                    <i data-lucide="mail"></i>
+                    <div class="stk-name">SMS Gateway</div>
+                    <div class="stk-role">Bulk Notifications</div>
+                </div>
+            </div>
         </div>
-        <div class="stk-card">
-          <i data-lucide="database"></i>
-          <div class="stk-name">Supabase</div>
-          <div class="stk-role">PostgreSQL + Auth + RLS</div>
-        </div>
-        <div class="stk-card">
-          <i data-lucide="cloud"></i>
-          <div class="stk-name">Vercel</div>
-          <div class="stk-role">Hosting + CDN + SSL</div>
-        </div>
-        <div class="stk-card">
-          <i data-lucide="palette"></i>
-          <div class="stk-name">Tailwind CSS</div>
-          <div class="stk-role">UI Framework</div>
-        </div>
-        <div class="stk-card">
-          <i data-lucide="bar-chart-3"></i>
-          <div class="stk-name">Tremor + Recharts</div>
-          <div class="stk-role">Charts &amp; Dashboard</div>
-        </div>
-        <div class="stk-card">
-          <i data-lucide="file-spreadsheet"></i>
-          <div class="stk-name">PapaParse + SheetJS</div>
-          <div class="stk-role">File Parsing</div>
-        </div>
-        <div class="stk-card">
-          <i data-lucide="message-circle"></i>
-          <div class="stk-name">WhatsApp Business API</div>
-          <div class="stk-role">Customer Messaging</div>
-        </div>
-        <div class="stk-card">
-          <i data-lucide="mail"></i>
-          <div class="stk-name">SMS Gateway</div>
-          <div class="stk-role">Bulk Notifications</div>
-        </div>
-      </div>
+        <div class="slide-footer"><span>Architecture &middot; Slide 1</span><span></span></div>
     </div>
-    <div class="slide-footer"><span>Architecture &middot; Slide 1</span><span></span></div>
-  </div>
 
-  <!-- ARCHITECTURE DIAGRAM -->
-  <div class="slide">
-    <div class="slide-body">
-      <div class="slide-label">System Design</div>
-      <h2 class="slide-heading">Architecture Layers</h2>
-      <div class="arch-box">
-        <div class="arch-layer">
-          <div class="arch-layer-label">Presentation Layer</div>
-          <div class="arch-items">
-            <div class="arch-item arch-item--green">Admin Dashboard</div>
-            <div class="arch-item arch-item--green">Agent CRM View</div>
-            <div class="arch-item arch-item--green">Manager Analytics</div>
-            <div class="arch-item arch-item--green">File Upload Portal</div>
-          </div>
+    <!-- ARCHITECTURE DIAGRAM -->
+    <div class="slide">
+        <div class="slide-body">
+            <div class="slide-label">System Design</div>
+            <h2 class="slide-heading">Architecture Layers</h2>
+            <div class="arch-box">
+                <div class="arch-layer">
+                    <div class="arch-layer-label">Presentation Layer</div>
+                    <div class="arch-items">
+                        <div class="arch-item arch-item--green">Admin Dashboard</div>
+                        <div class="arch-item arch-item--green">Agent CRM View</div>
+                        <div class="arch-item arch-item--green">Manager Analytics</div>
+                        <div class="arch-item arch-item--green">File Upload Portal</div>
+                    </div>
+                </div>
+                <div class="arch-arrow">&darr; Next.js API Routes &darr;</div>
+                <div class="arch-layer">
+                    <div class="arch-layer-label">Application Layer</div>
+                    <div class="arch-items">
+                        <div class="arch-item arch-item--blue">Data Pipeline Engine</div>
+                        <div class="arch-item arch-item--blue">Assignment Engine</div>
+                        <div class="arch-item arch-item--blue">Call Log Service</div>
+                        <div class="arch-item arch-item--blue">Notification Service</div>
+                        <div class="arch-item arch-item--blue">Report Generator</div>
+                    </div>
+                </div>
+                <div class="arch-arrow">&darr; Supabase Client SDK &darr;</div>
+                <div class="arch-layer">
+                    <div class="arch-layer-label">Data Layer</div>
+                    <div class="arch-items">
+                        <div class="arch-item arch-item--gold">PostgreSQL (RLS)</div>
+                        <div class="arch-item arch-item--gold">Supabase Auth</div>
+                        <div class="arch-item arch-item--gold">File Storage</div>
+                    </div>
+                </div>
+                <div class="arch-arrow">&darr; External APIs &darr;</div>
+                <div class="arch-layer">
+                    <div class="arch-layer-label">Integration Layer</div>
+                    <div class="arch-items">
+                        <div class="arch-item arch-item--purple">WhatsApp Business</div>
+                        <div class="arch-item arch-item--purple">SMS Gateway</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="arch-arrow">&darr; Next.js API Routes &darr;</div>
-        <div class="arch-layer">
-          <div class="arch-layer-label">Application Layer</div>
-          <div class="arch-items">
-            <div class="arch-item arch-item--blue">Data Pipeline Engine</div>
-            <div class="arch-item arch-item--blue">Assignment Engine</div>
-            <div class="arch-item arch-item--blue">Call Log Service</div>
-            <div class="arch-item arch-item--blue">Notification Service</div>
-            <div class="arch-item arch-item--blue">Report Generator</div>
-          </div>
-        </div>
-        <div class="arch-arrow">&darr; Supabase Client SDK &darr;</div>
-        <div class="arch-layer">
-          <div class="arch-layer-label">Data Layer</div>
-          <div class="arch-items">
-            <div class="arch-item arch-item--gold">PostgreSQL (RLS)</div>
-            <div class="arch-item arch-item--gold">Supabase Auth</div>
-            <div class="arch-item arch-item--gold">File Storage</div>
-          </div>
-        </div>
-        <div class="arch-arrow">&darr; External APIs &darr;</div>
-        <div class="arch-layer">
-          <div class="arch-layer-label">Integration Layer</div>
-          <div class="arch-items">
-            <div class="arch-item arch-item--purple">WhatsApp Business</div>
-            <div class="arch-item arch-item--purple">SMS Gateway</div>
-          </div>
-        </div>
-      </div>
+        <div class="slide-footer"><span>Architecture &middot; Slide 2</span><span></span></div>
     </div>
-    <div class="slide-footer"><span>Architecture &middot; Slide 2</span><span></span></div>
-  </div>
 
-  <!-- DATABASE SCHEMA -->
-  <div class="slide">
-    <div class="slide-body">
-      <div class="slide-label">Database</div>
-      <h2 class="slide-heading">7 Core Tables</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="db-table">
-          <div class="db-header"><i data-lucide="users"></i> users</div>
-          <div class="db-cols">
-            <span class="db-col db-col--pk">id (PK)</span>
-            <span class="db-col db-col--f">name</span>
-            <span class="db-col db-col--f">email</span>
-            <span class="db-col db-col--f">role</span>
-            <span class="db-col db-col--f">daily_target</span>
-          </div>
+    <!-- DATABASE SCHEMA -->
+    <div class="slide">
+        <div class="slide-body">
+            <div class="slide-label">Database</div>
+            <h2 class="slide-heading">7 Core Tables</h2>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div class="db-table">
+                    <div class="db-header"><i data-lucide="users"></i> users</div>
+                    <div class="db-cols">
+                        <span class="db-col db-col--pk">id (PK)</span>
+                        <span class="db-col db-col--f">name</span>
+                        <span class="db-col db-col--f">email</span>
+                        <span class="db-col db-col--f">role</span>
+                        <span class="db-col db-col--f">daily_target</span>
+                    </div>
+                </div>
+                <div class="db-table">
+                    <div class="db-header"><i data-lucide="building-2"></i> carriers</div>
+                    <div class="db-cols">
+                        <span class="db-col db-col--pk">id (PK)</span>
+                        <span class="db-col db-col--f">name</span>
+                        <span class="db-col db-col--f">code</span>
+                        <span class="db-col db-col--f">commission_rate</span>
+                    </div>
+                </div>
+                <div class="db-table">
+                    <div class="db-header"><i data-lucide="user"></i> customers</div>
+                    <div class="db-cols">
+                        <span class="db-col db-col--pk">id (PK)</span>
+                        <span class="db-col db-col--f">name</span>
+                        <span class="db-col db-col--f">phone</span>
+                        <span class="db-col db-col--f">email</span>
+                        <span class="db-col db-col--f">address</span>
+                        <span class="db-col db-col--f">dedup_hash</span>
+                    </div>
+                </div>
+                <div class="db-table">
+                    <div class="db-header"><i data-lucide="file-text"></i> policies</div>
+                    <div class="db-cols">
+                        <span class="db-col db-col--pk">id (PK)</span>
+                        <span class="db-col db-col--fk">customer_id (FK)</span>
+                        <span class="db-col db-col--fk">carrier_id (FK)</span>
+                        <span class="db-col db-col--fk">assigned_to (FK)</span>
+                        <span class="db-col db-col--f">policy_no</span>
+                        <span class="db-col db-col--f">product</span>
+                        <span class="db-col db-col--f">type</span>
+                        <span class="db-col db-col--f">expiry_date</span>
+                        <span class="db-col db-col--f">old_premium</span>
+                        <span class="db-col db-col--f">new_premium</span>
+                        <span class="db-col db-col--f">sum_insured</span>
+                        <span class="db-col db-col--f">status</span>
+                        <span class="db-col db-col--f">grace_end</span>
+                    </div>
+                </div>
+                <div class="db-table">
+                    <div class="db-header"><i data-lucide="phone-call"></i> call_logs</div>
+                    <div class="db-cols">
+                        <span class="db-col db-col--pk">id (PK)</span>
+                        <span class="db-col db-col--fk">policy_id (FK)</span>
+                        <span class="db-col db-col--fk">agent_id (FK)</span>
+                        <span class="db-col db-col--f">call_outcome</span>
+                        <span class="db-col db-col--f">customer_intent</span>
+                        <span class="db-col db-col--f">loss_reason</span>
+                        <span class="db-col db-col--f">callback_at</span>
+                        <span class="db-col db-col--f">notes</span>
+                        <span class="db-col db-col--f">created_at</span>
+                    </div>
+                </div>
+                <div class="db-table">
+                    <div class="db-header"><i data-lucide="shield"></i> audit_logs</div>
+                    <div class="db-cols">
+                        <span class="db-col db-col--pk">id (PK)</span>
+                        <span class="db-col db-col--fk">user_id (FK)</span>
+                        <span class="db-col db-col--f">action</span>
+                        <span class="db-col db-col--f">entity</span>
+                        <span class="db-col db-col--f">entity_id</span>
+                        <span class="db-col db-col--f">changes</span>
+                        <span class="db-col db-col--f">created_at</span>
+                    </div>
+                </div>
+                <div class="db-table" style="grid-column:span 2">
+                    <div class="db-header"><i data-lucide="settings"></i> mapping_templates</div>
+                    <div class="db-cols">
+                        <span class="db-col db-col--pk">id (PK)</span>
+                        <span class="db-col db-col--fk">carrier_id (FK)</span>
+                        <span class="db-col db-col--f">template_name</span>
+                        <span class="db-col db-col--f">column_map (JSONB)</span>
+                        <span class="db-col db-col--f">created_by</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="db-table">
-          <div class="db-header"><i data-lucide="building-2"></i> carriers</div>
-          <div class="db-cols">
-            <span class="db-col db-col--pk">id (PK)</span>
-            <span class="db-col db-col--f">name</span>
-            <span class="db-col db-col--f">code</span>
-            <span class="db-col db-col--f">commission_rate</span>
-          </div>
-        </div>
-        <div class="db-table">
-          <div class="db-header"><i data-lucide="user"></i> customers</div>
-          <div class="db-cols">
-            <span class="db-col db-col--pk">id (PK)</span>
-            <span class="db-col db-col--f">name</span>
-            <span class="db-col db-col--f">phone</span>
-            <span class="db-col db-col--f">email</span>
-            <span class="db-col db-col--f">address</span>
-            <span class="db-col db-col--f">dedup_hash</span>
-          </div>
-        </div>
-        <div class="db-table">
-          <div class="db-header"><i data-lucide="file-text"></i> policies</div>
-          <div class="db-cols">
-            <span class="db-col db-col--pk">id (PK)</span>
-            <span class="db-col db-col--fk">customer_id (FK)</span>
-            <span class="db-col db-col--fk">carrier_id (FK)</span>
-            <span class="db-col db-col--fk">assigned_to (FK)</span>
-            <span class="db-col db-col--f">policy_no</span>
-            <span class="db-col db-col--f">product</span>
-            <span class="db-col db-col--f">type</span>
-            <span class="db-col db-col--f">expiry_date</span>
-            <span class="db-col db-col--f">old_premium</span>
-            <span class="db-col db-col--f">new_premium</span>
-            <span class="db-col db-col--f">sum_insured</span>
-            <span class="db-col db-col--f">status</span>
-            <span class="db-col db-col--f">grace_end</span>
-          </div>
-        </div>
-        <div class="db-table">
-          <div class="db-header"><i data-lucide="phone-call"></i> call_logs</div>
-          <div class="db-cols">
-            <span class="db-col db-col--pk">id (PK)</span>
-            <span class="db-col db-col--fk">policy_id (FK)</span>
-            <span class="db-col db-col--fk">agent_id (FK)</span>
-            <span class="db-col db-col--f">call_outcome</span>
-            <span class="db-col db-col--f">customer_intent</span>
-            <span class="db-col db-col--f">loss_reason</span>
-            <span class="db-col db-col--f">callback_at</span>
-            <span class="db-col db-col--f">notes</span>
-            <span class="db-col db-col--f">created_at</span>
-          </div>
-        </div>
-        <div class="db-table">
-          <div class="db-header"><i data-lucide="shield"></i> audit_logs</div>
-          <div class="db-cols">
-            <span class="db-col db-col--pk">id (PK)</span>
-            <span class="db-col db-col--fk">user_id (FK)</span>
-            <span class="db-col db-col--f">action</span>
-            <span class="db-col db-col--f">entity</span>
-            <span class="db-col db-col--f">entity_id</span>
-            <span class="db-col db-col--f">changes</span>
-            <span class="db-col db-col--f">created_at</span>
-          </div>
-        </div>
-        <div class="db-table" style="grid-column:span 2">
-          <div class="db-header"><i data-lucide="settings"></i> mapping_templates</div>
-          <div class="db-cols">
-            <span class="db-col db-col--pk">id (PK)</span>
-            <span class="db-col db-col--fk">carrier_id (FK)</span>
-            <span class="db-col db-col--f">template_name</span>
-            <span class="db-col db-col--f">column_map (JSONB)</span>
-            <span class="db-col db-col--f">created_by</span>
-          </div>
-        </div>
-      </div>
+        <div class="slide-footer"><span>Architecture &middot; Slide 3</span><span></span></div>
     </div>
-    <div class="slide-footer"><span>Architecture &middot; Slide 3</span><span></span></div>
-  </div>
 
-  <!-- BUILD vs BUY -->
-  <div class="slide">
-    <div class="slide-body">
-      <div class="slide-label">Cost Analysis</div>
-      <h2 class="slide-heading">Custom Build vs Off-the-Shelf CRM</h2>
-      <div class="cmp-grid">
-        <div class="cmp-card cmp-card--custom">
-          <h3 style="color:var(--green)">Custom Build (Recommended)</h3>
-          <ul class="cmp-list">
-            <li><i data-lucide="check" style="color:var(--green)"></i> Designed for insurance renewal workflow</li>
-            <li><i data-lucide="check" style="color:var(--green)"></i> Carrier file import with mapping templates</li>
-            <li><i data-lucide="check" style="color:var(--green)"></i> Structured disposition system (4 fields)</li>
-            <li><i data-lucide="check" style="color:var(--green)"></i> Grace period &amp; expiry tracking built-in</li>
-            <li><i data-lucide="check" style="color:var(--green)"></i> No per-user licensing fees</li>
-            <li><i data-lucide="check" style="color:var(--green)"></i> Full data ownership (Supabase/PostgreSQL)</li>
-            <li><i data-lucide="check" style="color:var(--green)"></i> Unlimited users, unlimited records</li>
-          </ul>
-          <div class="cmp-price" style="color:var(--green)">Custom one-time cost</div>
+    <!-- BUILD vs BUY -->
+    <div class="slide">
+        <div class="slide-body">
+            <div class="slide-label">Cost Analysis</div>
+            <h2 class="slide-heading">Custom Build vs Off-the-Shelf CRM</h2>
+            <div class="cmp-grid">
+                <div class="cmp-card cmp-card--custom">
+                    <h3 style="color:var(--green)">Custom Build (Recommended)</h3>
+                    <ul class="cmp-list">
+                        <li><i data-lucide="check" style="color:var(--green)"></i> Designed for insurance renewal
+                            workflow</li>
+                        <li><i data-lucide="check" style="color:var(--green)"></i> Carrier file import with mapping
+                            templates</li>
+                        <li><i data-lucide="check" style="color:var(--green)"></i> Structured disposition system (4
+                            fields)</li>
+                        <li><i data-lucide="check" style="color:var(--green)"></i> Grace period &amp; expiry tracking
+                            built-in</li>
+                        <li><i data-lucide="check" style="color:var(--green)"></i> No per-user licensing fees</li>
+                        <li><i data-lucide="check" style="color:var(--green)"></i> Full data ownership
+                            (Supabase/PostgreSQL)</li>
+                        <li><i data-lucide="check" style="color:var(--green)"></i> Unlimited users, unlimited records
+                        </li>
+                    </ul>
+                    <div class="cmp-price" style="color:var(--green)">Custom one-time cost</div>
+                </div>
+                <div class="cmp-card">
+                    <h3>Off-the-Shelf CRM</h3>
+                    <ul class="cmp-list">
+                        <li><i data-lucide="x" style="color:var(--red)"></i> Generic CRM &mdash; no renewal workflow
+                        </li>
+                        <li><i data-lucide="x" style="color:var(--red)"></i> No carrier file import</li>
+                        <li><i data-lucide="x" style="color:var(--red)"></i> No insurance-specific dispositions</li>
+                        <li><i data-lucide="x" style="color:var(--red)"></i> Grace period must be custom-coded</li>
+                        <li><i data-lucide="x" style="color:var(--red)"></i> Per-user pricing scales with team</li>
+                        <li><i data-lucide="x" style="color:var(--red)"></i> Data locked in vendor platform</li>
+                        <li><i data-lucide="minus" style="color:var(--gray-400)"></i> Example: LeadSquared, Zoho,
+                            Freshworks</li>
+                    </ul>
+                    <div class="cmp-price" style="color:var(--red)">&#8377;1,500&ndash;3,000<small>/user/month</small>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="cmp-card">
-          <h3>Off-the-Shelf CRM</h3>
-          <ul class="cmp-list">
-            <li><i data-lucide="x" style="color:var(--red)"></i> Generic CRM &mdash; no renewal workflow</li>
-            <li><i data-lucide="x" style="color:var(--red)"></i> No carrier file import</li>
-            <li><i data-lucide="x" style="color:var(--red)"></i> No insurance-specific dispositions</li>
-            <li><i data-lucide="x" style="color:var(--red)"></i> Grace period must be custom-coded</li>
-            <li><i data-lucide="x" style="color:var(--red)"></i> Per-user pricing scales with team</li>
-            <li><i data-lucide="x" style="color:var(--red)"></i> Data locked in vendor platform</li>
-            <li><i data-lucide="minus" style="color:var(--gray-400)"></i> Example: LeadSquared, Zoho, Freshworks</li>
-          </ul>
-          <div class="cmp-price" style="color:var(--red)">&#8377;1,500&ndash;3,000<small>/user/month</small></div>
-        </div>
-      </div>
+        <div class="slide-footer"><span>Architecture &middot; Slide 4</span><span></span></div>
     </div>
-    <div class="slide-footer"><span>Architecture &middot; Slide 4</span><span></span></div>
-  </div>
 
-  <!-- SECURITY -->
-  <div class="slide">
-    <div class="slide-body">
-      <div class="slide-label">Security &amp; Compliance</div>
-      <h2 class="slide-heading">Data Protection Model</h2>
-      <div class="sec-grid">
-        <div class="sec-card">
-          <i data-lucide="shield-check"></i>
-          <h4>Row-Level Security</h4>
-          <p>Agents see only assigned policies. Managers see team. Admin sees all. Enforced at database layer via Supabase RLS.</p>
+    <!-- SECURITY -->
+    <div class="slide">
+        <div class="slide-body">
+            <div class="slide-label">Security &amp; Compliance</div>
+            <h2 class="slide-heading">Data Protection Model</h2>
+            <div class="sec-grid">
+                <div class="sec-card">
+                    <i data-lucide="shield-check"></i>
+                    <h4>Row-Level Security</h4>
+                    <p>Agents see only assigned policies. Managers see team. Admin sees all. Enforced at database layer
+                        via Supabase RLS.</p>
+                </div>
+                <div class="sec-card">
+                    <i data-lucide="lock"></i>
+                    <h4>Authentication</h4>
+                    <p>Supabase Auth with email + password. JWT-based sessions. Optional 2FA support.</p>
+                </div>
+                <div class="sec-card">
+                    <i data-lucide="users"></i>
+                    <h4>Role-Based Access</h4>
+                    <p>Three roles: Admin (full), Manager (team + analytics), Agent (own queue only).</p>
+                </div>
+                <div class="sec-card">
+                    <i data-lucide="file-search"></i>
+                    <h4>Audit Trail</h4>
+                    <p>Every data change logged with user, timestamp, and before/after values.</p>
+                </div>
+                <div class="sec-card">
+                    <i data-lucide="globe"></i>
+                    <h4>HTTPS / SSL</h4>
+                    <p>All traffic encrypted via Vercel SSL. No additional certificate management required.</p>
+                </div>
+                <div class="sec-card">
+                    <i data-lucide="hard-drive"></i>
+                    <h4>Automated Backups</h4>
+                    <p>Supabase daily database backups. Point-in-time recovery available on Pro plan.</p>
+                </div>
+            </div>
         </div>
-        <div class="sec-card">
-          <i data-lucide="lock"></i>
-          <h4>Authentication</h4>
-          <p>Supabase Auth with email + password. JWT-based sessions. Optional 2FA support.</p>
+        <div class="slide-footer"><span>Architecture &middot; Slide 5</span><a href="timeline.html">Timeline &rarr;</a>
         </div>
-        <div class="sec-card">
-          <i data-lucide="users"></i>
-          <h4>Role-Based Access</h4>
-          <p>Three roles: Admin (full), Manager (team + analytics), Agent (own queue only).</p>
-        </div>
-        <div class="sec-card">
-          <i data-lucide="file-search"></i>
-          <h4>Audit Trail</h4>
-          <p>Every data change logged with user, timestamp, and before/after values.</p>
-        </div>
-        <div class="sec-card">
-          <i data-lucide="globe"></i>
-          <h4>HTTPS / SSL</h4>
-          <p>All traffic encrypted via Vercel SSL. No additional certificate management required.</p>
-        </div>
-        <div class="sec-card">
-          <i data-lucide="hard-drive"></i>
-          <h4>Automated Backups</h4>
-          <p>Supabase daily database backups. Point-in-time recovery available on Pro plan.</p>
-        </div>
-      </div>
     </div>
-    <div class="slide-footer"><span>Architecture &middot; Slide 5</span><a href="timeline.html">Timeline &rarr;</a></div>
-  </div>
 
-  <div class="container" style="max-width:1080px">
-    <div class="page-nav">
-      <a href="solution.html">&larr; Solution</a>
-      <a href="timeline.html">Timeline &rarr;</a>
+    <div class="container" style="max-width:1080px">
+        <div class="page-nav">
+            <a href="solution.html">&larr; Solution</a>
+            <a href="timeline.html">Timeline &rarr;</a>
+        </div>
     </div>
-  </div>
-  <p class="page-footer">XASCOM CRM &amp; Analytics Dashboard &middot; Confidential &middot; April 2026</p>
-  <script>lucide.createIcons();</script>
+    <p class="page-footer">XASCOM CRM &amp; Analytics Dashboard &middot; Confidential &middot; April 2026</p>
+    <script>lucide.createIcons();</script>
 </body>
+
 </html>
