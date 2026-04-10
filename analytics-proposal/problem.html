@@ -215,6 +215,10 @@
                 gap: 6px
             }
 
+            .wf-row > span {
+                transform: rotate(90deg);
+            }
+
             .wf-step {
                 min-width: 100px;
                 font-size: .72rem;
@@ -224,6 +228,16 @@
 
         /* small tablet */
         @media(max-width:600px) {
+            .wf-row {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .wf-step {
+                min-width: auto;
+                width: 100%;
+            }
+
             .pain-grid {
                 grid-template-columns: 1fr
             }
@@ -253,6 +267,10 @@
             .wf-row {
                 flex-direction: column;
                 gap: 4px
+            }
+
+            .wf-row > span {
+                transform: rotate(90deg);
             }
 
             .wf-step {
